@@ -1,0 +1,149 @@
+# DO NOT DELETE
+
+plugin_djikstraDistance.o: plugin_djikstraDistance.h CallbackFunctions.h
+plugin_djikstraDistance.o: TextIO.h Image3D.h definitions.h
+plugin_djikstraDistance.o: protobuf_package.pb.h
+plugin_djikstraDistance.o: eigenvalue_eigenvector_3x3_matrix.h
+plugin_djikstraDistance.o: Protobuf.h Array1D.h Image3D_util.h dt.h
+imageProcessingPlugins.o: imageProcessingPlugins.h CallbackFunctions.h
+imageProcessingPlugins.o: TextIO.h Image3D.h definitions.h
+imageProcessingPlugins.o: protobuf_package.pb.h
+imageProcessingPlugins.o: eigenvalue_eigenvector_3x3_matrix.h
+imageProcessingPlugins.o: plugin_normalize.h Image3D_util.h dt.h
+imageProcessingPlugins.o: plugin_dummy.h
+imageProcessingPlugins.o: plugin_blur.h
+imageProcessingPlugins.o: plugin_distanceTransform.h plugin_boxNormalize.h
+imageProcessingPlugins.o: plugin_principalCurvature.h plugin_imadjust.h
+imageProcessingPlugins.o: Array1D.h plugin_activeContours.h Protobuf.h
+imageProcessingPlugins.o: ActiveContourSeed.h
+imageProcessingPlugins.o: plugin_CDiameterQuantification.h
+imageProcessingPlugins.o: plugin_clearSegmentation.h plugin_quantify.h
+imageProcessingPlugins.o: plugin_volume.h plugin_topLayer.h
+imageProcessingPlugins.o: plugin_grabVideo.h
+imageProcessingPlugins.o: plugin_protoToImage.h plugin_emptyImage.h
+imageProcessingPlugins.o: plugin_downsample.h
+imageProcessingPlugins.o: plugin_djikstraDistance.h plugin_unaryOperation.h
+imageProcessingPlugins.o: plugin_upsample.h
+imageProcessingPlugins.o: plugin_rayTraceFiller.h
+util.o: protobuf_package.pb.h
+plugin_boxNormalize.o: plugin_boxNormalize.h ImageIO.h
+plugin_boxNormalize.o: CallbackFunctions.h Image3D.h definitions.h
+plugin_boxNormalize.o: protobuf_package.pb.h
+plugin_boxNormalize.o: eigenvalue_eigenvector_3x3_matrix.h
+plugin_boxNormalize.o: Image3D_util.h dt.h
+plugin_CDiameterQuantification.o: plugin_CDiameterQuantification.h
+plugin_CDiameterQuantification.o: CallbackFunctions.h ImageIO.h
+plugin_CDiameterQuantification.o: Image3D.h definitions.h
+plugin_CDiameterQuantification.o: protobuf_package.pb.h
+plugin_CDiameterQuantification.o: eigenvalue_eigenvector_3x3_matrix.h
+plugin_CDiameterQuantification.o: util.h TextIO.h Protobuf.h Array1D.h
+plugin_CDiameterQuantification.o: Image3D_util.h dt.h
+plugin_topLayer.o: plugin_topLayer.h TextIO.h CallbackFunctions.h
+plugin_topLayer.o: Array1D.h Image3D.h
+plugin_topLayer.o: definitions.h protobuf_package.pb.h
+plugin_topLayer.o: eigenvalue_eigenvector_3x3_matrix.h
+plugin_topLayer.o: Image3D_util.h dt.h
+TextIO_sharedLibrary.o: TextIO_sharedLibrary.h CallbackFunctions.h TextIO.h
+TextIO_sharedLibrary.o: definitions.h
+TextIO_sharedLibrary.o: protobuf_package.pb.h
+TextIO_sharedLibrary.o: util.h
+plugin_recenterImage.o: plugin_recenterImage.h ImageIO.h
+plugin_recenterImage.o: CallbackFunctions.h Image3D.h definitions.h
+plugin_recenterImage.o: protobuf_package.pb.h
+plugin_recenterImage.o: eigenvalue_eigenvector_3x3_matrix.h
+plugin_principalCurvature.o: plugin_principalCurvature.h ImageIO.h
+plugin_principalCurvature.o: CallbackFunctions.h Image3D.h definitions.h
+plugin_principalCurvature.o: protobuf_package.pb.h
+plugin_principalCurvature.o: eigenvalue_eigenvector_3x3_matrix.h
+plugin_emptyImage.o: plugin_emptyImage.h CallbackFunctions.h ImageIO.h
+plugin_emptyImage.o: Image3D.h definitions.h protobuf_package.pb.h
+plugin_emptyImage.o: eigenvalue_eigenvector_3x3_matrix.h
+plugin_emptyImage.o: Image3D_util.h dt.h
+plugin_distanceTransform.o: plugin_distanceTransform.h ImageIO.h
+plugin_distanceTransform.o: CallbackFunctions.h Image3D.h definitions.h
+plugin_distanceTransform.o: protobuf_package.pb.h
+plugin_distanceTransform.o: eigenvalue_eigenvector_3x3_matrix.h
+plugin_distanceTransform.o: Image3D_util.h dt.h
+plugin_upsample.o: plugin_upsample.h CallbackFunctions.h TextIO.h
+plugin_upsample.o: definitions.h protobuf_package.pb.h
+plugin_upsample.o: eigenvalue_eigenvector_3x3_matrix.h
+plugin_upsample.o: Protobuf.h Array1D.h Image3D_util.h dt.h
+ImageIO_sharedLibrary.o: ImageIO_sharedLibrary.h CallbackFunctions.h
+ImageIO_sharedLibrary.o: util.h definitions.h protobuf_package.pb.h
+plugin_clearSegmentation.o: plugin_clearSegmentation.h CallbackFunctions.h
+plugin_clearSegmentation.o: Protobuf.h Array1D.h Image3D.h
+plugin_clearSegmentation.o: ImageIO.h definitions.h protobuf_package.pb.h
+plugin_clearSegmentation.o: eigenvalue_eigenvector_3x3_matrix.h
+plugin_clearSegmentation.o: Image3D_util.h dt.h
+plugin_downsample.o: plugin_downsample.h CallbackFunctions.h ImageIO.h
+plugin_downsample.o: Image3D.h definitions.h protobuf_package.pb.h
+plugin_downsample.o: eigenvalue_eigenvector_3x3_matrix.h
+Image3D_util.o: Image3D_util.h Image3D.h CallbackFunctions.h
+Image3D_util.o: definitions.h protobuf_package.pb.h
+Image3D_util.o: eigenvalue_eigenvector_3x3_matrix.h
+ActiveContourSeed.o: ActiveContourSeed.h CallbackFunctions.h Array1D.h
+ActiveContourSeed.o: ImageIO.h definitions.h protobuf_package.pb.h
+ActiveContourSeed.o: eigenvalue_eigenvector_3x3_matrix.h
+ActiveContourSeed.o: Image3D_util.h dt.h Protobuf.h TextIO.h
+plugin_normalize.o: plugin_normalize.h CallbackFunctions.h ImageIO.h
+plugin_normalize.o: Image3D.h definitions.h protobuf_package.pb.h
+plugin_normalize.o: eigenvalue_eigenvector_3x3_matrix.h
+plugin_normalize.o: Image3D_util.h dt.h
+plugin_dummy.o: plugin_dummy.h CallbackFunctions.h ImageIO.h
+plugin_dummy.o: Image3D.h definitions.h protobuf_package.pb.h
+plugin_dummy.o: eigenvalue_eigenvector_3x3_matrix.h
+plugin_dummy.o: Image3D_util.h dt.h
+main.o: callback_binary.h definitions.h
+main.o: protobuf_package.pb.h
+main.o: ImageIO_binary.h ./tiffio.h tiff.h tiffconf.h tiffvers.h util.h
+main.o: TextIO.h TextIO_binary.h imageProcessingPlugins.h
+TextIO_binary.o: TextIO_binary.h TextIO.h CallbackFunctions.h
+TextIO_binary.o: protobuf_package.pb.h
+plugin_volume.o: plugin_volume.h TextIO.h CallbackFunctions.h
+plugin_volume.o: definitions.h protobuf_package.pb.h
+plugin_volume.o: eigenvalue_eigenvector_3x3_matrix.h
+plugin_volume.o: Image3D_util.h dt.h
+plugin_quantify.o: plugin_quantify.h ImageIO.h
+plugin_quantify.o: CallbackFunctions.h Protobuf.h Array1D.h Image3D.h
+plugin_quantify.o: definitions.h protobuf_package.pb.h
+plugin_quantify.o: eigenvalue_eigenvector_3x3_matrix.h
+plugin_quantify.o: Image3D_util.h dt.h
+eigenvalue_eigenvector_3x3_matrix.o: eigenvalue_eigenvector_3x3_matrix.h
+eigenvalue_eigenvector_3x3_matrix.o: definitions.h
+eigenvalue_eigenvector_3x3_matrix.o: protobuf_package.pb.h
+run.o: run.h TextIO_sharedLibrary.h util.h ImageIO_sharedLibrary.h
+run.o: imageProcessingPlugins.h gitVersion.h
+plugin_blur.o: plugin_blur.h CallbackFunctions.h ImageIO.h
+plugin_blur.o: definitions.h protobuf_package.pb.h
+plugin_blur.o: eigenvalue_eigenvector_3x3_matrix.h
+plugin_blur.o: Image3D_util.h dt.h
+plugin_imadjust.o: plugin_imadjust.h ImageIO.h
+plugin_imadjust.o: CallbackFunctions.h Image3D.h definitions.h
+plugin_imadjust.o: protobuf_package.pb.h
+plugin_imadjust.o: eigenvalue_eigenvector_3x3_matrix.h
+plugin_imadjust.o: Image3D_util.h dt.h Array1D.h
+Protobuf.o: Protobuf.h TextIO.h CallbackFunctions.h
+Protobuf.o: definitions.h protobuf_package.pb.h
+Protobuf.o: eigenvalue_eigenvector_3x3_matrix.h
+Protobuf.o: dt.h
+plugin_grabVideo.o: plugin_grabVideo.h util.h CallbackFunctions.h
+plugin_grabVideo.o: protobuf_package.pb.h
+plugin_grabVideo.o: ImageIO.h 
+plugin_grabVideo.o: eigenvalue_eigenvector_3x3_matrix.h
+ImageIO_binary.o: ImageIO_binary.h CallbackFunctions.h ./tiffio.h tiff.h
+ImageIO_binary.o: definitions.h protobuf_package.pb.h
+ImageIO_binary.o: util.h
+plugin_unaryOperation.o: plugin_unaryOperation.h CallbackFunctions.h
+plugin_unaryOperation.o: Image3D.h definitions.h protobuf_package.pb.h
+plugin_unaryOperation.o: eigenvalue_eigenvector_3x3_matrix.h
+plugin_protoToImage.o: plugin_protoToImage.h CallbackFunctions.h ImageIO.h
+plugin_protoToImage.o: Image3D.h definitions.h protobuf_package.pb.h
+plugin_protoToImage.o: eigenvalue_eigenvector_3x3_matrix.h
+plugin_protoToImage.o: TextIO.h Protobuf.h Array1D.h Image3D_util.h dt.h
+plugin_activeContours.o: plugin_activeContours.h ImageIO.h
+plugin_activeContours.o: CallbackFunctions.h Image3D.h definitions.h
+plugin_activeContours.o: protobuf_package.pb.h
+plugin_activeContours.o: eigenvalue_eigenvector_3x3_matrix.h
+plugin_activeContours.o: Protobuf.h TextIO.h Array1D.h Image3D_util.h dt.h
+plugin_activeContours.o: ActiveContourSeed.h
+plugin_rayTraceFiller.o: plugin_rayTraceFiller.h

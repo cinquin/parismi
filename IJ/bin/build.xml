@@ -1,0 +1,81 @@
+<!-- Ant makefile for ImageJ -->
+
+<project name="ImageJ" default="build">
+
+<path id="classpath">
+  <fileset dir="../">
+    <include name="pipeline_video.jar"/>
+  </fileset>
+</path>
+
+
+  <target name="compile" description="Compile everything.">
+    <!-- First, ensure the build directory exists. -->
+    <mkdir dir="../bin" />
+    <mkdir dir="../bin/pipeline/data/video" />
+    <copy todir="../bin/pipeline/data/video">
+	<fileset dir="../../A0PipeLine_Manager/bin/pipeline/data/video" />
+    </copy>
+    <!-- Build everything; add debug="on" to debug -->
+    <javac srcdir="." destdir="../bin" optimize="on" debug="on">
+      <!-- The plugins directory only needs to be 
+             present at runtime, not at build time. -->
+      <exclude name="plugins/**"/>
+      <classpath refid="classpath" />
+    </javac>
+  </target>
+  
+
+  <target name="build" depends="compile" description="Build ij.jar.">
+    <!-- Copy needed files into the build directory. -->
+    <copy file="IJ_Props.txt" todir="../bin" />
+    <!-- <copy file="rebel.xml" todir="build" /> -->
+    <copy file="images/microscope.gif" tofile="../bin//microscope.gif" />
+    <copy file="images/about.jpg" tofile="../bin//about.jpg" />
+	<copy file="plugins/MacAdapter.class" tofile="../bin/MacAdapter.class" /> 
+	<copy file="plugins/JavaScriptEvaluator.class" tofile="../bin/JavaScriptEvaluator.class" /> 
+    <copy todir="../bin//macros"><fileset dir="macros"/></copy>
+    <!-- Build ij.jar. -->
+    <jar jarfile="ij.jar" basedir="../bin"
+    	 manifest="MANIFEST.MF" />
+    <copy file="ij.jar" todir="../" />
+  </target>
+
+
+  <target name="clean" description="Delete the build files.">
+    <delete dir="build" />
+    <delete file="ij.jar" />
+  </target>
+
+
+  <target name="run" depends="build" description="Build and run ImageJ.">
+    <copy file="ij.jar" toDir=".." />
+    <java maxmemory="2g" jar="ij.jar" fork="yes" />
+  </target>
+    
+
+  <target name="zip" depends="clean" description="Build zrc.zip.">
+    <zip zipfile="../src.zip"
+       basedir=".."
+       includes="source/**"
+    />
+  </target>
+
+
+  <target name="javadocs" description="Build the JavaDocs.">
+    <delete dir="../api" />
+    <mkdir dir="../api" />
+    <javadoc 
+           sourcepath="."
+           packagenames="ij.*"
+           destdir="../api"
+           author="true"
+           version="true"
+           use="true"
+           windowtitle="ImageJ API">
+    </javadoc>
+  </target>
+  
+  
+   </project>
+

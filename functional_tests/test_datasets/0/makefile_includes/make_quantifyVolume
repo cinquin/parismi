@@ -1,0 +1,6 @@
+
+quantifyVolume = output/volume+topLayer+fluorescenceQuantification+pearsonEdU+segmentation.proto output/volume+topLayer+fluorescenceQuantification+pearsonEdU+segmentation.txt 
+
+.DELETE_ON_ERROR :
+%utput/volume+topLayer+fluorescenceQuantification+pearsonEdU+segmentation.proto %utput/volume+topLayer+fluorescenceQuantification+pearsonEdU+segmentation.txt : %utput/topLayer+fluorescenceQuantification+pearsonEdU+segmentation.proto tables/quantifyVolume.xml 
+	${PIPELINE_SINGLE} $(shell pwd)/tables/quantifyVolume.xml;

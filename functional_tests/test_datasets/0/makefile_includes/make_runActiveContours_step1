@@ -1,0 +1,6 @@
+
+runActiveContours_step1 = output/segmentation.proto output/segmentation.tif output/segmentation.txt 
+
+.DELETE_ON_ERROR :
+%utput/segmentation.proto %utput/segmentation.tif %utput/segmentation.txt : input/handSeeding.proto output/emptyImage.tif tables/runActiveContours_step1.xml 
+	${PIPELINE_SINGLE} $(shell pwd)/tables/runActiveContours_step1.xml;

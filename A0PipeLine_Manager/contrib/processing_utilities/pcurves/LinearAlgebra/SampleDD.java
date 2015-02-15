@@ -1,0 +1,36 @@
+package processing_utilities.pcurves.LinearAlgebra;
+
+import java.util.NoSuchElementException;
+import java.util.StringTokenizer;
+
+public class SampleDD extends SampleLoadable {
+	public SampleDD() {
+		super();
+	}
+
+	// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// abstract functions of SampleLoadable BEGIN
+	// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	@Override
+	final public Sample DefaultClone() {
+		return new SampleDD();
+	}
+
+	@Override
+	protected boolean AddPoint(StringTokenizer t) {
+		try {
+			VektorDD point = new VektorDD(t);
+			AddPoint(point);
+			return true;
+		}
+		// If wrong format, we just don't load it, and return false
+		catch (NoSuchElementException e1) {
+			return false;
+		} catch (NumberFormatException e) {
+			return false;
+		}
+	}
+	// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// abstract functions of SampleLoadable END
+	// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+}

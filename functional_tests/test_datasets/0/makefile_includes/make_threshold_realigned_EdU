@@ -1,0 +1,6 @@
+
+threshold_realigned_EdU = output/preprocessed_EdU.tif 
+
+.DELETE_ON_ERROR :
+$(threshold_realigned_EdU) : output/realigned_EdU.tif tables/userAdjusted/threshold_realigned_EdU.xml 
+	${PIPELINE_SINGLE} $(shell pwd)/tables/userAdjusted/threshold_realigned_EdU.xml;

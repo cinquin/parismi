@@ -1,0 +1,659 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PipelineMetadata>
+  <ProcessingSteps>
+    <Step0>
+      <PluginDescription>LazyCopy</PluginDescription>
+      <Sources>
+        <Source>
+          Default source
+          <Derivation>null</Derivation>
+        </Source>
+      </Sources>
+      <PluginVersion>1.0</PluginVersion>
+      <PluginHash />
+      <LastModificationTime>1364598140201</LastModificationTime>
+      <Column Index="0">&lt;int&gt;0&lt;/int&gt;</Column>
+      <Column Index="1">&lt;pipeline.parameters.RowOrFileTextReference&gt;
+  &lt;hasBeenSet&gt;false&lt;/hasBeenSet&gt;
+  &lt;dontPrintOutValueToExternalPrograms&gt;false&lt;/dontPrintOutValueToExternalPrograms&gt;
+  &lt;editable&gt;true&lt;/editable&gt;
+  &lt;userDisplayName&gt;&lt;/userDisplayName&gt;
+  &lt;explanation&gt;Image that this step uses as an input. Name of an open image, absolute reference to another row starting with a dollar (e.g. $2), or relative reference (e.g. -1 for the previous row)&lt;/explanation&gt;
+  &lt;pipelineCalled&gt;false&lt;/pipelineCalled&gt;
+  &lt;stillChanging&gt;false&lt;/stillChanging&gt;
+  &lt;timeLastChange&gt;-1&lt;/timeLastChange&gt;
+  &lt;timeLastResponseToChange&gt;-1&lt;/timeLastResponseToChange&gt;
+  &lt;semaphore/&gt;
+  &lt;displayIndex&gt;0&lt;/displayIndex&gt;
+  &lt;value&gt;../{0}/input/1_DAPI_GLP1.lsm&lt;/value&gt;
+&lt;/pipeline.parameters.RowOrFileTextReference&gt;</Column>
+      <Column Index="2">&lt;pipeline.parameters.MultiListParameter&gt;
+  &lt;hasBeenSet&gt;false&lt;/hasBeenSet&gt;
+  &lt;dontPrintOutValueToExternalPrograms&gt;false&lt;/dontPrintOutValueToExternalPrograms&gt;
+  &lt;editable&gt;true&lt;/editable&gt;
+  &lt;userDisplayName&gt;channels&lt;/userDisplayName&gt;
+  &lt;explanation&gt;Choose while channels to process&lt;/explanation&gt;
+  &lt;pipelineCalled&gt;false&lt;/pipelineCalled&gt;
+  &lt;stillChanging&gt;false&lt;/stillChanging&gt;
+  &lt;timeLastChange&gt;-1&lt;/timeLastChange&gt;
+  &lt;timeLastResponseToChange&gt;-1&lt;/timeLastResponseToChange&gt;
+  &lt;semaphore/&gt;
+  &lt;displayIndex&gt;0&lt;/displayIndex&gt;
+  &lt;choices&gt;
+    &lt;string&gt;Ch1&lt;/string&gt;
+    &lt;string&gt;Ch0&lt;/string&gt;
+  &lt;/choices&gt;
+  &lt;currentChoices&gt;
+    &lt;int&gt;0&lt;/int&gt;
+  &lt;/currentChoices&gt;
+&lt;/pipeline.parameters.MultiListParameter&gt;</Column>
+      <Column Index="3">&lt;boolean&gt;true&lt;/boolean&gt;</Column>
+      <Column Index="4">&lt;boolean&gt;true&lt;/boolean&gt;</Column>
+      <Column Index="5">&lt;boolean&gt;true&lt;/boolean&gt;</Column>
+      <Column Index="6">&lt;boolean&gt;true&lt;/boolean&gt;</Column>
+      <Column Index="7">&lt;string&gt;LazyCopy&lt;/string&gt;</Column>
+      <Column Index="8">&lt;null/&gt;</Column>
+      <Column Index="9">&lt;null/&gt;</Column>
+      <Column Index="10">&lt;pipeline.parameters.RowOrFileTextReference&gt;
+  &lt;hasBeenSet&gt;false&lt;/hasBeenSet&gt;
+  &lt;dontPrintOutValueToExternalPrograms&gt;false&lt;/dontPrintOutValueToExternalPrograms&gt;
+  &lt;editable&gt;true&lt;/editable&gt;
+  &lt;userDisplayName&gt;&lt;/userDisplayName&gt;
+  &lt;explanation&gt;Image that this step uses as an output. Name of an open image, absolute reference to another row starting with a dollar (e.g. $2), or relative reference (e.g. -1 for the previous row)&lt;/explanation&gt;
+  &lt;pipelineCalled&gt;false&lt;/pipelineCalled&gt;
+  &lt;stillChanging&gt;false&lt;/stillChanging&gt;
+  &lt;timeLastChange&gt;-1&lt;/timeLastChange&gt;
+  &lt;timeLastResponseToChange&gt;-1&lt;/timeLastResponseToChange&gt;
+  &lt;semaphore/&gt;
+  &lt;displayIndex&gt;0&lt;/displayIndex&gt;
+  &lt;value&gt;&lt;/value&gt;
+&lt;/pipeline.parameters.RowOrFileTextReference&gt;</Column>
+      <Column Index="11">&lt;pipeline.parameters.TableParameter&gt;
+  &lt;hasBeenSet&gt;false&lt;/hasBeenSet&gt;
+  &lt;dontPrintOutValueToExternalPrograms&gt;false&lt;/dontPrintOutValueToExternalPrograms&gt;
+  &lt;editable&gt;true&lt;/editable&gt;
+  &lt;userDisplayName&gt;Output channels&lt;/userDisplayName&gt;
+  &lt;explanation&gt;Choose output channel names&lt;/explanation&gt;
+  &lt;pipelineCalled&gt;false&lt;/pipelineCalled&gt;
+  &lt;stillChanging&gt;false&lt;/stillChanging&gt;
+  &lt;timeLastChange&gt;-1&lt;/timeLastChange&gt;
+  &lt;timeLastResponseToChange&gt;-1&lt;/timeLastResponseToChange&gt;
+  &lt;semaphore/&gt;
+  &lt;displayIndex&gt;0&lt;/displayIndex&gt;
+  &lt;elements&gt;
+    &lt;string&gt;LazyCopy Ch1&lt;/string&gt;
+    &lt;string&gt;LazyCopy Ch0&lt;/string&gt;
+  &lt;/elements&gt;
+  &lt;currentChoices&gt;
+    &lt;int&gt;0&lt;/int&gt;
+  &lt;/currentChoices&gt;
+  &lt;hasBeenEdited&gt;false&lt;/hasBeenEdited&gt;
+  &lt;displayHorizontally&gt;false&lt;/displayHorizontally&gt;
+&lt;/pipeline.parameters.TableParameter&gt;</Column>
+      <Column Index="12">&lt;java.util.concurrent.atomic.AtomicBoolean&gt;
+  &lt;value&gt;1&lt;/value&gt;
+&lt;/java.util.concurrent.atomic.AtomicBoolean&gt;</Column>
+      <Column Index="13">&lt;java.util.concurrent.atomic.AtomicBoolean&gt;
+  &lt;value&gt;0&lt;/value&gt;
+&lt;/java.util.concurrent.atomic.AtomicBoolean&gt;</Column>
+      <Column Index="15">&lt;pipeline.parameters.TwoColumnTableParameter&gt;
+  &lt;hasBeenSet&gt;false&lt;/hasBeenSet&gt;
+  &lt;dontPrintOutValueToExternalPrograms&gt;false&lt;/dontPrintOutValueToExternalPrograms&gt;
+  &lt;editable&gt;true&lt;/editable&gt;
+  &lt;userDisplayName&gt;Auxiliary inputs&lt;/userDisplayName&gt;
+  &lt;explanation&gt;Auxiliary inputs; fill in corresponding rows; relative reference by default, $ for absolute reference&lt;/explanation&gt;
+  &lt;pipelineCalled&gt;false&lt;/pipelineCalled&gt;
+  &lt;stillChanging&gt;false&lt;/stillChanging&gt;
+  &lt;timeLastChange&gt;-1&lt;/timeLastChange&gt;
+  &lt;timeLastResponseToChange&gt;-1&lt;/timeLastResponseToChange&gt;
+  &lt;semaphore/&gt;
+  &lt;displayIndex&gt;0&lt;/displayIndex&gt;
+  &lt;firstColumn class="string-array"&gt;
+    &lt;string&gt;Aux 1&lt;/string&gt;
+    &lt;string&gt;Aux 2&lt;/string&gt;
+    &lt;string&gt;Aux 3&lt;/string&gt;
+    &lt;string&gt;Aux 4&lt;/string&gt;
+    &lt;string&gt;Aux 5&lt;/string&gt;
+  &lt;/firstColumn&gt;
+  &lt;secondColumn class="string-array"&gt;
+    &lt;null/&gt;
+    &lt;null/&gt;
+    &lt;null/&gt;
+    &lt;null/&gt;
+    &lt;null/&gt;
+  &lt;/secondColumn&gt;
+  &lt;hasBeenEdited&gt;false&lt;/hasBeenEdited&gt;
+&lt;/pipeline.parameters.TwoColumnTableParameter&gt;</Column>
+      <Column Index="16">&lt;pipeline.parameters.TableParameter&gt;
+  &lt;hasBeenSet&gt;false&lt;/hasBeenSet&gt;
+  &lt;dontPrintOutValueToExternalPrograms&gt;false&lt;/dontPrintOutValueToExternalPrograms&gt;
+  &lt;editable&gt;true&lt;/editable&gt;
+  &lt;userDisplayName&gt;Auxiliary inputs&lt;/userDisplayName&gt;
+  &lt;explanation&gt;Auxiliary inputs; fill in corresponding rows; relative reference by default, $ for absolute reference&lt;/explanation&gt;
+  &lt;pipelineCalled&gt;false&lt;/pipelineCalled&gt;
+  &lt;stillChanging&gt;false&lt;/stillChanging&gt;
+  &lt;timeLastChange&gt;-1&lt;/timeLastChange&gt;
+  &lt;timeLastResponseToChange&gt;-1&lt;/timeLastResponseToChange&gt;
+  &lt;semaphore/&gt;
+  &lt;displayIndex&gt;0&lt;/displayIndex&gt;
+  &lt;elements&gt;
+    &lt;string&gt;File name&lt;/string&gt;
+  &lt;/elements&gt;
+  &lt;hasBeenEdited&gt;false&lt;/hasBeenEdited&gt;
+  &lt;displayHorizontally&gt;false&lt;/displayHorizontally&gt;
+&lt;/pipeline.parameters.TableParameter&gt;</Column>
+      <Column Index="18">&lt;null/&gt;</Column>
+      <Column Index="19">&lt;java.util.concurrent.atomic.AtomicInteger&gt;
+  &lt;value&gt;0&lt;/value&gt;
+&lt;/java.util.concurrent.atomic.AtomicInteger&gt;</Column>
+      <Column Index="21">&lt;null/&gt;</Column>
+      <Column Index="22">&lt;null/&gt;</Column>
+      <Column Index="23">&lt;null/&gt;</Column>
+      <Column Index="24">&lt;null/&gt;</Column>
+      <Column Index="25">&lt;null/&gt;</Column>
+      <Column Index="26">&lt;null/&gt;</Column>
+      <Column Index="28">&lt;boolean&gt;false&lt;/boolean&gt;</Column>
+      <Column Index="29">&lt;null/&gt;</Column>
+      <Column Index="30">&lt;null/&gt;</Column>
+      <Column Index="31">&lt;null/&gt;</Column>
+      <Column Index="32">&lt;long&gt;1364598140201&lt;/long&gt;</Column>
+      <Column Index="33">&lt;null/&gt;</Column>
+    </Step0>
+    <Step1>
+      <PluginDescription>CropToNonZeroRegion</PluginDescription>
+      <Sources>
+        <Source>
+          Default source
+          <Derivation>De novo hyperstack creation</Derivation>
+        </Source>
+      </Sources>
+      <PluginVersion>1.0</PluginVersion>
+      <PluginHash />
+      <LastModificationTime>1364598141823</LastModificationTime>
+      <Column Index="0">&lt;int&gt;1&lt;/int&gt;</Column>
+      <Column Index="1">&lt;pipeline.parameters.RowOrFileTextReference&gt;
+  &lt;hasBeenSet&gt;false&lt;/hasBeenSet&gt;
+  &lt;dontPrintOutValueToExternalPrograms&gt;false&lt;/dontPrintOutValueToExternalPrograms&gt;
+  &lt;editable&gt;true&lt;/editable&gt;
+  &lt;userDisplayName&gt;&lt;/userDisplayName&gt;
+  &lt;explanation&gt;Image that this step uses as an input. Name of an open image, absolute reference to another row starting with a dollar (e.g. $2), or relative reference (e.g. -1 for the previous row)&lt;/explanation&gt;
+  &lt;pipelineCalled&gt;false&lt;/pipelineCalled&gt;
+  &lt;stillChanging&gt;false&lt;/stillChanging&gt;
+  &lt;timeLastChange&gt;-1&lt;/timeLastChange&gt;
+  &lt;timeLastResponseToChange&gt;-1&lt;/timeLastResponseToChange&gt;
+  &lt;semaphore/&gt;
+  &lt;displayIndex&gt;0&lt;/displayIndex&gt;
+  &lt;value&gt;-1&lt;/value&gt;
+&lt;/pipeline.parameters.RowOrFileTextReference&gt;</Column>
+      <Column Index="2">&lt;pipeline.parameters.MultiListParameter&gt;
+  &lt;hasBeenSet&gt;false&lt;/hasBeenSet&gt;
+  &lt;dontPrintOutValueToExternalPrograms&gt;false&lt;/dontPrintOutValueToExternalPrograms&gt;
+  &lt;editable&gt;true&lt;/editable&gt;
+  &lt;userDisplayName&gt;channels&lt;/userDisplayName&gt;
+  &lt;explanation&gt;Choose while channels to process&lt;/explanation&gt;
+  &lt;pipelineCalled&gt;false&lt;/pipelineCalled&gt;
+  &lt;stillChanging&gt;false&lt;/stillChanging&gt;
+  &lt;timeLastChange&gt;-1&lt;/timeLastChange&gt;
+  &lt;timeLastResponseToChange&gt;-1&lt;/timeLastResponseToChange&gt;
+  &lt;semaphore/&gt;
+  &lt;displayIndex&gt;0&lt;/displayIndex&gt;
+  &lt;choices&gt;
+    &lt;string&gt;Ch1&lt;/string&gt;
+    &lt;string&gt;Ch0&lt;/string&gt;
+  &lt;/choices&gt;
+  &lt;currentChoices&gt;
+    &lt;int&gt;0&lt;/int&gt;
+  &lt;/currentChoices&gt;
+&lt;/pipeline.parameters.MultiListParameter&gt;</Column>
+      <Column Index="3">&lt;boolean&gt;true&lt;/boolean&gt;</Column>
+      <Column Index="4">&lt;boolean&gt;false&lt;/boolean&gt;</Column>
+      <Column Index="5">&lt;boolean&gt;true&lt;/boolean&gt;</Column>
+      <Column Index="6">&lt;boolean&gt;true&lt;/boolean&gt;</Column>
+      <Column Index="7">&lt;string&gt;CropToNonZeroRegion&lt;/string&gt;</Column>
+      <Column Index="8">&lt;null/&gt;</Column>
+      <Column Index="9">&lt;null/&gt;</Column>
+      <Column Index="10">&lt;pipeline.parameters.RowOrFileTextReference&gt;
+  &lt;hasBeenSet&gt;false&lt;/hasBeenSet&gt;
+  &lt;dontPrintOutValueToExternalPrograms&gt;false&lt;/dontPrintOutValueToExternalPrograms&gt;
+  &lt;editable&gt;true&lt;/editable&gt;
+  &lt;userDisplayName&gt;&lt;/userDisplayName&gt;
+  &lt;explanation&gt;Image that this step uses as an input. Name of an open image, absolute reference to another row starting with a dollar (e.g. $2), or relative reference (e.g. -1 for the previous row)&lt;/explanation&gt;
+  &lt;pipelineCalled&gt;false&lt;/pipelineCalled&gt;
+  &lt;stillChanging&gt;false&lt;/stillChanging&gt;
+  &lt;timeLastChange&gt;-1&lt;/timeLastChange&gt;
+  &lt;timeLastResponseToChange&gt;-1&lt;/timeLastResponseToChange&gt;
+  &lt;semaphore/&gt;
+  &lt;displayIndex&gt;0&lt;/displayIndex&gt;
+  &lt;value&gt;&lt;/value&gt;
+&lt;/pipeline.parameters.RowOrFileTextReference&gt;</Column>
+      <Column Index="11">&lt;pipeline.parameters.TableParameter&gt;
+  &lt;hasBeenSet&gt;false&lt;/hasBeenSet&gt;
+  &lt;dontPrintOutValueToExternalPrograms&gt;false&lt;/dontPrintOutValueToExternalPrograms&gt;
+  &lt;editable&gt;true&lt;/editable&gt;
+  &lt;userDisplayName&gt;Output channels&lt;/userDisplayName&gt;
+  &lt;explanation&gt;Choose output channel names&lt;/explanation&gt;
+  &lt;pipelineCalled&gt;false&lt;/pipelineCalled&gt;
+  &lt;stillChanging&gt;false&lt;/stillChanging&gt;
+  &lt;timeLastChange&gt;-1&lt;/timeLastChange&gt;
+  &lt;timeLastResponseToChange&gt;-1&lt;/timeLastResponseToChange&gt;
+  &lt;semaphore/&gt;
+  &lt;displayIndex&gt;0&lt;/displayIndex&gt;
+  &lt;elements&gt;
+    &lt;string&gt;CropToNonZeroRegion Ch1&lt;/string&gt;
+    &lt;string&gt;CropToNonZeroRegion Ch0&lt;/string&gt;
+  &lt;/elements&gt;
+  &lt;currentChoices&gt;
+    &lt;int&gt;0&lt;/int&gt;
+  &lt;/currentChoices&gt;
+  &lt;hasBeenEdited&gt;false&lt;/hasBeenEdited&gt;
+  &lt;displayHorizontally&gt;false&lt;/displayHorizontally&gt;
+&lt;/pipeline.parameters.TableParameter&gt;</Column>
+      <Column Index="12">&lt;java.util.concurrent.atomic.AtomicBoolean&gt;
+  &lt;value&gt;1&lt;/value&gt;
+&lt;/java.util.concurrent.atomic.AtomicBoolean&gt;</Column>
+      <Column Index="13">&lt;java.util.concurrent.atomic.AtomicBoolean&gt;
+  &lt;value&gt;0&lt;/value&gt;
+&lt;/java.util.concurrent.atomic.AtomicBoolean&gt;</Column>
+      <Column Index="15">&lt;pipeline.parameters.TwoColumnTableParameter&gt;
+  &lt;hasBeenSet&gt;false&lt;/hasBeenSet&gt;
+  &lt;dontPrintOutValueToExternalPrograms&gt;false&lt;/dontPrintOutValueToExternalPrograms&gt;
+  &lt;editable&gt;true&lt;/editable&gt;
+  &lt;userDisplayName&gt;Auxiliary inputs&lt;/userDisplayName&gt;
+  &lt;explanation&gt;Auxiliary inputs; fill in corresponding rows; relative reference by default, $ for absolute reference&lt;/explanation&gt;
+  &lt;pipelineCalled&gt;false&lt;/pipelineCalled&gt;
+  &lt;stillChanging&gt;false&lt;/stillChanging&gt;
+  &lt;timeLastChange&gt;-1&lt;/timeLastChange&gt;
+  &lt;timeLastResponseToChange&gt;-1&lt;/timeLastResponseToChange&gt;
+  &lt;semaphore/&gt;
+  &lt;displayIndex&gt;0&lt;/displayIndex&gt;
+  &lt;firstColumn class="string-array"&gt;
+    &lt;string&gt;Aux 1&lt;/string&gt;
+    &lt;string&gt;Aux 2&lt;/string&gt;
+    &lt;string&gt;Aux 3&lt;/string&gt;
+    &lt;string&gt;Aux 4&lt;/string&gt;
+    &lt;string&gt;Aux 5&lt;/string&gt;
+  &lt;/firstColumn&gt;
+  &lt;secondColumn class="string-array"&gt;
+    &lt;null/&gt;
+    &lt;null/&gt;
+    &lt;null/&gt;
+    &lt;null/&gt;
+    &lt;null/&gt;
+  &lt;/secondColumn&gt;
+  &lt;hasBeenEdited&gt;false&lt;/hasBeenEdited&gt;
+&lt;/pipeline.parameters.TwoColumnTableParameter&gt;</Column>
+      <Column Index="16">&lt;pipeline.parameters.TableParameter&gt;
+  &lt;hasBeenSet&gt;false&lt;/hasBeenSet&gt;
+  &lt;dontPrintOutValueToExternalPrograms&gt;false&lt;/dontPrintOutValueToExternalPrograms&gt;
+  &lt;editable&gt;true&lt;/editable&gt;
+  &lt;userDisplayName&gt;Auxiliary inputs&lt;/userDisplayName&gt;
+  &lt;explanation&gt;Auxiliary inputs; fill in corresponding rows; relative reference by default, $ for absolute reference&lt;/explanation&gt;
+  &lt;pipelineCalled&gt;false&lt;/pipelineCalled&gt;
+  &lt;stillChanging&gt;false&lt;/stillChanging&gt;
+  &lt;timeLastChange&gt;-1&lt;/timeLastChange&gt;
+  &lt;timeLastResponseToChange&gt;-1&lt;/timeLastResponseToChange&gt;
+  &lt;semaphore/&gt;
+  &lt;displayIndex&gt;0&lt;/displayIndex&gt;
+  &lt;hasBeenEdited&gt;false&lt;/hasBeenEdited&gt;
+  &lt;displayHorizontally&gt;false&lt;/displayHorizontally&gt;
+&lt;/pipeline.parameters.TableParameter&gt;</Column>
+      <Column Index="18">&lt;null/&gt;</Column>
+      <Column Index="19">&lt;java.util.concurrent.atomic.AtomicInteger&gt;
+  &lt;value&gt;0&lt;/value&gt;
+&lt;/java.util.concurrent.atomic.AtomicInteger&gt;</Column>
+      <Column Index="21">&lt;null/&gt;</Column>
+      <Column Index="22">&lt;int&gt;20&lt;/int&gt;</Column>
+      <Column Index="23">&lt;null/&gt;</Column>
+      <Column Index="24">&lt;null/&gt;</Column>
+      <Column Index="25">&lt;null/&gt;</Column>
+      <Column Index="26">&lt;null/&gt;</Column>
+      <Column Index="28">&lt;boolean&gt;false&lt;/boolean&gt;</Column>
+      <Column Index="29">&lt;null/&gt;</Column>
+      <Column Index="30">&lt;null/&gt;</Column>
+      <Column Index="31">&lt;null/&gt;</Column>
+      <Column Index="32">&lt;long&gt;1364598141823&lt;/long&gt;</Column>
+      <Column Index="33">&lt;null/&gt;</Column>
+    </Step1>
+    <Step2>
+      <PluginDescription>C helper for normalizing</PluginDescription>
+      <Sources>
+        <Source>
+          Default source
+          <Derivation>De novo hyperstack creation</Derivation>
+        </Source>
+      </Sources>
+      <PluginVersion>1.0</PluginVersion>
+      <PluginHash />
+      <LastModificationTime>1364598143705</LastModificationTime>
+      <Column Index="0">&lt;int&gt;2&lt;/int&gt;</Column>
+      <Column Index="1">&lt;pipeline.parameters.RowOrFileTextReference&gt;
+  &lt;hasBeenSet&gt;false&lt;/hasBeenSet&gt;
+  &lt;dontPrintOutValueToExternalPrograms&gt;false&lt;/dontPrintOutValueToExternalPrograms&gt;
+  &lt;editable&gt;true&lt;/editable&gt;
+  &lt;userDisplayName&gt;&lt;/userDisplayName&gt;
+  &lt;explanation&gt;Image that this step uses as an input. Name of an open image, absolute reference to another row starting with a dollar (e.g. $2), or relative reference (e.g. -1 for the previous row)&lt;/explanation&gt;
+  &lt;pipelineCalled&gt;false&lt;/pipelineCalled&gt;
+  &lt;stillChanging&gt;false&lt;/stillChanging&gt;
+  &lt;timeLastChange&gt;-1&lt;/timeLastChange&gt;
+  &lt;timeLastResponseToChange&gt;-1&lt;/timeLastResponseToChange&gt;
+  &lt;semaphore/&gt;
+  &lt;displayIndex&gt;0&lt;/displayIndex&gt;
+  &lt;value&gt;-1&lt;/value&gt;
+&lt;/pipeline.parameters.RowOrFileTextReference&gt;</Column>
+      <Column Index="2">&lt;pipeline.parameters.MultiListParameter&gt;
+  &lt;hasBeenSet&gt;false&lt;/hasBeenSet&gt;
+  &lt;dontPrintOutValueToExternalPrograms&gt;false&lt;/dontPrintOutValueToExternalPrograms&gt;
+  &lt;editable&gt;true&lt;/editable&gt;
+  &lt;userDisplayName&gt;channels&lt;/userDisplayName&gt;
+  &lt;explanation&gt;Choose while channels to process&lt;/explanation&gt;
+  &lt;pipelineCalled&gt;false&lt;/pipelineCalled&gt;
+  &lt;stillChanging&gt;false&lt;/stillChanging&gt;
+  &lt;timeLastChange&gt;-1&lt;/timeLastChange&gt;
+  &lt;timeLastResponseToChange&gt;-1&lt;/timeLastResponseToChange&gt;
+  &lt;semaphore/&gt;
+  &lt;displayIndex&gt;0&lt;/displayIndex&gt;
+  &lt;choices&gt;
+    &lt;string&gt;Ch1&lt;/string&gt;
+    &lt;string&gt;Ch0&lt;/string&gt;
+  &lt;/choices&gt;
+  &lt;currentChoices&gt;
+    &lt;int&gt;0&lt;/int&gt;
+  &lt;/currentChoices&gt;
+&lt;/pipeline.parameters.MultiListParameter&gt;</Column>
+      <Column Index="3">&lt;boolean&gt;true&lt;/boolean&gt;</Column>
+      <Column Index="4">&lt;boolean&gt;false&lt;/boolean&gt;</Column>
+      <Column Index="5">&lt;boolean&gt;true&lt;/boolean&gt;</Column>
+      <Column Index="6">&lt;boolean&gt;true&lt;/boolean&gt;</Column>
+      <Column Index="7">&lt;string&gt;CNormalizeLibraryCall&lt;/string&gt;</Column>
+      <Column Index="8">&lt;null/&gt;</Column>
+      <Column Index="9">&lt;null/&gt;</Column>
+      <Column Index="10">&lt;pipeline.parameters.RowOrFileTextReference&gt;
+  &lt;hasBeenSet&gt;false&lt;/hasBeenSet&gt;
+  &lt;dontPrintOutValueToExternalPrograms&gt;false&lt;/dontPrintOutValueToExternalPrograms&gt;
+  &lt;editable&gt;true&lt;/editable&gt;
+  &lt;userDisplayName&gt;&lt;/userDisplayName&gt;
+  &lt;explanation&gt;Image that this step uses as an input. Name of an open image, absolute reference to another row starting with a dollar (e.g. $2), or relative reference (e.g. -1 for the previous row)&lt;/explanation&gt;
+  &lt;pipelineCalled&gt;false&lt;/pipelineCalled&gt;
+  &lt;stillChanging&gt;false&lt;/stillChanging&gt;
+  &lt;timeLastChange&gt;-1&lt;/timeLastChange&gt;
+  &lt;timeLastResponseToChange&gt;-1&lt;/timeLastResponseToChange&gt;
+  &lt;semaphore/&gt;
+  &lt;displayIndex&gt;0&lt;/displayIndex&gt;
+  &lt;value&gt;&lt;/value&gt;
+&lt;/pipeline.parameters.RowOrFileTextReference&gt;</Column>
+      <Column Index="11">&lt;pipeline.parameters.TableParameter&gt;
+  &lt;hasBeenSet&gt;false&lt;/hasBeenSet&gt;
+  &lt;dontPrintOutValueToExternalPrograms&gt;false&lt;/dontPrintOutValueToExternalPrograms&gt;
+  &lt;editable&gt;true&lt;/editable&gt;
+  &lt;userDisplayName&gt;Output channels&lt;/userDisplayName&gt;
+  &lt;explanation&gt;Choose output channel names&lt;/explanation&gt;
+  &lt;pipelineCalled&gt;false&lt;/pipelineCalled&gt;
+  &lt;stillChanging&gt;false&lt;/stillChanging&gt;
+  &lt;timeLastChange&gt;-1&lt;/timeLastChange&gt;
+  &lt;timeLastResponseToChange&gt;-1&lt;/timeLastResponseToChange&gt;
+  &lt;semaphore/&gt;
+  &lt;displayIndex&gt;0&lt;/displayIndex&gt;
+  &lt;elements&gt;
+    &lt;string&gt;CNormalizeLibraryCall Ch1&lt;/string&gt;
+    &lt;string&gt;CNormalizeLibraryCall Ch0&lt;/string&gt;
+  &lt;/elements&gt;
+  &lt;currentChoices&gt;
+    &lt;int&gt;0&lt;/int&gt;
+  &lt;/currentChoices&gt;
+  &lt;hasBeenEdited&gt;false&lt;/hasBeenEdited&gt;
+  &lt;displayHorizontally&gt;false&lt;/displayHorizontally&gt;
+&lt;/pipeline.parameters.TableParameter&gt;</Column>
+      <Column Index="12">&lt;java.util.concurrent.atomic.AtomicBoolean&gt;
+  &lt;value&gt;1&lt;/value&gt;
+&lt;/java.util.concurrent.atomic.AtomicBoolean&gt;</Column>
+      <Column Index="13">&lt;java.util.concurrent.atomic.AtomicBoolean&gt;
+  &lt;value&gt;0&lt;/value&gt;
+&lt;/java.util.concurrent.atomic.AtomicBoolean&gt;</Column>
+      <Column Index="15">&lt;pipeline.parameters.TwoColumnTableParameter&gt;
+  &lt;hasBeenSet&gt;false&lt;/hasBeenSet&gt;
+  &lt;dontPrintOutValueToExternalPrograms&gt;false&lt;/dontPrintOutValueToExternalPrograms&gt;
+  &lt;editable&gt;true&lt;/editable&gt;
+  &lt;userDisplayName&gt;Auxiliary inputs&lt;/userDisplayName&gt;
+  &lt;explanation&gt;Auxiliary inputs; fill in corresponding rows; relative reference by default, $ for absolute reference&lt;/explanation&gt;
+  &lt;pipelineCalled&gt;false&lt;/pipelineCalled&gt;
+  &lt;stillChanging&gt;false&lt;/stillChanging&gt;
+  &lt;timeLastChange&gt;-1&lt;/timeLastChange&gt;
+  &lt;timeLastResponseToChange&gt;-1&lt;/timeLastResponseToChange&gt;
+  &lt;semaphore/&gt;
+  &lt;displayIndex&gt;0&lt;/displayIndex&gt;
+  &lt;firstColumn class="string-array"/&gt;
+  &lt;secondColumn class="string-array"/&gt;
+  &lt;hasBeenEdited&gt;false&lt;/hasBeenEdited&gt;
+&lt;/pipeline.parameters.TwoColumnTableParameter&gt;</Column>
+      <Column Index="16">&lt;pipeline.parameters.TableParameter&gt;
+  &lt;hasBeenSet&gt;false&lt;/hasBeenSet&gt;
+  &lt;dontPrintOutValueToExternalPrograms&gt;false&lt;/dontPrintOutValueToExternalPrograms&gt;
+  &lt;editable&gt;true&lt;/editable&gt;
+  &lt;userDisplayName&gt;Auxiliary inputs&lt;/userDisplayName&gt;
+  &lt;explanation&gt;Auxiliary inputs; fill in corresponding rows; relative reference by default, $ for absolute reference&lt;/explanation&gt;
+  &lt;pipelineCalled&gt;false&lt;/pipelineCalled&gt;
+  &lt;stillChanging&gt;false&lt;/stillChanging&gt;
+  &lt;timeLastChange&gt;-1&lt;/timeLastChange&gt;
+  &lt;timeLastResponseToChange&gt;-1&lt;/timeLastResponseToChange&gt;
+  &lt;semaphore/&gt;
+  &lt;displayIndex&gt;0&lt;/displayIndex&gt;
+  &lt;elements/&gt;
+  &lt;hasBeenEdited&gt;false&lt;/hasBeenEdited&gt;
+  &lt;displayHorizontally&gt;false&lt;/displayHorizontally&gt;
+&lt;/pipeline.parameters.TableParameter&gt;</Column>
+      <Column Index="18">&lt;null/&gt;</Column>
+      <Column Index="19">&lt;java.util.concurrent.atomic.AtomicInteger&gt;
+  &lt;value&gt;0&lt;/value&gt;
+&lt;/java.util.concurrent.atomic.AtomicInteger&gt;</Column>
+      <Column Index="21">&lt;null/&gt;</Column>
+      <Column Index="22">&lt;int&gt;20&lt;/int&gt;</Column>
+      <Column Index="23">&lt;null/&gt;</Column>
+      <Column Index="24">&lt;null/&gt;</Column>
+      <Column Index="25">&lt;null/&gt;</Column>
+      <Column Index="26">&lt;null/&gt;</Column>
+      <Column Index="28">&lt;boolean&gt;false&lt;/boolean&gt;</Column>
+      <Column Index="30">&lt;null/&gt;</Column>
+      <Column Index="31">&lt;null/&gt;</Column>
+      <Column Index="32">&lt;long&gt;1364598143705&lt;/long&gt;</Column>
+      <Column Index="33">&lt;null/&gt;</Column>
+    </Step2>
+    <Step3>
+      <PluginDescription>SaveHyperstackToTIFFQQQ</PluginDescription>
+      <Sources>
+        <Source>
+          Default source
+          <Derivation>De novo hyperstack creation</Derivation>
+        </Source>
+      </Sources>
+      <PluginVersion>1.0</PluginVersion>
+      <PluginHash />
+      <LastModificationTime>1364598146052</LastModificationTime>
+      <Column Index="0">&lt;int&gt;3&lt;/int&gt;</Column>
+      <Column Index="1">&lt;pipeline.parameters.RowOrFileTextReference&gt;
+  &lt;hasBeenSet&gt;false&lt;/hasBeenSet&gt;
+  &lt;dontPrintOutValueToExternalPrograms&gt;false&lt;/dontPrintOutValueToExternalPrograms&gt;
+  &lt;editable&gt;true&lt;/editable&gt;
+  &lt;userDisplayName&gt;&lt;/userDisplayName&gt;
+  &lt;explanation&gt;Image that this step uses as an input. Name of an open image, absolute reference to another row starting with a dollar (e.g. $2), or relative reference (e.g. -1 for the previous row)&lt;/explanation&gt;
+  &lt;pipelineCalled&gt;false&lt;/pipelineCalled&gt;
+  &lt;stillChanging&gt;false&lt;/stillChanging&gt;
+  &lt;timeLastChange&gt;-1&lt;/timeLastChange&gt;
+  &lt;timeLastResponseToChange&gt;-1&lt;/timeLastResponseToChange&gt;
+  &lt;semaphore/&gt;
+  &lt;displayIndex&gt;0&lt;/displayIndex&gt;
+  &lt;value&gt;-1&lt;/value&gt;
+&lt;/pipeline.parameters.RowOrFileTextReference&gt;</Column>
+      <Column Index="2">&lt;pipeline.parameters.MultiListParameter&gt;
+  &lt;hasBeenSet&gt;false&lt;/hasBeenSet&gt;
+  &lt;dontPrintOutValueToExternalPrograms&gt;false&lt;/dontPrintOutValueToExternalPrograms&gt;
+  &lt;editable&gt;true&lt;/editable&gt;
+  &lt;userDisplayName&gt;channels&lt;/userDisplayName&gt;
+  &lt;explanation&gt;Choose while channels to process&lt;/explanation&gt;
+  &lt;pipelineCalled&gt;false&lt;/pipelineCalled&gt;
+  &lt;stillChanging&gt;false&lt;/stillChanging&gt;
+  &lt;timeLastChange&gt;-1&lt;/timeLastChange&gt;
+  &lt;timeLastResponseToChange&gt;-1&lt;/timeLastResponseToChange&gt;
+  &lt;semaphore/&gt;
+  &lt;displayIndex&gt;0&lt;/displayIndex&gt;
+  &lt;choices&gt;
+    &lt;string&gt;CNormalizeLibraryCall Ch1&lt;/string&gt;
+  &lt;/choices&gt;
+  &lt;currentChoices&gt;
+    &lt;int&gt;0&lt;/int&gt;
+  &lt;/currentChoices&gt;
+&lt;/pipeline.parameters.MultiListParameter&gt;</Column>
+      <Column Index="3">&lt;boolean&gt;true&lt;/boolean&gt;</Column>
+      <Column Index="4">&lt;boolean&gt;false&lt;/boolean&gt;</Column>
+      <Column Index="5">&lt;boolean&gt;true&lt;/boolean&gt;</Column>
+      <Column Index="6">&lt;boolean&gt;true&lt;/boolean&gt;</Column>
+      <Column Index="7">&lt;string&gt;SaveHyperstackToTIFF&lt;/string&gt;</Column>
+      <Column Index="8">&lt;pipeline.parameters.BooleanParameter&gt;
+  &lt;hasBeenSet&gt;false&lt;/hasBeenSet&gt;
+  &lt;dontPrintOutValueToExternalPrograms&gt;false&lt;/dontPrintOutValueToExternalPrograms&gt;
+  &lt;editable&gt;true&lt;/editable&gt;
+  &lt;userDisplayName&gt;Move without copying&lt;/userDisplayName&gt;
+  &lt;explanation&gt;Does not copy the file if it has already been stored on disk by another plugin; this could lead to errors if other plugins try to access the stored file subsequently&lt;/explanation&gt;
+  &lt;pipelineCalled&gt;false&lt;/pipelineCalled&gt;
+  &lt;stillChanging&gt;false&lt;/stillChanging&gt;
+  &lt;timeLastChange&gt;-1&lt;/timeLastChange&gt;
+  &lt;timeLastResponseToChange&gt;-1&lt;/timeLastResponseToChange&gt;
+  &lt;semaphore/&gt;
+  &lt;displayIndex&gt;0&lt;/displayIndex&gt;
+  &lt;currentChoice&gt;false&lt;/currentChoice&gt;
+&lt;/pipeline.parameters.BooleanParameter&gt;</Column>
+      <Column Index="9">&lt;pipeline.parameters.SplitParameter&gt;
+  &lt;hasBeenSet&gt;false&lt;/hasBeenSet&gt;
+  &lt;dontPrintOutValueToExternalPrograms&gt;false&lt;/dontPrintOutValueToExternalPrograms&gt;
+  &lt;editable&gt;true&lt;/editable&gt;
+  &lt;pipelineCalled&gt;false&lt;/pipelineCalled&gt;
+  &lt;stillChanging&gt;false&lt;/stillChanging&gt;
+  &lt;timeLastChange&gt;-1&lt;/timeLastChange&gt;
+  &lt;timeLastResponseToChange&gt;-1&lt;/timeLastResponseToChange&gt;
+  &lt;semaphore/&gt;
+  &lt;displayIndex&gt;0&lt;/displayIndex&gt;
+  &lt;parameters&gt;
+    &lt;pipeline.parameters.FileNameParameter&gt;
+      &lt;hasBeenSet&gt;false&lt;/hasBeenSet&gt;
+      &lt;dontPrintOutValueToExternalPrograms&gt;false&lt;/dontPrintOutValueToExternalPrograms&gt;
+      &lt;editable&gt;true&lt;/editable&gt;
+      &lt;userDisplayName&gt;Save to file&lt;/userDisplayName&gt;
+      &lt;explanation&gt;Save to file&lt;/explanation&gt;
+      &lt;pipelineCalled&gt;false&lt;/pipelineCalled&gt;
+      &lt;stillChanging&gt;false&lt;/stillChanging&gt;
+      &lt;timeLastChange&gt;-1&lt;/timeLastChange&gt;
+      &lt;timeLastResponseToChange&gt;-1&lt;/timeLastResponseToChange&gt;
+      &lt;semaphore/&gt;
+      &lt;displayIndex&gt;0&lt;/displayIndex&gt;
+      &lt;value&gt;membrane.tif&lt;/value&gt;
+    &lt;/pipeline.parameters.FileNameParameter&gt;
+    &lt;pipeline.parameters.DirectoryParameter&gt;
+      &lt;hasBeenSet&gt;false&lt;/hasBeenSet&gt;
+      &lt;dontPrintOutValueToExternalPrograms&gt;false&lt;/dontPrintOutValueToExternalPrograms&gt;
+      &lt;editable&gt;true&lt;/editable&gt;
+      &lt;userDisplayName&gt;Save directory&lt;/userDisplayName&gt;
+      &lt;explanation&gt;Directory to save measurements in&lt;/explanation&gt;
+      &lt;pipelineCalled&gt;false&lt;/pipelineCalled&gt;
+      &lt;stillChanging&gt;false&lt;/stillChanging&gt;
+      &lt;timeLastChange&gt;-1&lt;/timeLastChange&gt;
+      &lt;timeLastResponseToChange&gt;-1&lt;/timeLastResponseToChange&gt;
+      &lt;semaphore/&gt;
+      &lt;displayIndex&gt;0&lt;/displayIndex&gt;
+      &lt;value&gt;../{0}/output/&lt;/value&gt;
+    &lt;/pipeline.parameters.DirectoryParameter&gt;
+  &lt;/parameters&gt;
+&lt;/pipeline.parameters.SplitParameter&gt;</Column>
+      <Column Index="10">&lt;pipeline.parameters.RowOrFileTextReference&gt;
+  &lt;hasBeenSet&gt;false&lt;/hasBeenSet&gt;
+  &lt;dontPrintOutValueToExternalPrograms&gt;false&lt;/dontPrintOutValueToExternalPrograms&gt;
+  &lt;editable&gt;true&lt;/editable&gt;
+  &lt;userDisplayName&gt;&lt;/userDisplayName&gt;
+  &lt;explanation&gt;Image that this step uses as an input. Name of an open image, absolute reference to another row starting with a dollar (e.g. $2), or relative reference (e.g. -1 for the previous row)&lt;/explanation&gt;
+  &lt;pipelineCalled&gt;false&lt;/pipelineCalled&gt;
+  &lt;stillChanging&gt;false&lt;/stillChanging&gt;
+  &lt;timeLastChange&gt;-1&lt;/timeLastChange&gt;
+  &lt;timeLastResponseToChange&gt;-1&lt;/timeLastResponseToChange&gt;
+  &lt;semaphore/&gt;
+  &lt;displayIndex&gt;0&lt;/displayIndex&gt;
+  &lt;value&gt;&lt;/value&gt;
+&lt;/pipeline.parameters.RowOrFileTextReference&gt;</Column>
+      <Column Index="11">&lt;pipeline.parameters.TableParameter&gt;
+  &lt;hasBeenSet&gt;false&lt;/hasBeenSet&gt;
+  &lt;dontPrintOutValueToExternalPrograms&gt;false&lt;/dontPrintOutValueToExternalPrograms&gt;
+  &lt;editable&gt;true&lt;/editable&gt;
+  &lt;userDisplayName&gt;Output channels&lt;/userDisplayName&gt;
+  &lt;explanation&gt;Choose output channel names&lt;/explanation&gt;
+  &lt;pipelineCalled&gt;false&lt;/pipelineCalled&gt;
+  &lt;stillChanging&gt;false&lt;/stillChanging&gt;
+  &lt;timeLastChange&gt;-1&lt;/timeLastChange&gt;
+  &lt;timeLastResponseToChange&gt;-1&lt;/timeLastResponseToChange&gt;
+  &lt;semaphore/&gt;
+  &lt;displayIndex&gt;0&lt;/displayIndex&gt;
+  &lt;elements&gt;
+    &lt;string&gt;SaveHyperstackToTIFF CNormalizeLibr&lt;/string&gt;
+  &lt;/elements&gt;
+  &lt;hasBeenEdited&gt;false&lt;/hasBeenEdited&gt;
+  &lt;displayHorizontally&gt;false&lt;/displayHorizontally&gt;
+&lt;/pipeline.parameters.TableParameter&gt;</Column>
+      <Column Index="12">&lt;java.util.concurrent.atomic.AtomicBoolean&gt;
+  &lt;value&gt;1&lt;/value&gt;
+&lt;/java.util.concurrent.atomic.AtomicBoolean&gt;</Column>
+      <Column Index="13">&lt;java.util.concurrent.atomic.AtomicBoolean&gt;
+  &lt;value&gt;0&lt;/value&gt;
+&lt;/java.util.concurrent.atomic.AtomicBoolean&gt;</Column>
+      <Column Index="15">&lt;pipeline.parameters.TwoColumnTableParameter&gt;
+  &lt;hasBeenSet&gt;false&lt;/hasBeenSet&gt;
+  &lt;dontPrintOutValueToExternalPrograms&gt;false&lt;/dontPrintOutValueToExternalPrograms&gt;
+  &lt;editable&gt;true&lt;/editable&gt;
+  &lt;userDisplayName&gt;Auxiliary inputs&lt;/userDisplayName&gt;
+  &lt;explanation&gt;Auxiliary inputs; fill in corresponding rows; relative reference by default, $ for absolute reference&lt;/explanation&gt;
+  &lt;pipelineCalled&gt;false&lt;/pipelineCalled&gt;
+  &lt;stillChanging&gt;false&lt;/stillChanging&gt;
+  &lt;timeLastChange&gt;-1&lt;/timeLastChange&gt;
+  &lt;timeLastResponseToChange&gt;-1&lt;/timeLastResponseToChange&gt;
+  &lt;semaphore/&gt;
+  &lt;displayIndex&gt;0&lt;/displayIndex&gt;
+  &lt;firstColumn class="string-array"&gt;
+    &lt;string&gt;File name&lt;/string&gt;
+  &lt;/firstColumn&gt;
+  &lt;secondColumn class="string-array"&gt;
+    &lt;string&gt;&lt;/string&gt;
+  &lt;/secondColumn&gt;
+  &lt;hasBeenEdited&gt;false&lt;/hasBeenEdited&gt;
+&lt;/pipeline.parameters.TwoColumnTableParameter&gt;</Column>
+      <Column Index="16">&lt;pipeline.parameters.TableParameter&gt;
+  &lt;hasBeenSet&gt;false&lt;/hasBeenSet&gt;
+  &lt;dontPrintOutValueToExternalPrograms&gt;false&lt;/dontPrintOutValueToExternalPrograms&gt;
+  &lt;editable&gt;true&lt;/editable&gt;
+  &lt;userDisplayName&gt;Auxiliary inputs&lt;/userDisplayName&gt;
+  &lt;explanation&gt;Auxiliary inputs; fill in corresponding rows; relative reference by default, $ for absolute reference&lt;/explanation&gt;
+  &lt;pipelineCalled&gt;false&lt;/pipelineCalled&gt;
+  &lt;stillChanging&gt;false&lt;/stillChanging&gt;
+  &lt;timeLastChange&gt;-1&lt;/timeLastChange&gt;
+  &lt;timeLastResponseToChange&gt;-1&lt;/timeLastResponseToChange&gt;
+  &lt;semaphore/&gt;
+  &lt;displayIndex&gt;0&lt;/displayIndex&gt;
+  &lt;hasBeenEdited&gt;false&lt;/hasBeenEdited&gt;
+  &lt;displayHorizontally&gt;false&lt;/displayHorizontally&gt;
+&lt;/pipeline.parameters.TableParameter&gt;</Column>
+      <Column Index="18">&lt;null/&gt;</Column>
+      <Column Index="19">&lt;java.util.concurrent.atomic.AtomicInteger&gt;
+  &lt;value&gt;0&lt;/value&gt;
+&lt;/java.util.concurrent.atomic.AtomicInteger&gt;</Column>
+      <Column Index="21">&lt;null/&gt;</Column>
+      <Column Index="22">&lt;int&gt;20&lt;/int&gt;</Column>
+      <Column Index="23">&lt;null/&gt;</Column>
+      <Column Index="24">&lt;null/&gt;</Column>
+      <Column Index="25">&lt;null/&gt;</Column>
+      <Column Index="26">&lt;null/&gt;</Column>
+      <Column Index="27">&lt;null/&gt;</Column>
+      <Column Index="28">&lt;boolean&gt;false&lt;/boolean&gt;</Column>
+      <Column Index="29">&lt;null/&gt;</Column>
+      <Column Index="30">&lt;null/&gt;</Column>
+      <Column Index="31">&lt;null/&gt;</Column>
+      <Column Index="32">&lt;long&gt;1364598146052&lt;/long&gt;</Column>
+      <Column Index="33">&lt;null/&gt;</Column>
+    </Step3>
+  </ProcessingSteps>
+</PipelineMetadata>
+
+

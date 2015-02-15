@@ -1,0 +1,7 @@
+
+quantifyFluorescence_step1 = output/fluorescenceQuantification+pearsonEdU+segmentation_step1.proto output/fluorescenceQuantification+pearsonEdU+segmentation_step1.txt 
+all : output/fluorescenceQuantification+pearsonEdU+segmentation_step1.proto
+
+.DELETE_ON_ERROR :
+%utput/fluorescenceQuantification+pearsonEdU+segmentation_step1.proto %utput/fluorescenceQuantification+pearsonEdU+segmentation_step1.txt : %utput/pearsonEdU+segmentation.proto output/DNA.tif tables/quantifyFluorescence_step1.xml 
+	${PIPELINE_SINGLE} $(shell pwd)/tables/quantifyFluorescence_step1.xml;

@@ -1,0 +1,7 @@
+
+extractSegmentation_DNA = output/individualSegmentations/DNA_*.tif 
+all : output/segmentation.proto
+
+.DELETE_ON_ERROR :
+output/individualSegmentations/DNA_*.tif : output/DNA.tif output/segmentation.proto tables/extractSegmentation_DNA.xml 
+	${PIPELINE_SINGLE} $(shell pwd)/tables/extractSegmentation_DNA.xml;

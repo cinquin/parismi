@@ -1,0 +1,6 @@
+
+processIndividualSegmentations_DNA = output/individualSegmentations/processed_DNA_*.tif 
+
+.DELETE_ON_ERROR :
+output/individualSegmentations/processed_DNA_*.tif : output/individualSegmentations/DNA_*.tif tables/processIndividualSegmentations_DNA.xml 
+	${PIPELINE_BATCH} $(shell pwd)/tables/processIndividualSegmentations_DNA.xml;

@@ -1,0 +1,6 @@
+
+splitChannels_emptyImage = output/emptyImage.tif 
+
+.DELETE_ON_ERROR :
+$(splitChannels_emptyImage) : input/1_EdU_DAO5.lsm tables/splitChannels_emptyImage.xml 
+	${PIPELINE_SINGLE} $(shell pwd)/tables/splitChannels_emptyImage.xml;

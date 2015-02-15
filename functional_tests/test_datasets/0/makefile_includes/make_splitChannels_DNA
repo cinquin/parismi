@@ -1,0 +1,6 @@
+
+splitChannels_DNA = output/DNA.tif 
+
+.DELETE_ON_ERROR :
+$(splitChannels_DNA) : input/1_DAPI_GLP1.lsm tables/splitChannels_DNA.xml 
+	${PIPELINE_SINGLE} $(shell pwd)/tables/splitChannels_DNA.xml;

@@ -1,0 +1,7 @@
+
+automaticSeeding = input/automaticSeeding.proto output/automaticSeeding.txt 
+all : output/DNA.tif
+
+.DELETE_ON_ERROR :
+%nput/automaticSeeding.proto %utput/automaticSeeding.txt : %utput/DNA.tif /Applications/bleeding_edge_ImageJ/matlab_interface/model.mat tables/userAdjusted/automaticSeeding.xml 
+	$(shell ${PIPELINE_SINGLE} `pwd`/tables/userAdjusted/automaticSeeding.xml || (echo "*** WARNING: skipping automatic seeding (missing Matlab install?)" && cp reference_output/automaticSeeding.txt output/automaticSeeding.txt) >&2)

@@ -1,0 +1,242 @@
+/*******************************************************************************
+ * Parismi v0.1
+ * Copyright (c) 2009-2015 Cinquin Lab.
+ * All rights reserved. This code is made available under a dual license:
+ * the two-clause BSD license or the GNU Public License v2.
+ ******************************************************************************/
+package pipeline.parameter_cell_views;
+
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.util.EventObject;
+
+import javax.swing.DefaultCellEditor;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.text.JTextComponent;
+
+import pipeline.GUI_utils.MultiRenderer;
+import pipeline.misc_util.Utils;
+import pipeline.misc_util.Utils.LogLevel;
+import pipeline.parameters.TwoColumnTableParameter;
+
+// TODO Restore selection from parameter; see how OneColumnJTable table does it
+public class TwoColumnJTable extends AbstractParameterCellView implements TableModelListener {
+	private static final long serialVersionUID = 1L;
+
+	private JTable localTable;
+	private Object[] firstColumn;
+	private Object[] secondColumn;
+
+	private TwoColumnTableParameter currentParameter;
+
+	@SuppressWarnings("unused")
+	private boolean silenceUpdate;
+
+	private class localJTable extends JTable {
+		private static final long serialVersionUID = 1L;
+
+		public localJTable(AbstractTableModel a) {
+			super(a);
+			// this.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
+		}
+
+		@Override
+		public Component prepareRenderer(TableCellRenderer renderer, int rowIndex, int vColIndex) {
+			Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);
+			if (!isCellSelected(rowIndex, vColIndex)) {
+				if (evenTableRow)
+					c.setBackground(new Color(255, 255, 200));
+				else
+					c.setBackground(new Color(230, 230, 255));
+			}
+			return c;
+		}
+
+		@Override
+		public Component prepareEditor(TableCellEditor editor, int row, int column) {
+			Component c = super.prepareEditor(editor, row, column);
+
+			// Do this to start editing cell contents straight away
+			if (c instanceof JTextComponent) {
+				((JTextComponent) c).selectAll();
+			}
+
+			return c;
+		}
+	}
+
+	private class MyTableModel extends AbstractTableModel {
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public int getColumnCount() {
+			if (currentParameter == null)
+				return 0;
+			return 2;
+		}
+
+		@Override
+		public int getRowCount() {
+			if (currentParameter == null)
+				return 0;
+			return firstColumn.length;
+		}
+
+		@Override
+		public Object getValueAt(int row, int col) {
+			if (currentParameter == null)
+				return null;
+			if (col == 0)
+				return firstColumn[row];
+			else
+				return secondColumn[row];
+		}
+
+		@Override
+		public boolean isCellEditable(int row, int col) {
+			return (col > 0);
+		}
+
+		@Override
+		public void setValueAt(Object value, int row, int col) {
+			if (currentParameter == null)
+				return;
+
+			if (col == 0) {
+				Utils.log("cannot set value of first column", LogLevel.VERBOSE_VERBOSE_VERBOSE_DEBUG);
+				return;
+			}
+
+			if (currentParameter.getPostProcessor() != null)
+				value = currentParameter.getPostProcessor().postProcess(value);
+
+			if (value != null && currentParameter.isEnforceUniqueEntries()) {
+				for (int r = 0; r < getRowCount(); r++) {
+					if (r == row)
+						continue;
+					if (value.equals(secondColumn[row]))
+						return;
+				}
+			}
+
+			secondColumn[row] = value;
+			fireTableCellUpdated(row, col);
+		}
+
+	}
+
+	public TwoColumnJTable() {
+		super();
+		setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.BOTH;
+		c.gridx = 0;
+		c.gridy = 0;
+		c.weighty = 1.0;
+		c.weightx = 1.0;
+		c.gridwidth = 1;
+
+		localTable = new localJTable(new MyTableModel());
+		localTable.setFillsViewportHeight(true);
+		localTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		localTable.setRowSelectionAllowed(false);
+
+		localTable.getModel().addTableModelListener(this);
+
+		MultiRenderer multiRenderer = new MultiRenderer();
+		MultiRenderer.fillMultiRendererWithSpreadSheet(multiRenderer);
+		DefaultCellEditor defaultEditor = new DefaultCellEditor(new JTextField());
+		multiRenderer.setDefaultEditor(defaultEditor);
+
+		MultiRenderer multiRenderer2 = new MultiRenderer();
+		MultiRenderer.fillMultiRendererWithSpreadSheet(multiRenderer2);
+
+		defaultEditor.setClickCountToStart(1);
+
+		localTable.setDefaultEditor(Object.class, multiRenderer);
+		localTable.setDefaultRenderer(Object.class, multiRenderer2);
+
+		add(localTable, c);
+
+	}
+
+	@Override
+	public void editingFinished() {
+		if (localTable != null && localTable.getCellEditor() != null)
+			localTable.getCellEditor().stopCellEditing();
+	}
+
+	@Override
+	public boolean shouldSelectCell(EventObject anEvent) {
+		return true;
+	}
+
+	@Override
+	public void tableChanged(TableModelEvent e) {
+	}
+
+	private boolean evenTableRow;
+
+	public Component getTableCellRendererOrEditorComponent(JTable table, Object value, boolean isSelected,
+			boolean hasFocus, int row, int column) {
+		currentParameter = (TwoColumnTableParameter) value;
+
+		evenTableRow = (row % 2 == 0);
+		setOpaque(true);
+		if (evenTableRow)
+			localTable.setBackground(Utils.COLOR_FOR_EVEN_ROWS);
+		else
+			localTable.setBackground(Utils.COLOR_FOR_ODD_ROWS);
+
+		silenceUpdate = true;
+
+		if (currentParameter != null) {
+			firstColumn = currentParameter.getFirstColumn();
+			secondColumn = currentParameter.getSecondColumn();
+		} else {
+			firstColumn = new String[0];
+			secondColumn = new String[0];
+		}
+
+		localTable.clearSelection();
+		((MyTableModel) localTable.getModel()).fireTableDataChanged();
+		localTable.createDefaultColumnsFromModel();
+
+		// TODO Restore selection from parameter; see how OneColumnJTable does it
+
+		int height_wanted = (int) getPreferredSize().getHeight();
+		if (table != null)
+			if (height_wanted > table.getRowHeight(row))
+				table.setRowHeight(row, height_wanted);
+
+		silenceUpdate = false;
+		return this;
+
+	}
+
+	@Override
+	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+			int row, int column) {
+		return getTableCellRendererOrEditorComponent(table, value, isSelected, hasFocus, row, column);
+	}
+
+	@Override
+	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+		return getTableCellRendererOrEditorComponent(table, value, isSelected, true, row, column);
+	}
+
+	@Override
+	public Object getCellEditorValue() {
+		return currentParameter;
+	}
+
+}

@@ -1,0 +1,16 @@
+obj = kdtree.o
+lib_a = libkdtree.a
+
+CC = gcc
+CFLAGS = -pedantic -Wall -g -O3 $(pic) $(opt) $(dbg) $(falloc) $(pthreads)
+LDFLAGS = $(ldpthread)
+
+.PHONY: all
+all: $(lib_a)
+
+$(lib_a): $(obj)
+	$(AR) rcs $@ $(obj)
+
+.PHONY: clean
+clean:
+	rm -f $(obj) $(lib_a)

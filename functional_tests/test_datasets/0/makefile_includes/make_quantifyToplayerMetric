@@ -1,0 +1,6 @@
+
+quantifyToplayerMetric = output/topLayer+fluorescenceQuantification+pearsonEdU+segmentation.proto output/topLayer+fluorescenceQuantification+pearsonEdU+segmentation.txt 
+
+.DELETE_ON_ERROR :
+%utput/topLayer+fluorescenceQuantification+pearsonEdU+segmentation.proto %utput/topLayer+fluorescenceQuantification+pearsonEdU+segmentation.txt : %utput/fluorescenceQuantification+pearsonEdU+segmentation.proto tables/quantifyToplayerMetric.xml 
+	${PIPELINE_SINGLE} $(shell pwd)/tables/quantifyToplayerMetric.xml;

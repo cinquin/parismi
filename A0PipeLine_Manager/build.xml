@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. --><project basedir="." default="jar" name="A0PipeLine_Manager">
+    <property environment="env"/>
+    <property name="IJ.location" value="../IJ"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.8"/>
+    <property name="source" value="1.8"/>
+    <import file="build-user.xml"/>
+    <path id="IJ.classpath">
+        <pathelement location="${IJ.location}/bin/"/>
+        <pathelement location="${IJ.location}/pipeline_video.jar"/>
+    </path>
+    <path id="A0PipeLine_Manager.classpath">
+        <pathelement location="bin"/>
+        <path refid="IJ.classpath"/>
+        <pathelement location="lib/xpp3_min-1.1.4c.jar"/>
+        <pathelement location="lib/swingx-1.6.1.jar"/>
+        <pathelement location="lib/guava-11.0.2.jar"/>
+        <pathelement location="lib/jna-4.0.0.jar"/>
+        <pathelement location="lib/kd.jar"/>
+        <pathelement location="lib/protobuf-java-2.4.1_PATCHED.jar"/>
+        <pathelement location="lib/org.eclipse.jdt.annotation_2.0.0.v20131221-0104_beta_java8.jar"/>
+        <pathelement location="lib/xstream-1.4.2.jar"/>
+        <pathelement location="lib/jfreechart-1.0.13.jar"/>
+        <pathelement location="lib/jgrapht-jdk1.6.jar"/>
+        <pathelement location="lib/miglayout-4.0.jar"/>
+        <pathelement location="lib/jdom-1.1.jar"/>
+        <pathelement location="lib/jcommon-1.0.16.jar"/>
+        <pathelement location="lib/jcommander-1.33-SNAPSHOT.jar"/>
+        <pathelement location="lib/portfolio.jar"/>
+        <pathelement location="lib/org.aspectj.runtime_1.7.3.20130613144500-a.jar"/>
+        <pathelement location="lib/commons-lang3-3.1.jar"/>
+        <pathelement location="lib/commons-math3-3.3.jar"/>
+    </path>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.launch"/>
+                <exclude name="**/*.java"/>
+                <exclude name="**/.DS_Store"/>
+            </fileset>
+        </copy>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="contrib">
+                <exclude name="**/*.launch"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+    <target depends="clean" name="cleanall">
+        <ant antfile="build.xml" dir="${IJ.location}" inheritAll="false" target="clean"/>
+    </target>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects">
+        <ant antfile="build.xml" dir="${IJ.location}" inheritAll="false" target="build-project">
+            <propertyset>
+                <propertyref name="build.compiler"/>
+            </propertyset>
+        </ant>
+    </target>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+            <src path="src"/>
+            <src path="contrib"/>
+            <exclude name="**/.DS_Store"/>
+            <exclude name="processing_utilities/curvature/features/"/>
+            <classpath refid="A0PipeLine_Manager.classpath"/>
+        </javac>
+    </target>
+    <target name="Standalone pipeline">
+        <java classname="pipeline.A0PipeLine_Manager" failonerror="true" fork="yes">
+            <jvmarg line="-ea"/>
+            <arg line="singleRun"/>
+            <classpath refid="A0PipeLine_Manager.classpath"/>
+        </java>
+    </target>
+</project>

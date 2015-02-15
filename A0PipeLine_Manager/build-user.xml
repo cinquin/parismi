@@ -1,0 +1,78 @@
+<?eclipse.ant.import?>
+<project name="A0PipeLine_Manager-user" default="" basedir=".">
+  <description>
+    A0PipeLine_Manager build file - custom changes
+  </description>
+  <property name="src" location="src" />
+  <property name="build" location="bin" />
+  <property name="dist"  location="dist" />
+  <property name="lib" location="lib" />
+  <property name="lib_unjarred" location="lib_unjarred" />
+  <property name="pluginsDir"  location="$basedir/../../IJ/plugins/" />
+  <property name="IJBase"  location="$basedir/../../IJ/" />
+
+    <target name="clean">
+        <delete dir="${lib_unjarred}"/>
+    </target>
+    	
+	<!--
+  <target name="main" depends="jar" description="Main target">
+  </target>
+	-->
+	
+  <target name="unjar_dependencies">
+ 	 <mkdir dir="${lib_unjarred}"/>
+     <unzip dest="${lib_unjarred}">
+         <fileset dir="${lib}">
+            <include name="**/*.jar" />
+  	      </fileset>
+    </unzip>
+  </target>
+	
+  <target name="copy_dependencies">
+	    <copy todir="${build}">
+        <fileset dir="${lib_unjarred}">
+        	<exclude name="**/.DS_Store" />
+        	<exclude name="**/*.RSA" />
+        	<exclude name="**/*.DSA" />
+        	<exclude name="**/*.SF" />
+            <include name="**/*" />
+  	        </fileset>    
+	     	 <fileset dir="${IJ.location}/bin">
+	     	 	<include name="**/*.class" />
+	     	 </fileset>
+    	</copy>
+  </target>
+
+  <target name="jar" depends="copy_dependencies,build-project" description="Generate the distribution">
+    <property name="builder.name" value="Daily Build" />
+    <property name="version.num" value="0.99"/>
+    <buildnumber file="build.num"/>
+    <tstamp>
+      <format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss" />
+    </tstamp>
+    
+    <manifest file="MANIFEST.MF" mode="update">
+      <attribute name="Built-By" value="${builder.name}"/>
+      <attribute name="Implementation-Version" 
+                 value="${version.num}-b${build.number}"/>
+      <attribute name="Built-Date" value="${TODAY}"/>
+      <attribute name="Main-Class" value="pipeline.A0PipeLine_Manager"/>
+    </manifest>
+  
+    <jar jarfile="A0PipeLine_Manager.jar" manifest="standalone_MANIFEST.MF">
+      <fileset dir="." includes="plugins.config"/>
+      <fileset dir="${build}" includes="**/*" excludes="**/.DS_Store" />
+      <fileset dir="." includes="rebel.xml" />
+    </jar>
+  	
+    <jar jarfile="pipeline_video.jar">
+      <fileset dir="${build}" includes="pipeline/data/video/*.class"/>
+      <fileset dir="." includes="rebel.xml" />
+    </jar>
+  	
+    <copy file="A0PipeLine_Manager.jar" toDir="${pluginsDir}" />
+  	<copy file="pipeline_video.jar" toDir="${IJBase}" />
+  </target>
+
+</project>

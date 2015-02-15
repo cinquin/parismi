@@ -1,0 +1,6 @@
+
+realignAutomatic_EdU = output/pearsonEdU+segmentation.proto output/realigned_EdU.tif 
+
+.DELETE_ON_ERROR :
+%utput/pearsonEdU+segmentation.proto %utput/realigned_EdU.tif : %utput/EdU.tif output/DNA.tif output/segmentation.proto tables/realignAutomatic_EdU.xml 
+	${PIPELINE_SINGLE} $(shell pwd)/tables/realignAutomatic_EdU.xml;

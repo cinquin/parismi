@@ -1,0 +1,2 @@
+PIPELINE_SINGLE = /usr/bin/time java -Xmx32G -server -jar ../../../IJ/plugins/A0PipeLine_Manager.jar singleRun
+PIPELINE_BATCH = /usr/bin/time java -Xmx32G -server -jar ../../../IJ/plugins/A0PipeLine_Manager.jar batch

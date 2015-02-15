@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. --><project basedir="." default="build" name="IJ">
+    <property environment="env"/>
+    <property name="A0PipeLine_Manager.location" value="../A0PipeLine_Manager"/>
+    <property name="build_files" value=""/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.7"/>
+    <property name="source" value="1.7"/>
+    <path id="IJ.classpath">
+        <pathelement location="bin"/>
+        <pathelement location="pipeline_video.jar"/>
+        <!-- <pathelement location="../../../../../Library/Java/JavaVirtualMachines/jdk1.7.0_45.jdk/Contents/Home/lib/tools.jar"/> -->
+	<pathelement location="tools.jar"/>
+    </path>
+    <path id="run.ImageJ with pipeline.bootclasspath">
+        <fileset dir="${java.home}/lib" includes="*.jar"/>
+        <fileset dir="${java.home}/lib/ext" includes="*.jar"/>
+    </path>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+	 <subant target="clean">
+              <fileset dir="." includes="*/build.xml"/>
+          </subant>
+    </target>
+    <target depends="clean" name="cleanall"/>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects"/>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <subant target="">
+              <fileset dir="." includes="*/build.xml"/>
+          </subant>
+    </target>
+    <target name="ImageJ with pipeline">
+        <java classname="ij.ImageJ" failonerror="true" fork="yes">
+            <jvmarg line="${build_files} -Xmx15500M -server"/>
+            <classpath refid="IJ.classpath"/>
+            <bootclasspath>
+                <path refid="run.ImageJ with pipeline.bootclasspath"/>
+            </bootclasspath>
+        </java>
+    </target>
+</project>

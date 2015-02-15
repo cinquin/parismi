@@ -1,0 +1,44 @@
+package protobuf_package;
+
+message ProtobufInfo {
+  repeated int32 image_fullseg_coords_y = 1 [packed = true];
+  repeated int32 image_fullseg_coords_x = 2 [packed = true];
+  repeated int32 image_fullseg_coords_z = 3 [packed = true];
+  repeated int32 image_perimseg_coords_y = 4 [packed = true];
+  repeated int32 image_perimseg_coords_x = 5 [packed = true];
+  repeated int32 image_perimseg_coords_z = 6 [packed = true];
+  repeated int32 image_userseg_coords_y = 7 [packed = true];
+  repeated int32 image_userseg_coords_x = 8 [packed = true];
+  repeated int32 image_userseg_coords_z = 9 [packed = true];
+  repeated float quantifiedProperties = 10; 
+  repeated float userCellValue = 11;
+  repeated string userCellFormula = 12;
+  optional float idx = 13;
+  optional float seed_y = 14;
+  optional float seed_x = 15;
+  optional float seed_z = 16;
+  optional float seed_manual = 17;
+  optional float contour_AddRemoveMerge = 18;
+  optional float contour_MergeGroup = 19;
+  optional float contour_WindowSize = 20;
+  optional float contour_Tmax = 21;
+  optional float contour_segmethod = 22;
+  optional float hand_validated = 23 [default = 1];
+  optional float seed_hsz = 24;
+  optional float seed_t1 = 25;
+  optional float seed_t2 = 26;
+  optional float seed_segmethod = 27;
+}
+
+message ProtobufDirectory {
+  repeated ProtobufInfo protobuf_info = 1;
+  repeated string userCellDescriptions= 2; 
+  repeated string quantifiedPropertyNames=3; 
+  optional float idx_max = 4 [default = 0];
+  optional float image_dimy = 5;
+  optional float image_dimx = 6;
+  optional float image_dimz = 7;
+  optional float x_micron_calibration = 8;
+  optional float y_micron_calibration = 9;
+  optional float z_micron_calibration = 10;
+}

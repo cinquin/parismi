@@ -1,0 +1,6 @@
+
+splitChannels_DAO5 = output/DAO5.tif 
+
+.DELETE_ON_ERROR :
+$(splitChannels_DAO5) : input/1_EdU_DAO5.lsm tables/splitChannels_DAO5.xml 
+	${PIPELINE_SINGLE} $(shell pwd)/tables/splitChannels_DAO5.xml;

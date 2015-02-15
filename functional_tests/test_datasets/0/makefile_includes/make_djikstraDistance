@@ -1,0 +1,7 @@
+
+djikstraDistance = output/djikstra+backbone+volume+topLayer+fluorescenceQuantification+pearsonEdU+segmentation.proto output/djikstra+backbone+volume+topLayer+fluorescenceQuantification+pearsonEdU+segmentation.txt 
+all : output/backbone+volume+topLayer+fluorescenceQuantification+pearsonEdU+segmentation.proto
+
+.DELETE_ON_ERROR :
+%utput/djikstra+backbone+volume+topLayer+fluorescenceQuantification+pearsonEdU+segmentation.proto %utput/djikstra+backbone+volume+topLayer+fluorescenceQuantification+pearsonEdU+segmentation.txt : output/backbone+volume+topLayer+fluorescenceQuantification+pearsonEdU+segmentation.proto tables/getDjikstraDistance.xml 
+	${PIPELINE_SINGLE} $(shell pwd)/tables/getDjikstraDistance.xml;

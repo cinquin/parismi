@@ -1,0 +1,4 @@
+#!/bin/bash
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+shift 2
+${DIR}/run_detect.sh /Applications/MATLAB/MATLAB_Compiler_Runtime/v84/ -d $@

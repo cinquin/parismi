@@ -1,0 +1,80 @@
+Information
+===========
+
+This package contains code used to train and test a cell detector on multi-page
+TIFF stacks. To train on your own dataset, you must modify two m-files. See the
+``Training'' section for details.
+
+For basic usage, see demo.m.
+
+
+How to use the code
+===================
+
+First, set up the code by starting Matlab and running the compile.m script.
+
+To use the training code on your own data, you must modify two files so that
+the training code is able to access the training data. This step is described
+in the ``Training'' section below. 
+
+See the file demo.m for basic usage.
+
+
+Training
+========
+
+The training code refers to TIFF stacks by number, i.e., by an index. Thus, the
+set of stacks which make up the training set is specified simply by a vector of
+integers (e.g., [1 2 3 5 12]). To train on your own data, you must tell the
+training code how to load those stacks and how to access the corresponding
+ground truth data for those stacks. To do this, you modify the following two
+files:
+
+  misc/loadstack.m
+  misc/loadinfo.m
+
+The first file, loadstack.m, is the interface which the training code uses to
+access the TIFF stacks. It takes a stack index as input and returns the
+corresponding stack, i.e., a 3D uint8 array. Read the comments in loadstack.m
+for more information.
+
+The second file, loadinfo.m, takes a stack index and returns a structure
+containing (1) ground truth seed points and (2) metadata for the corresponding
+stack. Read the comments and the code in loadinfo.m for more information.
+
+
+Settings/parameters
+===================
+
+The training code is controlled by a number of parameters, all of which are set
+in model_train.m. A small few are crucial, but the rest can usually be ignored.
+
+Because the ground truth annotation consists only of simple (x,y,z) seed
+locations, the user needs to supply to the training procedure a little bit of
+information about the cell dimensions. In particular, the user should provide
+(1) the size of the detection window, and (2) the range of scales to search
+over.
+
+  (1) The size of the detection window is controlled by the parameter 'dim',
+      which defaults to 48 pixels. The detection window should be large enough
+      to contain an average-sized cell, plus a bit of margin. For example, in
+      the C. elegans germline images we work with, the average cell is roughly
+      25 pixels in diameter in the XY plane, and so a 48x48-pixel detection
+      window works well.
+
+  (2) The scale range is controlled with the parameters 'minsc', 'maxsc', and
+      'numsc', which specify the minimum scale, maximum scale, and number of
+      scales to search over, respectively. For example, if the detection window
+      is 48x48 pixels, then setting minsc=0.5 and maxsc=2 will cause the
+      detector to search over sizes 24x24 up to 96x96.
+
+All of the more "esoteric" training parameters have good default settings, so
+they can usually be safely ignored.
+
+
+Acknowledgments
+===============
+
+Many files were adapted from Deva Ramanan's releaseDT package or voc-release5
+from Girshick et al. The getPrmDflt function was taken from Piotr's Image and
+Video Matlab Toolbox.

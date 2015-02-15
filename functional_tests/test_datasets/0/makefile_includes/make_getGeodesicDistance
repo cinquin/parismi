@@ -1,0 +1,7 @@
+
+getGeodesicDistance = output/backbone+volume+topLayer+fluorescenceQuantification+pearsonEdU+segmentation.proto output/backbone+volume+topLayer+fluorescenceQuantification+pearsonEdU+segmentation.txt 
+all : output/volume+topLayer+fluorescenceQuantification+pearsonEdU+segmentation.proto
+
+.DELETE_ON_ERROR :
+%utput/backbone+volume+topLayer+fluorescenceQuantification+pearsonEdU+segmentation.proto %utput/backbone+volume+topLayer+fluorescenceQuantification+pearsonEdU+segmentation.txt : output/volume+topLayer+fluorescenceQuantification+pearsonEdU+segmentation.proto tables/userAdjusted/getGeodesicDistance.xml 
+	${PIPELINE_SINGLE} $(shell pwd)/tables/userAdjusted/getGeodesicDistance.xml;
