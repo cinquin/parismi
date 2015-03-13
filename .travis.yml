@@ -2,3 +2,19 @@ language: java
 script: "cd A0PipeLine_Manager && ant"
 install: true
 jdk: oraclejdk8
+
+env:
+  global:
+   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+   #   via the "travis encrypt" command using the project repo's public key
+   - secure: "JaFFc57dKISXoqqMG7Ew/8fV4kOuXZIExoQPFdcS6U5mjqZwzyai5i1aSHiLPmvplLSitp5w5eI8KYC5MWenvGcCDBqKWJfXyFADji9Fv3aSLHHqzSEXaeUYrP+PSBanP0nDCb2foL419u14WrwOR7qINFkoQ1ZMI1XCaKNRJa0="
+
+addons:
+  coverity_scan:
+    project:
+      name: "cinquin/parismi"
+      description: "<Your project description here>"
+    notification_email: olivier.cinquin@uci.edu
+    build_command_prepend: "true"
+    build_command:   "cd A0PipeLine_Manager && ant"
+    branch_pattern: coverity_scan
