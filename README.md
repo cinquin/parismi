@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/cinquin/parismi.svg?branch=master)](https://travis-ci.org/cinquin/parismi)
+
 **General notes**
 
 We are releasing the code of our 3D image segmentation and cell cycle
