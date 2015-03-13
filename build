@@ -1,0 +1,2 @@
+#!/bin/sh
+cd A0PipeLine_Manager && ant

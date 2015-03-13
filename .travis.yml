@@ -16,5 +16,5 @@ addons:
       description: "<Your project description here>"
     notification_email: olivier.cinquin@uci.edu
     build_command_prepend: "true"
-    build_command:   "cd A0PipeLine_Manager && ant"
+    build_command:   "./build"
     branch_pattern: "*"
