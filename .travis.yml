@@ -1,0 +1,4 @@
+language: java
+script: "cd A0PipeLine_Manager && ant"
+install: true
+jdk: oraclejdk8
