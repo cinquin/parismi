@@ -17,4 +17,3 @@ addons:
     notification_email: olivier.cinquin@uci.edu
     build_command_prepend: "true"
     build_command:   "cd A0PipeLine_Manager && ant"
-    branch_pattern: coverity_scan
