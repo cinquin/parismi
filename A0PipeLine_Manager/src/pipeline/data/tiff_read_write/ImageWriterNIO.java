@@ -1,9 +1,7 @@
 package pipeline.data.tiff_read_write;
 
-import ij.IJ;
 import ij.VirtualStack;
 import ij.io.FileInfo;
-import ij.process.ImageProcessor;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -31,15 +29,14 @@ import pipeline.misc_util.parfor.ParFor;
  * In some tests, write throughput was 2-3x higher that ImageJ's native TIFF writer.
  * */
 class ImageWriterNIO {
-	private class BufferPair {
+	private static class BufferPair {
 		ByteBuffer byteBuffer;
 		Buffer typedBuffer;
 	}
 
 	private FileInfo fi;
-	private boolean showProgressBar = true;
 
-	private final int queueCapacity = 2;
+	private static final int queueCapacity = 2;
 	private BlockingDeque<BufferPair> freeBuffers = new LinkedBlockingDeque<BufferPair>(queueCapacity);
 	private BlockingQueue<BufferPair> pendingWrites = new ArrayBlockingQueue<>(queueCapacity, false);
 
@@ -168,12 +165,10 @@ class ImageWriterNIO {
 
 	}
 
-	private void showProgress(double progress) {
-		if (showProgressBar)
-			IJ.showProgress(progress);
-	}
-
+	@SuppressWarnings({ "static-method", "unused" })
 	void write8BitImage(byte[] pixels) throws IOException {
+		throw new RuntimeException("Unimplemented");
+		/*
 		int bytesWritten = 0;
 		int size = fi.width * fi.height;
 		int count = 8192;
@@ -186,18 +181,25 @@ class ImageWriterNIO {
 			bytesWritten += count;
 			showProgress((double) bytesWritten / size);
 		}
+		*/
 	}
 
+	@SuppressWarnings({ "static-method", "unused" })
 	void write8BitStack(Object[] stack) throws IOException {
+		throw new RuntimeException("Unimplemented");
+		/*
 		showProgressBar = false;
 		for (int i = 0; i < fi.nImages; i++) {
 			IJ.showStatus("Writing: " + (i + 1) + "/" + fi.nImages);
 			write8BitImage((byte[]) stack[i]);
 			IJ.showProgress((double) (i + 1) / fi.nImages);
-		}
+		} */
 	}
 
+	@SuppressWarnings({ "static-method", "unused" })
 	void write8BitVirtualStack(VirtualStack virtualStack) throws IOException {
+		throw new RuntimeException("Unimplemented");
+		/*
 		showProgressBar = false;
 		boolean flip = "FlipTheseImages".equals(fi.fileName);
 		for (int i = 1; i <= fi.nImages; i++) {
@@ -208,10 +210,13 @@ class ImageWriterNIO {
 			byte[] pixels = (byte[]) ip.getPixels();
 			write8BitImage(pixels);
 			IJ.showProgress((double) i / fi.nImages);
-		}
+		}*/
 	}
 
+	@SuppressWarnings({ "static-method", "unused" })
 	void write16BitImage(short[] pixels) throws IOException {
+		throw new RuntimeException("Unimplemented");
+		/*
 		int bytesWritten = 0;
 		int size = fi.width * fi.height * 2;
 		int count = 8192;
@@ -239,19 +244,26 @@ class ImageWriterNIO {
 			out.write(buffer, 0, count);
 			bytesWritten += count;
 			showProgress((double) bytesWritten / size);
-		}
+		} */
 	}
 
+	@SuppressWarnings({ "static-method", "unused" })
 	void write16BitStack(Object[] stack) throws IOException {
+		throw new RuntimeException("Unimplemented");
+		/*
 		showProgressBar = false;
 		for (int i = 0; i < fi.nImages; i++) {
 			IJ.showStatus("Writing: " + (i + 1) + "/" + fi.nImages);
 			write16BitImage((short[]) stack[i]);
 			IJ.showProgress((double) (i + 1) / fi.nImages);
 		}
+		*/
 	}
 
+	@SuppressWarnings({ "static-method", "unused" })
 	void write16BitVirtualStack(VirtualStack virtualStack) throws IOException {
+		throw new RuntimeException("Unimplemented");
+		/*
 		showProgressBar = false;
 		boolean flip = "FlipTheseImages".equals(fi.fileName);
 		for (int i = 1; i <= fi.nImages; i++) {
@@ -263,9 +275,13 @@ class ImageWriterNIO {
 			write16BitImage(pixels);
 			IJ.showProgress((double) i / fi.nImages);
 		}
+		*/
 	}
 
+	@SuppressWarnings({ "static-method", "unused" })
 	void writeRGB48Image(Object[] stack) throws IOException {
+		throw new RuntimeException("Unimplemented");
+		/*
 		short[] r = (short[]) stack[0];
 		short[] g = (short[]) stack[1];
 		short[] b = (short[]) stack[2];
@@ -304,12 +320,11 @@ class ImageWriterNIO {
 			}
 			out.write(buffer, 0, count);
 		}
+		*/
 	}
 
 	private int bytesPerPixel;
 	private int bufferSize;
-
-	private RandomAccessFile out;
 
 	/**
 	 * The caller is responsible for ensuring that buffer is of the right size, and that slices are
@@ -368,16 +383,22 @@ class ImageWriterNIO {
 		}
 	}
 
+	@SuppressWarnings({ "static-method", "unused" })
 	private void writeFloatStack(Object[] stack) throws InterruptedException, IOException {
+		throw new RuntimeException("Unimplemented");
+		/*
 		showProgressBar = false;
 		for (int i = 0; i < fi.nImages; i++) {
 			IJ.showStatus("Writing: " + (i + 1) + "/" + fi.nImages);
 			writeImage(stack[i]);
 			IJ.showProgress((double) (i + 1) / fi.nImages);
-		}
+		} */
 	}
 
+	@SuppressWarnings({ "static-method", "unused" })
 	private void writeFloatVirtualStack(VirtualStack virtualStack) throws InterruptedException, IOException {
+		throw new RuntimeException("Unimplemented");
+		/*
 		showProgressBar = false;
 		boolean flip = "FlipTheseImages".equals(fi.fileName);
 		for (int i = 1; i <= fi.nImages; i++) {
@@ -388,10 +409,13 @@ class ImageWriterNIO {
 			float[] pixels = (float[]) ip.getPixels();
 			writeImage(pixels);
 			IJ.showProgress((double) i / fi.nImages);
-		}
+		} */
 	}
 
+	@SuppressWarnings({ "static-method", "unused" })
 	void writeRGBImage(int[] pixels) throws IOException {
+		throw new RuntimeException("Unimplemented");
+		/*
 		int bytesWritten = 0;
 		int size = fi.width * fi.height * 3;
 		int count = fi.width * 24;
@@ -410,18 +434,25 @@ class ImageWriterNIO {
 			bytesWritten += count;
 			showProgress((double) bytesWritten / size);
 		}
+		*/
 	}
 
+	@SuppressWarnings({ "static-method", "unused" })
 	void writeRGBStack(Object[] stack) throws IOException {
+		throw new RuntimeException("Unimplemented");
+		/*
 		showProgressBar = false;
 		for (int i = 0; i < fi.nImages; i++) {
 			IJ.showStatus("Writing: " + (i + 1) + "/" + fi.nImages);
 			writeRGBImage((int[]) stack[i]);
 			IJ.showProgress((double) (i + 1) / fi.nImages);
-		}
+		} */
 	}
 
+	@SuppressWarnings({ "static-method", "unused" })
 	void writeRGBVirtualStack(VirtualStack virtualStack) throws IOException {
+		throw new RuntimeException("Unimplemented");
+		/*
 		showProgressBar = false;
 		boolean flip = "FlipTheseImages".equals(fi.fileName);
 		for (int i = 1; i <= fi.nImages; i++) {
@@ -432,7 +463,7 @@ class ImageWriterNIO {
 			int[] pixels = (int[]) ip.getPixels();
 			writeRGBImage(pixels);
 			IJ.showProgress((double) i / fi.nImages);
-		}
+		} */
 	}
 
 	/**

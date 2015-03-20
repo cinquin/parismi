@@ -230,7 +230,8 @@ public class SVMCellDetector extends ThreeDPlugin implements AuxiliaryInputOutpu
 		File tempDirectoryFile = new File(tempDirectory);
 		if (!local)
 			try {
-				Files.createDirectories(Paths.get(tempDirectory)).toFile().setWritable(true, false);
+				if (!Files.createDirectories(Paths.get(tempDirectory)).toFile().setWritable(true, false))
+					throw new RuntimeException("Permissions problem");
 			} catch (IOException e2) {
 				throw new PluginRuntimeException("Could not create or set permissions on ~/parismiTempFiles/", e2, true);
 			}
@@ -261,8 +262,10 @@ public class SVMCellDetector extends ThreeDPlugin implements AuxiliaryInputOutpu
 					textListFile = File.createTempFile("list_of_cells", ".txt");
 				} else {
 					textListFile = File.createTempFile("list_of_cells", ".txt", tempDirectoryFile);
-					textListFile.setWritable(true, false);
-					textListFile.setReadable(true, false);
+					if (!textListFile.setWritable(true, false))
+						throw new RuntimeException("Permissions problem");
+					if (!textListFile.setReadable(true, false))
+						throw new RuntimeException("Permissions problem");
 				}
 			} catch (IOException e) {
 				throw new PluginRuntimeException(

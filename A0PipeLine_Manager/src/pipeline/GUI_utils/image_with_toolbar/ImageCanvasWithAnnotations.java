@@ -391,6 +391,10 @@ public class ImageCanvasWithAnnotations extends ImageCanvas implements MouseMoti
 	private long z0, z1;
 
 	public void setZRange(Pair<Long, Long> range) {
+		if (range == null) {
+			z0 = z1 = -1;
+			return;
+		}
 		z0 = Math.min(range.fst, range.snd);
 		z1 = Math.max(range.fst, range.snd);
 	}
@@ -496,7 +500,7 @@ public class ImageCanvasWithAnnotations extends ImageCanvas implements MouseMoti
 		return result;
 	}
 
-	private class DoublePoint {
+	private static final class DoublePoint {
 		public double x, y, z, t;
 
 		@SuppressWarnings("unused")
@@ -508,7 +512,6 @@ public class ImageCanvasWithAnnotations extends ImageCanvas implements MouseMoti
 		}
 
 		public DoublePoint() {
-
 		}
 	}
 

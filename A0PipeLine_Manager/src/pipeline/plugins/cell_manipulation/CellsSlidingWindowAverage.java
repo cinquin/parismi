@@ -48,9 +48,6 @@ public class CellsSlidingWindowAverage extends FourDPlugin implements AuxiliaryI
 				+ " over the axis defined by user-chosen field x.";
 	}
 
-	@SuppressWarnings("unused")
-	private boolean rangeSet;
-
 	private String xFieldName = "";
 	private String yFieldName = "";
 	private float windowLength = 1;

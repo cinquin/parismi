@@ -94,7 +94,9 @@ public class LoadProtobufBinary extends ThreeDPlugin implements AuxiliaryInputOu
 			if (length > Integer.MAX_VALUE)
 				throw new IllegalArgumentException("Protobuf file too large");
 			bytes = new byte[(int) length];
-			fileInput.read(bytes);
+			if (fileInput.read(bytes) < length) {
+				throw new IOException("Did not read full " + length + " bytes");
+			}
 			Utils.log("Read " + length + " from protobuf file", LogLevel.VERBOSE_DEBUG);
 		} catch (IOException e) {
 			throw new PluginRuntimeException("Could not open file " + FileNameUtils.compactPath(f.getAbsolutePath()),

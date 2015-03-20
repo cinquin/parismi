@@ -548,8 +548,6 @@ public class ZProjector extends ThreeDPlugin {
 		 */
 	}
 
-	long lastExecutionTime;
-
 	public int numberOfThreadsToUse = 8;
 
 	private transient float[][] outputArrays = new float[numberOfThreadsToUse][];

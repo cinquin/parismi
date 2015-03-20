@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -120,6 +121,7 @@ public class PluginShell extends FourDPlugin implements IPluginShell, MouseEvent
 		return (managedPlugin.getFlags() & (Integer.MAX_VALUE - ONLY_2D - ONLY_3D) | DISPOSE_WHEN_NSLICES_CHANGES | ONE_OUTPUT_CHANNEL_PER_INPUT_CHANNEL);
 	}
 
+	@SuppressWarnings("null")
 	@Override
 	public List<PluginIOView> createOutput(String outputName, PluginIOHyperstackViewWithImagePlus impForDisplay,
 			Map<String, IPluginIO> linkedOutputs) throws InterruptedException {
@@ -535,9 +537,9 @@ public class PluginShell extends FourDPlugin implements IPluginShell, MouseEvent
 			PreviewType previewType, boolean inputHasChanged, AbstractParameter parameterWhoseValueChanged,
 			boolean stayInCoreLoop) throws InterruptedException {
 
-		if (localInstanceOnlyforParameters != null) {
+		//if (localInstanceOnlyforParameters != null) {
 			localInstanceOnlyforParameters.setRow(ourRow);
-		}
+		//}
 
 		String[] outSelection = outChannels.getSelectionString();
 
@@ -586,14 +588,14 @@ public class PluginShell extends FourDPlugin implements IPluginShell, MouseEvent
 	public Map<String, InputOutputDescription> getInputDescriptions() {
 		if (managedPlugin != null)
 			return managedPlugin.getInputDescriptions();
-		return null;
+		return Collections.emptyMap();
 	}
 
 	@Override
 	public Map<String, InputOutputDescription> getOutputDescriptions() {
 		if (managedPlugin != null)
 			return managedPlugin.getOutputDescriptions();
-		return null;
+		return Collections.emptyMap();
 	}
 
 	@Override

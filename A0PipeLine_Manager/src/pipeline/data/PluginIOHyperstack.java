@@ -13,9 +13,12 @@ import ij.measure.Calibration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.eclipse.jdt.annotation.NonNull;
 
 import pipeline.GUI_utils.PluginIOHyperstackViewWithImagePlus;
 import pipeline.data.InputOutputObjectDimensions.dimensionType;
@@ -403,7 +406,8 @@ public class PluginIOHyperstack extends PluginIOImage implements IPluginIO, IPlu
 		for (IPluginIOStack channel : getChannels().values()) {
 			channel.computePixelArray();
 		}
-		File f = saveTo != null ? saveTo : File.createTempFile("HyperstackSaveToOutput:", ".tiff");
+		@SuppressWarnings("null")
+		@NonNull File f = saveTo != null ? saveTo : File.createTempFile("HyperstackSaveToOutput:", ".tiff");
 		TIFFFileAccessor testTIFF = new TIFFFileAccessor(f, getName(), pType, calibration, useBigTIFF);
 		testTIFF.setImageAcquisitionMetadata(getImageAcquisitionMetadata());
 		testTIFF.setDimensions(getWidth(), getHeight(), getDepth(), getnChannels(), getnTimePoints());
@@ -880,9 +884,11 @@ public class PluginIOHyperstack extends PluginIOImage implements IPluginIO, IPlu
 	public void linkToList(IPluginIOList<?> list) {
 	}
 
+	@SuppressWarnings("null")
 	@Override
 	public List<Float> getQuantifiedProperties() {
-		return null;
+		//Not implemented
+		return Collections.emptyList();
 	}
 
 	@Override
@@ -900,10 +906,11 @@ public class PluginIOHyperstack extends PluginIOImage implements IPluginIO, IPlu
 		throw new RuntimeException("Not implemented");
 	}
 
+	@SuppressWarnings("null")
 	@Override
 	public List<String> getQuantifiedPropertyNames() {
-		// TODO Auto-generated method stub
-		return null;
+		//Not implemented
+		return Collections.emptyList();
 	}
 
 	@Override

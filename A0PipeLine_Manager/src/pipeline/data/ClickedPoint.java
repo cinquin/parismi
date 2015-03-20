@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.primitives.ArrayFloatList;
+import org.eclipse.jdt.annotation.NonNull;
 
 import pipeline.GUI_utils.bean_table.DoNotShowInTable;
 import pipeline.GUI_utils.bean_table.MethodToGetColumnNames;
@@ -85,7 +86,6 @@ public class ClickedPoint extends PluginIO implements Cloneable, Comparable<Clic
 		this.contourAddremovemerge = contourAddremovemerge;
 		clickGroup = contourMergegroup;
 		expandUserCellList(numberUserCells);
-		intializeQuantifiedProperties();
 	}
 
 	@Override
@@ -141,17 +141,14 @@ public class ClickedPoint extends PluginIO implements Cloneable, Comparable<Clic
 		this.modifiers = modifiers;
 		clickGroup = contourMergegroup;
 		expandUserCellList(numberUserCells);
-		intializeQuantifiedProperties();
 	}
 
 	public ClickedPoint() {
 		expandUserCellList(numberUserCells);
-		intializeQuantifiedProperties();
 	}
 
 	public ClickedPoint(float f, float g) {
 		expandUserCellList(numberUserCells);
-		intializeQuantifiedProperties();
 		x = f;
 		y = g;
 	}
@@ -222,12 +219,7 @@ public class ClickedPoint extends PluginIO implements Cloneable, Comparable<Clic
 
 	public List<SpreadsheetCell> userCells = new ArrayList<>();
 
-	private void intializeQuantifiedProperties() {
-		if (quantifiedProperties == null)
-			quantifiedProperties = new ArrayList<>();
-	}
-
-	public List<Float> quantifiedProperties = new ArrayList<>();
+	public @NonNull List<Float> quantifiedProperties = new ArrayList<>();
 
 	@Override
 	@MethodToGetColumnNames(value = "getQuantifiedPropertyNames")
@@ -240,7 +232,7 @@ public class ClickedPoint extends PluginIO implements Cloneable, Comparable<Clic
 		quantifiedProperties = qp;
 	}
 
-	public List<String> listNamesOfQuantifiedProperties = new ArrayList<>();
+	public @NonNull List<String> listNamesOfQuantifiedProperties = new ArrayList<>();
 
 	public float getSeedId() {
 		return seedId;
@@ -489,7 +481,7 @@ public class ClickedPoint extends PluginIO implements Cloneable, Comparable<Clic
 	}
 
 	@Override
-	public void setQuantifiedPropertyNames(List<String> desc) {
+	public void setQuantifiedPropertyNames(@NonNull List<String> desc) {
 		listNamesOfQuantifiedProperties = desc;
 	}
 

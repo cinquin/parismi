@@ -102,8 +102,6 @@ public class CThresholdSeedsLibraryCall extends ExternalCallToLibrary {
 				boolean keepQuiet) {
 			minLCG = ((float[]) LCGparam.getValue())[0];
 			maxLCG = ((float[]) LCGparam.getValue())[1];
-			if (!stillChanging) {
-			}
 			if (pipelineCallback != null)
 				pipelineCallback.parameterValueChanged(ourRow, null, false);
 		}
@@ -119,8 +117,6 @@ public class CThresholdSeedsLibraryCall extends ExternalCallToLibrary {
 				boolean keepQuiet) {
 			minR = ((float[]) Rparam.getValue())[0];
 			maxR = ((float[]) Rparam.getValue())[1];
-			if (!stillChanging) {
-			}
 			if (pipelineCallback != null)
 				pipelineCallback.parameterValueChanged(ourRow, null, false);
 		}
@@ -136,8 +132,6 @@ public class CThresholdSeedsLibraryCall extends ExternalCallToLibrary {
 				boolean keepQuiet) {
 			minDAPI = ((float[]) DAPIparam.getValue())[0];
 			maxDAPI = ((float[]) DAPIparam.getValue())[1];
-			if (!stillChanging) {
-			}
 			if (pipelineCallback != null)
 				pipelineCallback.parameterValueChanged(ourRow, null, false);
 		}

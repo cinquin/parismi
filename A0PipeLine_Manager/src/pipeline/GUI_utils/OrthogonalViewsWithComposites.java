@@ -104,7 +104,7 @@ public class OrthogonalViewsWithComposites implements MouseListener, MouseMotion
 	private ImageWindow win;
 	private ImagePlus imp;
 	private ImageCanvas canvas;
-	private ImagePlus xzImage, yzImage; // Will hold a CompositeImage if there is more than 1 channel
+	private ImagePlus xzImage = null, yzImage = null; // Will hold a CompositeImage if there is more than 1 channel
 	private ImagePlus xzImageAsImp, yzImageAsImp;
 	private ImageProcessor[] xzImages;
 	private ImageProcessor[] yzImages;
@@ -150,7 +150,7 @@ public class OrthogonalViewsWithComposites implements MouseListener, MouseMotion
 		if (listenersAdded)
 			return;
 
-		yzImage.getWindow().getCanvas().addMouseListener(new MouseListener() {
+		if (yzImage != null) yzImage.getWindow().getCanvas().addMouseListener(new MouseListener() {
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -192,7 +192,7 @@ public class OrthogonalViewsWithComposites implements MouseListener, MouseMotion
 			}
 		});
 
-		xzImage.getWindow().getCanvas().addMouseWheelListener(e -> {
+		if (xzImage != null) xzImage.getWindow().getCanvas().addMouseWheelListener(e -> {
 			if (e.getModifiers() != 0) {
 				xzImage.getWindow().dispatchEvent(e);
 				return;
@@ -379,7 +379,7 @@ public class OrthogonalViewsWithComposites implements MouseListener, MouseMotion
 		}
 
 		aratx = az / ax;
-		width2 = (int) Math.round(imp.getWidth() * ax);
+		width2 = (int) Math.round(imp.getWidth() * ax); //XXX Is it intentional that value of width2 is not used?
 		height2 = (int) Math.round(depth * aratx);// imp.getHeight()
 
 		// if (xzImage!=null)

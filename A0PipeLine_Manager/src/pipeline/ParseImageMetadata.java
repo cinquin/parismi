@@ -9,12 +9,15 @@ package pipeline;
 import ij.ImagePlus;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.List;
 
+import org.eclipse.jdt.annotation.NonNull;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
@@ -91,9 +94,8 @@ public class ParseImageMetadata {
 							}
 						}
 					}
-				} catch (Exception e) {
-					Utils.log("Failed to parse metada in" + imp.getTitle(), LogLevel.ERROR);
-					Utils.printStack(e);
+				} catch (IOException e) {
+					throw new RuntimeException(e);
 				}
 			}
 			return xmlToParse.toString();
@@ -140,9 +142,8 @@ public class ParseImageMetadata {
 							}
 						}
 					}
-				} catch (Exception e) {
-					Utils.log("Failed to parse metada in" + imp.getTitle(), LogLevel.ERROR);
-					Utils.printStack(e);
+				} catch (IOException e) {
+					throw new RuntimeException(e);
 				}
 			}
 			StringWriter sw = new StringWriter();
@@ -151,10 +152,8 @@ public class ParseImageMetadata {
 			try {
 				outputter.output(doc, sw);
 				newXML = sw.toString();
-			} catch (Exception e) {
-				Utils.log("Problem printing XML to image metadata in setPipelineProcessingMetadata", LogLevel.ERROR);
-				Utils.printStack(e);
-				newXML = "";
+			} catch (IOException e) {
+				throw new RuntimeException(e);
 			}
 
 			imp.setProperty("Info", "BEGIN PIPELINE XML\n" + newXML + "\nEND PIPELINE XML\n" + stuffToKeep);
@@ -207,9 +206,8 @@ public class ParseImageMetadata {
 						}
 					}
 				}
-			} catch (Exception e) {
-				Utils.log("Failed to parse metada in" + imp.getTitle(), LogLevel.ERROR);
-				Utils.printStack(e);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
 			}
 			Document doc;
 			// xmlToParse should contain xml we created and we know how to parse
@@ -217,9 +215,8 @@ public class ParseImageMetadata {
 			try {
 				SAXBuilder builder = new SAXBuilder();
 				doc = builder.build(new InputSource(new StringReader(xmlToParse.toString())));
-			} catch (Exception e) {
-				Utils.log("Failed to parse " + xmlToParse, LogLevel.ERROR);
-				doc = new Document();
+			} catch (JDOMException | IOException e) {
+				throw new RuntimeException(e);
 			}
 
 			setPipelineProcessingMetadata(doc, nodeToUpdate, s);
@@ -230,10 +227,8 @@ public class ParseImageMetadata {
 			try {
 				outputter.output(doc, sw);
 				newXML = sw.toString();
-			} catch (Exception e) {
-				Utils.log("Problem printing XML to image metadata in setPipelineProcessingMetadata", LogLevel.ERROR);
-				Utils.printStack(e);
-				newXML = "";
+			} catch (IOException e) {
+				throw new RuntimeException(e);
 			}
 
 			imp.setProperty("Info", "BEGIN PIPELINE XML\n" + newXML + "\nEND PIPELINE XML\n" + stuffToKeepBuffer);
@@ -261,26 +256,22 @@ public class ParseImageMetadata {
 			}
 			Element pipelineMetadata = metaData.getRootElement();
 			Element channels = pipelineMetadata.getChild("Channels");
+			if (channels == null) {
+				return null;
+			}
 			List<Element> channelList;
 			channelList = channels.getChildren();
 			Element ourChannel = null;
-			try {
-				boolean found = false;
-				for (Element aChannelList : channelList) {
-					ourChannel = aChannelList;
-					if ((channelName == null) || ourChannel.getChildText("Name").equals(channelName)) {
-						found = true;
-						break;
-					}
+			boolean found = false;
+			for (Element aChannelList : channelList) {
+				ourChannel = aChannelList;
+				if ((channelName == null) || ourChannel.getChildText("Name").equals(channelName)) {
+					found = true;
+					break;
 				}
-				if (!found)
-					return null;
-			} catch (Exception e) {
-				Utils.log("Exception while extracting property " + propertyName
-						+ " from parsed xml in updateChannelInfo", LogLevel.ERROR);
-				Utils.printStack(e);
-				return null;
 			}
+			if (!found)
+				return null;
 
 			return ourChannel.getChildText(propertyName);
 		}
@@ -311,22 +302,16 @@ public class ParseImageMetadata {
 			List<Element> channelList;
 			channelList = channels.getChildren();
 			Element ourChannel = null;
-			try {
-				boolean found = false;
-				for (Element aChannelList : channelList) {
-					ourChannel = aChannelList;
-					if ((channelName == null) || ourChannel.getChildText("Name").equals(channelName)) {
-						found = true;
-						break;
-					}
+			boolean found = false;
+			for (Element aChannelList : channelList) {
+				ourChannel = aChannelList;
+				if ((channelName == null) || ourChannel.getChildText("Name").equals(channelName)) {
+					found = true;
+					break;
 				}
-				if (!found)
-					throw new RuntimeException("channel " + channelName + " not found in updateChannelInfo");
-			} catch (Exception e) {
-				Utils.log("Exception while extracting names from parsed xml in updateChannelInfo", LogLevel.ERROR);
-				Utils.printStack(e);
-				return;
 			}
+			if (!found)
+				throw new RuntimeException("channel " + channelName + " not found in updateChannelInfo");
 
 			// Element oldTransform=ourChannel.getChild("Transform");
 			ourChannel.removeChild(propertyName);
@@ -341,10 +326,8 @@ public class ParseImageMetadata {
 			try {
 				outputter.output(metaData, sw);
 				xmlString = sw.toString();
-			} catch (Exception e) {
-				Utils.log("Problem printing XML to image metadata in updateChannelInfo", LogLevel.ERROR);
-				Utils.printStack(e);
-				xmlString = "";
+			} catch (IOException e) {
+				throw new RuntimeException(e);
 			}
 
 			imp.setProperty("Info", "BEGIN PIPELINE XML\n" + xmlString + "\nEND PIPELINE XML\n");
@@ -362,57 +345,46 @@ public class ParseImageMetadata {
 		if (imp == null)
 			return new Document();
 		synchronized (imp) {
+			String metadata = ((String) imp.getProperty("Info"));
+			if (metadata == null)
+				return new Document();
+			// try to look for XML and parse it
+			// look for a block delimited by BEGIN PIPELINE XML AND END PIPELINE XML
+
+			BufferedReader reader = new BufferedReader(new StringReader(metadata));
+			String str;
+			StringBuffer xmlToParse = new StringBuffer(20000);
+			boolean foundBeginning = false;
 			try {
-
-				String metadata = ((String) imp.getProperty("Info"));
-				if (metadata == null)
-					return new Document();
-				// try to look for XML and parse it
-				// look for a block delimited by BEGIN PIPELINE XML AND END PIPELINE XML
-
-				BufferedReader reader = new BufferedReader(new StringReader(metadata));
-				String str;
-				StringBuffer xmlToParse = new StringBuffer(20000);
-				boolean foundBeginning = false;
-				try {
-					while ((str = reader.readLine()) != null) {
-						if (foundBeginning) {
-							// we are reading lines that belong to the XML we'll parse later
-							if (!str.equals("END PIPELINE XML")) {
-								xmlToParse.append(str);
-								xmlToParse.append('\n');
-							} else
-								break;
-						} else {
-							if (str.equals("BEGIN PIPELINE XML")) {
-								foundBeginning = true;
-							}
+				while ((str = reader.readLine()) != null) {
+					if (foundBeginning) {
+						// we are reading lines that belong to the XML we'll parse later
+						if (!str.equals("END PIPELINE XML")) {
+							xmlToParse.append(str);
+							xmlToParse.append('\n');
+						} else
+							break;
+					} else {
+						if (str.equals("BEGIN PIPELINE XML")) {
+							foundBeginning = true;
 						}
 					}
-				} catch (Exception e) {
-					Utils.log("Failed to find any metada in " + imp.getTitle(), LogLevel.ERROR);
-					Utils.printStack(e);
-					return new Document();
 				}
-
-				Document doc;
-				// xmlToParse should contain xml we created and we know how to parse
-
-				try {
-					SAXBuilder builder = new SAXBuilder();
-					doc = builder.build(new InputSource(new StringReader(xmlToParse.toString())));
-				} catch (Exception e) {
-					Utils.log("Failed to parse " + xmlToParse, LogLevel.ERROR);
-					return new Document();
-				}
-
-				return doc;
-			} catch (Exception e) {
-				Utils.log("Failed to parse image metada C " + imp.getTitle(), LogLevel.ERROR);
-				Utils.printStack(e);
-
-				return null;
+			} catch (IOException e) {
+				throw new RuntimeException(e);
 			}
+
+			Document doc;
+			// xmlToParse should contain xml we created and we know how to parse
+
+			try {
+				SAXBuilder builder = new SAXBuilder();
+				doc = builder.build(new InputSource(new StringReader(xmlToParse.toString())));
+			} catch (IOException | JDOMException e) {
+				throw new RuntimeException(e);
+			}
+
+			return doc;
 		}
 	}
 
@@ -464,20 +436,14 @@ public class ParseImageMetadata {
 				return names;
 			}
 
-			try {
-				String[] nameArray = new String[channelList.size()];
-				int index = 0;
-				for (Element e : channelList) {
-					nameArray[index] = e.getChildText("Name");
-					index++;
-				}
-
-				return nameArray;
-			} catch (Exception e) {
-				Utils.log("Exception while extracting names from parsed xml", LogLevel.ERROR);
-				Utils.printStack(e);
-				return null;
+			String[] nameArray = new String[channelList.size()];
+			int index = 0;
+			for (Element e : channelList) {
+				nameArray[index] = e.getChildText("Name");
+				index++;
 			}
+
+			return nameArray;
 		}
 	}
 
@@ -492,7 +458,7 @@ public class ParseImageMetadata {
 	 * @see #extractChannelNames
 	 */
 	@SuppressWarnings("unchecked")
-	public static NameAndFileBacking extractChannelNamesAndFileStore(ImagePlus imp) {
+	public static @NonNull NameAndFileBacking extractChannelNamesAndFileStore(ImagePlus imp) {
 		// first look in the metadata and go by that if possible
 		// if not, check if imp is a hyperstack; if it is, generate a generic list of names
 		// if it's not, just create a single generic name
@@ -544,40 +510,33 @@ public class ParseImageMetadata {
 				result.timesModified = timesModified;
 				return result;
 			}
-
-			try {
-				String[] names = new String[channelList.size()];
-				String[] filePaths = new String[channelList.size()];
-				long[] timesStored = new long[channelList.size()];
-				long[] timesModified = new long[channelList.size()];
-				int index = 0;
-				for (Element e : channelList) {
-					names[index] = e.getChildText("Name");
-					filePaths[index] = e.getChildText("FileBacking");
-					String lastStorageString = e.getChildText("LastStorageTime");
-					if (lastStorageString == null) {
-						Utils.log("Missing last storage time for channel " + names[index], LogLevel.WARNING);
-					} else
-						timesStored[index] = Long.parseLong(lastStorageString);
-					String lastModificationString = e.getChildText("LastModificationTime");
-					if (lastModificationString == null) {
-						Utils.log("Missing last modification time for channel " + names[index]
-								+ "; WARNING: ASSUMING IT HAS NOT BEEN MODIFIED", LogLevel.WARNING);
-					} else
-						timesModified[index] = Long.parseLong(lastModificationString);
-					index++;
-				}
-
-				result.channelNames = names;
-				result.filePaths = filePaths;
-				result.timesStored = timesStored;
-				result.timesModified = timesModified;
-				return result;
-			} catch (Exception e) {
-				Utils.log("Exception while extracting names from parsed xml", LogLevel.ERROR);
-				Utils.printStack(e);
-				return null;
+			String[] names = new String[channelList.size()];
+			String[] filePaths = new String[channelList.size()];
+			long[] timesStored = new long[channelList.size()];
+			long[] timesModified = new long[channelList.size()];
+			int index = 0;
+			for (Element e : channelList) {
+				names[index] = e.getChildText("Name");
+				filePaths[index] = e.getChildText("FileBacking");
+				String lastStorageString = e.getChildText("LastStorageTime");
+				if (lastStorageString == null) {
+					Utils.log("Missing last storage time for channel " + names[index], LogLevel.WARNING);
+				} else
+					timesStored[index] = Long.parseLong(lastStorageString);
+				String lastModificationString = e.getChildText("LastModificationTime");
+				if (lastModificationString == null) {
+					Utils.log("Missing last modification time for channel " + names[index]
+							+ "; WARNING: ASSUMING IT HAS NOT BEEN MODIFIED", LogLevel.WARNING);
+				} else
+					timesModified[index] = Long.parseLong(lastModificationString);
+				index++;
 			}
+
+			result.channelNames = names;
+			result.filePaths = filePaths;
+			result.timesStored = timesStored;
+			result.timesModified = timesModified;
+			return result;
 		}
 	}
 
@@ -641,10 +600,8 @@ public class ParseImageMetadata {
 		try {
 			outputter.output(doc, sw);
 			xmlString = sw.toString();
-		} catch (Exception e) {
-			Utils.log("Problem printing XML to image metadata in addBlankChannel", LogLevel.ERROR);
-			Utils.printStack(e);
-			xmlString = "";
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 
 		return "BEGIN PIPELINE XML\n" + xmlString + "END PIPELINE XML\n";

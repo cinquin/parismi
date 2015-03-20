@@ -18,8 +18,7 @@ public class PluginIOUserClicks extends PluginIO implements PluginUserInput {
 
 	@Override
 	public File asFile(File saveTo, boolean useBigTIFF) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new RuntimeException("Unimplemented");
 	}
 
 }

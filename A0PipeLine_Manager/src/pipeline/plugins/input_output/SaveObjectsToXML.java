@@ -46,7 +46,7 @@ public class SaveObjectsToXML extends FourDPlugin implements AuxiliaryInputOutpu
 
 	@Override
 	public String[] getInputLabels() {
-		return new String[] { "File name" };
+		return new String[] {"File name"};
 	}
 
 	@Override

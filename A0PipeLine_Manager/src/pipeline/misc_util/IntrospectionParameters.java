@@ -428,7 +428,7 @@ public class IntrospectionParameters {
 						createAndRegisterDefaultListener(param, f, changeTriggersUpdate, changeTriggersLiveUpdates,
 								plugin);
 			} else if (Arrays.asList(fieldType.getInterfaces()).contains(ParameterListenerI.class)
-					&& parameterType.parameterType().equals("button")) {
+					&& parameterType != null && parameterType.parameterType().equals("button")) {
 
 				param = new ActionParameter(userDisplayName, description, parameterInfo.clickable(), null);
 				storeNewObjectInField = false;

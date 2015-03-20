@@ -80,7 +80,7 @@ public class Utils {
 	public static final String[] LogLevelNames = new String[] { "CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG",
 			"VERBOSE_DEBUG", "VERBOSE_VERBOSE_DEBUG", "VERBOSE_VERBOSE_VERBOSE_DEBUG" };
 
-	public class LogLevel {
+	public static final class LogLevel {
 		public static final int CRITICAL = 0, ERROR = 1, WARNING = 2, INFO = 3, DEBUG = 4, VERBOSE_DEBUG = 5,
 				VERBOSE_VERBOSE_DEBUG = 6, VERBOSE_VERBOSE_VERBOSE_DEBUG = 7;
 	}
@@ -225,9 +225,6 @@ public class Utils {
 		try {
 			fiArray = td.getTiffInfo();
 		} catch (IOException e) {
-			String msg = e.getMessage();
-			if (msg == null || msg.equals(""))
-				msg = "" + e;
 			if (displayErrorMessage)
 				Utils.displayMessage("Error opening tiff " + shortName, false, LogLevel.ERROR);
 			throw new ImageOpenFailed("Error opening virtual TIFF file " + shortName, e);
@@ -308,8 +305,6 @@ public class Utils {
 				// JOptionPane.showMessageDialog(null, textLabel,"Pipeline message",level);
 				});
 	}
-
-	static boolean seenSmallRotation;
 
 	/**
 	 * True if pipeline is not attached to a GUI.

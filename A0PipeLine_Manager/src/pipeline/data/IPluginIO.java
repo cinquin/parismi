@@ -12,6 +12,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 import org.jdom.Document;
 
 import pipeline.GUI_utils.ListOfPointsView;
@@ -30,7 +32,7 @@ public interface IPluginIO {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	File asFile(File saveTo, boolean useBigTIFF) throws IOException, InterruptedException;
+	@NonNull File asFile(@Nullable File saveTo, boolean useBigTIFF) throws IOException, InterruptedException;
 
 	Document getMetadata();
 
@@ -48,7 +50,7 @@ public interface IPluginIO {
 
 	Object getProperty(String string);
 
-	byte[] asProtobufBytes();
+	@NonNull byte[] asProtobufBytes();
 
 	void restoreFromProtobuf() throws NotRestorableFromProtobuf, InterruptedException;
 

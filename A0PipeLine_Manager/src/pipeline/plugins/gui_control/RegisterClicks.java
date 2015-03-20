@@ -21,6 +21,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.SwingUtilities;
+
 import pipeline.PreviewType;
 import pipeline.GUI_utils.PluginIOHyperstackViewWithImagePlus;
 import pipeline.data.ClickedPoint;
@@ -220,7 +222,7 @@ public class RegisterClicks extends FourDPlugin implements MouseEventPlugin, Res
 		}
 	}
 
-	private class BufferedClicksAsTextListener extends ParameterListenerAdapter {
+	private static class BufferedClicksAsTextListener extends ParameterListenerAdapter {
 	}
 
 	private ParameterListener bufferedClicksAsTextListener0 = new BufferedClicksAsTextListener();
@@ -259,9 +261,12 @@ public class RegisterClicks extends FourDPlugin implements MouseEventPlugin, Res
 			if (!workerThread.isAlive())
 				Utils.log("WORKER THREAD DEAD", LogLevel.ERROR);
 			flushButtonPressed = true;
-			synchronized (list) {
-				list.notifyAll();
-			}
+			//Invoke later to avoid potential deadlock
+			SwingUtilities.invokeLater( () -> {
+				synchronized (list) {
+					list.notifyAll();
+				}
+			});
 		}
 	}
 
@@ -273,7 +278,6 @@ public class RegisterClicks extends FourDPlugin implements MouseEventPlugin, Res
 		@Override
 		public void buttonPressed(String commandName, AbstractParameter parameter, ActionEvent event) {
 			reset();
-
 		}
 	}
 

@@ -42,7 +42,6 @@ import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.event.MouseAdapter;
@@ -90,7 +89,7 @@ class EquationDisplay extends JComponent implements PropertyChangeListener {
 
 	private boolean drawText = true;
 
-	private Point dragStart;
+	//private Point dragStart;
 
 	private NumberFormat formatter;
 	private ZoomHandler zoomHandler;
@@ -437,7 +436,7 @@ class EquationDisplay extends JComponent implements PropertyChangeListener {
 		g2.fill(g2.getClipBounds());
 	}
 
-	private class DrawableEquation {
+	private static class DrawableEquation {
 		private AbstractEquation equation;
 		private Color color;
 
@@ -485,17 +484,17 @@ class EquationDisplay extends JComponent implements PropertyChangeListener {
 	private class PanHandler extends MouseAdapter {
 		@Override
 		public void mousePressed(MouseEvent e) {
-			dragStart = e.getPoint();
+			//dragStart = e.getPoint();
 		}
 	}
 
 	private class PanMotionHandler extends MouseMotionAdapter {
 		@Override
 		public void mouseDragged(MouseEvent e) {
-			Point dragEnd = e.getPoint();
+			//Point dragEnd = e.getPoint();
 
-			@SuppressWarnings("unused")
-			double distance = xPixelToPosition(dragEnd.getX()) - xPixelToPosition(dragStart.getX());
+			//@SuppressWarnings("unused")
+			//double distance = xPixelToPosition(dragEnd.getX()) - xPixelToPosition(dragStart.getX());
 			/*
 			 * minX -= distance;
 			 * maxX -= distance;
@@ -506,7 +505,7 @@ class EquationDisplay extends JComponent implements PropertyChangeListener {
 			 * maxY -= distance;
 			 */
 			repaint();
-			dragStart = dragEnd;
+			//dragStart = dragEnd;
 		}
 	}
 }

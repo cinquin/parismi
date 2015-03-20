@@ -133,7 +133,7 @@ public class AnnotateAndSave extends FourDPlugin implements AuxiliaryInputOutput
 		return NO_IMP_OUTPUT + CUSTOM + STUFF_ALL_INPUTS;
 	}
 
-	private class workingDirectoryListener implements ParameterListener {
+	private static class workingDirectoryListener implements ParameterListener {
 		private String parameterName;
 
 		@Override
@@ -165,7 +165,7 @@ public class AnnotateAndSave extends FourDPlugin implements AuxiliaryInputOutput
 		}
 	}
 
-	private class saveToFileListener implements ParameterListener {
+	private static class saveToFileListener implements ParameterListener {
 		private String parameterName;
 
 		@Override
@@ -197,7 +197,7 @@ public class AnnotateAndSave extends FourDPlugin implements AuxiliaryInputOutput
 		}
 	}
 
-	private class userNotesListener implements ParameterListener {
+	private static class userNotesListener implements ParameterListener {
 		private String parameterName;
 
 		@Override

@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.eclipse.jdt.annotation.NonNull;
 import org.jdom.Document;
 
 import pipeline.GUI_utils.ListOfPointsView;
@@ -168,7 +169,7 @@ public abstract class PluginIO implements Serializable, IPluginIO {
 			throw new RuntimeException("Unrecognized property " + string);
 	}
 
-	private byte[] protobuf;
+	private @NonNull byte[] protobuf = new byte [] {};
 
 	/*
 	 * (non-Javadoc)
@@ -176,8 +177,8 @@ public abstract class PluginIO implements Serializable, IPluginIO {
 	 * @see pipeline.data.PluginIOInterface#asProtobufBytes()
 	 */
 	@Override
-	public byte[] asProtobufBytes() {
-		return null;
+	public @NonNull byte[] asProtobufBytes() {
+		return protobuf;
 	}
 
 	/*

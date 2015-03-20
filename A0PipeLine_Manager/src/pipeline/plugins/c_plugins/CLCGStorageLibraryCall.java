@@ -59,8 +59,6 @@ public class CLCGStorageLibraryCall extends ExternalCallToLibrary {
 				boolean keepQuiet) {
 			minThreshold = ((int[]) param1.getValue())[0];
 			maxThreshold = ((int[]) param1.getValue())[1];
-			if (!stillChanging) {
-			}
 			if (pipelineCallback != null)
 				pipelineCallback.parameterValueChanged(ourRow, null, false);
 		}

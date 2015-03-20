@@ -80,8 +80,6 @@ public class ThresholdToBinary extends TwoDPlugin {
 			float oldMax = maxThreshold;
 			minThreshold = ((int[]) intrangeparam.getValue())[0];
 			maxThreshold = ((int[]) intrangeparam.getValue())[1];
-			if (!stillChanging) {
-			}
 			if ((pipelineCallback != null) && ((minThreshold != oldMin) || (maxThreshold != oldMax)))
 				pipelineCallback.parameterValueChanged(ourRow, null, false);
 		}

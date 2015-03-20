@@ -138,8 +138,6 @@ public class DisplaySeedFieldValue extends DisplayEmbeddedImages {
 			float oldMax = maxThreshold;
 			minThreshold = ((float[]) rangeParameter.getValue())[0];
 			maxThreshold = ((float[]) rangeParameter.getValue())[1];
-			if (!stillChanging) {
-			}
 			if ((pipelineCallback != null) && ((minThreshold != oldMin) || (maxThreshold != oldMax)))
 				pipelineCallback.parameterValueChanged(ourRow, null, false);
 		}
@@ -264,9 +262,7 @@ public class DisplaySeedFieldValue extends DisplayEmbeddedImages {
 
 		double[] valuesForHistogram = new double[tableModel.getRowCount()];
 		for (int i = 0; i < tableModel.getRowCount(); i++) {
-			Object o = tableModel.getFloatValueAt(i, columnIndex);
-			if (o instanceof Float)
-				valuesForHistogram[i] = (Float) o;
+			valuesForHistogram[i] = tableModel.getFloatValueAt(i, columnIndex);
 		}
 
 		HistogramDataset dataset = new HistogramDataset();

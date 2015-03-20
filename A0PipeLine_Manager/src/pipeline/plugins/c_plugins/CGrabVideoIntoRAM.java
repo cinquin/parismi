@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import pipeline.PreviewType;
 import pipeline.GUI_utils.PluginIOHyperstackViewWithImagePlus;
 import pipeline.GUI_utils.PluginIOView;
@@ -23,8 +25,8 @@ import pipeline.data.PluginIOImage.PixelType;
 import pipeline.data.tiff_read_write.TIFFFileAccessor;
 import pipeline.misc_util.FileNameUtils;
 import pipeline.misc_util.ParameterListenerWeakRef;
+import pipeline.misc_util.PluginRuntimeException;
 import pipeline.misc_util.Utils;
-import pipeline.misc_util.Utils.LogLevel;
 import pipeline.parameters.AbstractParameter;
 import pipeline.parameters.ActionParameter;
 import pipeline.parameters.ComboBoxParameter;
@@ -93,9 +95,8 @@ public class CGrabVideoIntoRAM extends ExternalCallToLibrary implements SpecialD
 
 	ActionParameter saveResultsParameter;
 	ComboBoxParameter actionTypeParameter;
-	byte actionType = 0;
 
-	private class InterruptListener extends ParameterListenerAdapter {
+	private static class InterruptListener extends ParameterListenerAdapter {
 		@Override
 		public void buttonPressed(String commandName, AbstractParameter parameter, ActionEvent event) {
 			try {
@@ -131,7 +132,6 @@ public class CGrabVideoIntoRAM extends ExternalCallToLibrary implements SpecialD
 		fileName = (AbstractParameter) splitParameters[0];
 		workingDirectory = (AbstractParameter) splitParameters[1];
 		interruptButton = (ActionParameter) splitParameters[2];
-
 	}
 
 	private void initializeParams() {
@@ -205,7 +205,7 @@ public class CGrabVideoIntoRAM extends ExternalCallToLibrary implements SpecialD
 	private TIFFFileAccessor tiffOutput;
 	private File f;
 
-	private File getFile() {
+	private @NonNull File getFile() {
 		String fileNameString =
 				FileNameUtils.removeIncrementationMarks(workingDirectory.getValue() + Utils.fileNameSeparator
 						+ FileNameUtils.removeIncrementationMarks((String) fileName.getValue()));
@@ -213,13 +213,10 @@ public class CGrabVideoIntoRAM extends ExternalCallToLibrary implements SpecialD
 		File directory = new File(fileNameString).getParentFile();
 		if (!(directory.exists() && directory.isDirectory())) {
 			if (directory.isFile()) {
-				Utils.displayMessage("Cannot save to " + directory + " because it is a file", true, LogLevel.ERROR);
-				return null;
+				throw new PluginRuntimeException("Cannot save to " + directory + " because it is a file", true);
 			}
 			if (!directory.mkdirs()) {
-				Utils.displayMessage("Directory " + directory + " does not exist and could not be created", true,
-						LogLevel.ERROR);
-				return null;
+				throw new PluginRuntimeException("Directory " + directory + " does not exist and could not be created", true);
 			}
 		}
 		return new File(fileNameString);

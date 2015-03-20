@@ -122,7 +122,7 @@ public class MultiList extends AbstractParameterCellView implements ParameterLis
 		this.setPreferredSize(d);
 
 		int heightWanted = (int) Math.min(list.getPreferredSize().getHeight(), maximalHeight);
-		if (heightWanted > owningTable.getRowHeight(ourRow))
+		if (owningTable != null && heightWanted > owningTable.getRowHeight(ourRow))
 			owningTable.setRowHeight(ourRow, heightWanted);
 
 		setToolTipText(currentParameter.getParamNameDescription()[1]);

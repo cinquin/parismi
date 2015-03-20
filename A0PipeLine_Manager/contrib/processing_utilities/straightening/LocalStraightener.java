@@ -9,8 +9,8 @@ import ij.process.ImageProcessor;
 public class LocalStraightener {
 	public static ImageProcessor localStraightenLine(ImageProcessor ip, PolygonRoi roi, int width) {
 		ip.setInterpolationMethod(ImageProcessor.NEAREST_NEIGHBOR);
-		if (roi == null)
-			return null;
+		/*if (roi == null)
+			return null;*/
 		if (roi.getState() == Roi.CONSTRUCTING)
 			roi.exitConstructingMode();
 		boolean isSpline = roi.isSplineFit();

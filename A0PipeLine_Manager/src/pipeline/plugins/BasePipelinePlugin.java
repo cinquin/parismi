@@ -654,7 +654,7 @@ public abstract class BasePipelinePlugin implements ImageListener, PipelinePlugi
 	 * @see pipeline.plugins.abstract_plugins.PipelinePlugin#finalize()
 	 */
 	@Override
-	public void finalize() {
+	protected void finalize() {
 		try {
 			if (imageListenerWeakRef != null) {
 				ImagePlus.removeImageListener(imageListenerWeakRef);

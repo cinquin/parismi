@@ -29,7 +29,7 @@ public class FindConnectedRegion extends ThreeDPlugin {
 	// public static final String PLUGIN_VERSION = "1.2";
 
 	/* An inner class to make the results list sortable. */
-	private class Region implements Comparable<Object> {
+	private static final class Region implements Comparable<Object> {
 
 		Region(int value, String materialName, int points, boolean sameValue) {
 			byteImage = true;

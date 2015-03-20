@@ -158,7 +158,7 @@ public class LazyCopy extends FourDPlugin implements SpecialDimPlugin, Auxiliary
 		return false;
 	}
 
-	public class DimensionMismatchException extends PluginRuntimeException {
+	public static final class DimensionMismatchException extends PluginRuntimeException {
 
 		private static final long serialVersionUID = -4594939512721080584L;
 

@@ -26,7 +26,7 @@ public class ImagePlusImageAccessor implements ImageAccessor {
 	private int time;
 
 	@Override
-	public void finalize() {
+	protected void finalize() {
 		try {
 			close();
 		} finally {

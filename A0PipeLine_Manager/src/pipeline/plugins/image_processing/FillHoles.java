@@ -26,7 +26,7 @@ import pipeline.plugins.ThreeDPlugin;
 public class FillHoles extends ThreeDPlugin {
 
 	/* An inner class to make the results list sortable. */
-	private class Region implements Comparable<Object> {
+	private static final class Region implements Comparable<Object> {
 
 		Region(int value, String materialName, int points, boolean sameValue) {
 			byteImage = true;

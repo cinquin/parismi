@@ -34,6 +34,8 @@ import java.util.Vector;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import pipeline.data.ChannelInfo;
 import pipeline.data.IPluginIOHyperstack;
 import pipeline.data.IPluginIOStack;
@@ -71,7 +73,7 @@ public class TIFFFileAccessor extends PluginIOHyperstack implements ImageAccesso
 	}
 
 	private static final long serialVersionUID = 1L;
-	private File f;
+	private @NonNull File f;
 	private FileInfo fi;
 	private BareBonesFileInfoLongOffsets[] fiArray;
 	private RandomAccessFile outStream;
@@ -100,7 +102,7 @@ public class TIFFFileAccessor extends PluginIOHyperstack implements ImageAccesso
 	}
 
 	@Override
-	public void finalize() {
+	protected void finalize() {
 		try {
 			if (!closed)
 				close();
@@ -114,7 +116,7 @@ public class TIFFFileAccessor extends PluginIOHyperstack implements ImageAccesso
 		}
 	}
 
-	public TIFFFileAccessor(File f, String name) {
+	public TIFFFileAccessor(@NonNull File f, String name) {
 		setDiskLocation(f.getAbsolutePath());
 		setSupportsWritingToPixels(false);
 		// TODO We need a special implementation for virtual stacks
@@ -135,7 +137,7 @@ public class TIFFFileAccessor extends PluginIOHyperstack implements ImageAccesso
 	 * @param cal
 	 * @param useBigTIFF
 	 */
-	public TIFFFileAccessor(File f, String name, PixelType pType, Calibration cal, boolean useBigTIFF) {
+	public TIFFFileAccessor(@NonNull File f, String name, PixelType pType, Calibration cal, boolean useBigTIFF) {
 		calibration = cal;
 		openedForWriting = true;
 		this.pType = pType;
@@ -1266,12 +1268,12 @@ public class TIFFFileAccessor extends PluginIOHyperstack implements ImageAccesso
 		throw new RuntimeException("Ball iterator not implemented");
 	}
 
-	private class BufferSet {
+	private static class BufferSet {
 		public ByteBuffer localByteBuffer;
 		public FloatBuffer localFloatBuffer;
 		public ShortBuffer localShortBuffer;
 
-		int size = 0;
+		final int size;
 
 		public BufferSet(int size) {
 			this.size = size;

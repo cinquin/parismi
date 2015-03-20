@@ -34,7 +34,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
-import javax.swing.Timer;
+
+import org.eclipse.jdt.annotation.NonNull;
 
 import pipeline.GUI_utils.image_with_toolbar.ImageCanvasWithAnnotations;
 import pipeline.GUI_utils.image_with_toolbar.StackWindowWithToolbar;
@@ -48,7 +49,6 @@ import pipeline.data.PluginIOCells;
 import pipeline.data.PluginIOImage.PixelType;
 import pipeline.data.PluginIOListener;
 import pipeline.data.PluginIOStack;
-import pipeline.data.SingleChannelView;
 import pipeline.misc_util.ImageListenerWeakRef;
 import pipeline.misc_util.KeyListenerWeakRef;
 import pipeline.misc_util.MouseListenerWeakRef;
@@ -69,7 +69,6 @@ import processing_utilities.projection.RayFunction;
  */
 public class PluginIOHyperstackViewWithImagePlus extends PluginIOView implements PluginIOListener, ImageListener,
 		MouseListener, MouseEventPlugin, KeyListener {
-	public transient SingleChannelView singleChannelView;
 
 	/**
 	 * For images that were computed by projection, lower bound of the range in the original image the
@@ -194,7 +193,7 @@ public class PluginIOHyperstackViewWithImagePlus extends PluginIOView implements
 		this.showOrthogonalViews = showOrthogonalViews;
 	}
 
-	protected transient List<MouseEventPlugin> mousePluginListeners = new LinkedList<>();
+	protected transient @NonNull List<MouseEventPlugin> mousePluginListeners = new LinkedList<>();
 
 	public void addListener(MouseEventPlugin listener) {
 		mousePluginListeners.add(listener);
@@ -766,12 +765,8 @@ public class PluginIOHyperstackViewWithImagePlus extends PluginIOView implements
 		notifyMousePluginListenersToProcess();
 	}
 
-	private Timer t;
-
 	@Override
 	public void keyPressed(KeyEvent e) {
-		if (t != null)
-			t.stop();
 		ActionListener action = null;
 		char keyTyped = e.getKeyChar();
 		if (keyTyped == 'Z') {
@@ -842,10 +837,6 @@ public class PluginIOHyperstackViewWithImagePlus extends PluginIOView implements
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		if (t != null) {
-			t.stop();
-			t = null;
-		}
 	}
 
 	@Override

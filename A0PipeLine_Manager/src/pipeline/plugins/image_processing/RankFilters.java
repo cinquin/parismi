@@ -125,11 +125,7 @@ public class RankFilters extends TwoDPlugin {
 
 		int[] lineRadius;
 		int kRadius;
-		// int kNPoints;
-		// makeKernel(radius);
-		if (this.lineRadius == null) {
-			Utils.log("null lineRadius", LogLevel.WARNING);
-		}
+
 		lineRadius = (this.lineRadius.clone()); // cloning also required by doFiltering method
 		kRadius = this.kRadius;
 		// kNPoints = this.kNPoints;

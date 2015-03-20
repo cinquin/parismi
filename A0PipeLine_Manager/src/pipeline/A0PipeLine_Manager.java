@@ -597,7 +597,7 @@ public class A0PipeLine_Manager implements PlugIn {
 				}
 				return sourceRow;
 			}
-			return -1;// We shouldn't get here
+			throw new InternalError("shouldn't get here");
 		}
 
 		/**
@@ -747,10 +747,10 @@ public class A0PipeLine_Manager implements PlugIn {
 									new BufferedOutputStream(fos)) {
 								final byte[] buffer = new byte[10000000];
 								int bytesRead;
-								@SuppressWarnings("unused")
+								/*@SuppressWarnings("unused")
 								int n = 0;
 								@SuppressWarnings("unused")
-								final File f = file;
+								final File f = file;*/
 								SwingUtilities.invokeLater(() -> {
 									// decompressionProgress.setIndeterminate(false);
 									// decompressionProgress.setMinimum(0);
@@ -769,7 +769,7 @@ public class A0PipeLine_Manager implements PlugIn {
 											});
 									}
 									os.write(buffer, 0, bytesRead);
-									n++;
+									//n++;
 								}
 								SwingUtilities.invokeLater(() -> {
 									// decompressionProgress.setValue(decompressionProgress.getMaximum());
@@ -3277,7 +3277,6 @@ public class A0PipeLine_Manager implements PlugIn {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			plugins.values();
 		}
 
 		private boolean isPlugin(Class<?> clazz) {
@@ -5253,7 +5252,7 @@ public class A0PipeLine_Manager implements PlugIn {
 	}
 
 	// Copied from http://weblogs.java.net/blog/alexfromsun/archive/2006/02/debugging_swing.html
-	public class CheckThreadViolationRepaintManager extends RepaintManager {
+	public static final class CheckThreadViolationRepaintManager extends RepaintManager {
 		// It is recommended to pass the complete check
 		private boolean completeCheck = true;
 		private WeakReference<JComponent> lastComponent;

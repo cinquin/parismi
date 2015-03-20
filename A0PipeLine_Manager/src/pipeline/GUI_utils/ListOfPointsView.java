@@ -1000,8 +1000,8 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 				} else
 					modelEvent = null;
 			}
-			dirty.set(true);
 			synchronized (dirty) {
+				dirty.set(true);
 				tableStructurePossiblyChanged = true;// = e.getType() == TableModelEvent.HEADER_ROW;
 				if (tableStructurePossiblyChanged)
 					Utils.log("Table structure change event", LogLevel.DEBUG);

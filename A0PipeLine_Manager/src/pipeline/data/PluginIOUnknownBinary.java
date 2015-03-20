@@ -18,8 +18,7 @@ public class PluginIOUnknownBinary extends PluginIO {
 
 	@Override
 	public File asFile(File saveTo, boolean useBigTIFF) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new RuntimeException("Unimplemented");
 	}
 
 	@Override

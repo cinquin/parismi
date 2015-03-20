@@ -42,7 +42,7 @@ public class ZStitch extends MergeFiles implements SpecialDimPlugin, AuxiliaryIn
 
 	@Override
 	public String getToolTip() {
-		return "Concatenate TIFF stacks whose path is given a path that can contain wildcards. "
+		return "Concatenate stacks whose path is given a path that can contain wildcards. "
 				+ "At this point result must fit in RAM";
 	}
 

@@ -82,8 +82,6 @@ public class ThresholdToBinaryFloatSlider extends TwoDPlugin {
 			float oldMax = maxThreshold;
 			minThreshold = ((float[]) intrangeparam.getValue())[0];
 			maxThreshold = ((float[]) intrangeparam.getValue())[1];
-			if (!stillChanging) {
-			}
 			if ((pipelineCallback != null) && ((minThreshold != oldMin) || (maxThreshold != oldMax)))
 				pipelineCallback.parameterValueChanged(ourRow, null, false);
 		}

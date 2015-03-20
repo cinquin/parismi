@@ -105,7 +105,7 @@ public class SystemCallToExternalProgram extends LinkToExternalProgram {
 				}
 
 				@Override
-				public void finalize() {
+				protected void finalize() {
 					try {
 						if (process != null)
 							process.destroy();
@@ -141,12 +141,15 @@ public class SystemCallToExternalProgram extends LinkToExternalProgram {
 		}
 	}
 
+	@SuppressWarnings("null")
 	@Override
 	public void terminate(boolean blockUntilTerminated) {
 		if (process != null) {
-			synchronized (process) {
-				process.destroy();
-				process = null;
+			synchronized (this) {
+				if (process != null) {
+					process.destroy();
+					process = null;
+				}
 			}
 		}
 	}

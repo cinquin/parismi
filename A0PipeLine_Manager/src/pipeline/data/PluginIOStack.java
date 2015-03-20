@@ -17,6 +17,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import pipeline.data.InputOutputObjectDimensions.dimensionType;
 import pipeline.data.tiff_read_write.TIFFFileAccessor;
 import pipeline.misc_util.FormatException;
@@ -428,7 +430,8 @@ public class PluginIOStack extends PluginIOHyperstack implements IPluginIOStack 
 	@Override
 	public File asFile(File saveTo, boolean useBigTIFF) throws IOException, InterruptedException {
 		computePixelArray();
-		File f = saveTo != null ? saveTo : File.createTempFile("StackSaveToOutput:", ".tiff");
+		@SuppressWarnings("null")
+		@NonNull File f = saveTo != null ? saveTo : File.createTempFile("StackSaveToOutput:", ".tiff");
 		TIFFFileAccessor testTIFF = new TIFFFileAccessor(f, getName(), pType, calibration, useBigTIFF);
 		if (getImageAcquisitionMetadata() instanceof ChannelInfo)
 			testTIFF.setImageAcquisitionMetadata(new ChannelInfo[] { (ChannelInfo) getImageAcquisitionMetadata() });

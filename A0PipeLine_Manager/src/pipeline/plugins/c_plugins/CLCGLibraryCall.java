@@ -49,7 +49,6 @@ public class CLCGLibraryCall extends ExternalCallToLibrary implements AuxiliaryI
 				sigma1 = ((int[]) param1.getValue())[0];
 				pipelineCallback.parameterValueChanged(ourRow, null, false);
 			}
-
 		}
 	}
 
@@ -189,9 +188,7 @@ public class CLCGLibraryCall extends ExternalCallToLibrary implements AuxiliaryI
 
 	private int width;
 	private int height;
-	int nChannels;
 	private int nSlices;
-	int sliceInterval;
 	private boolean changedInput = true;
 
 	@Override

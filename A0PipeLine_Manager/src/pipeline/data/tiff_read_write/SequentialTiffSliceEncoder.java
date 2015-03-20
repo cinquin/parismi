@@ -118,11 +118,11 @@ class SequentialTiffSliceEncoder {
 			ifdSize = 8 + nEntries * 20 + 8;
 		int descriptionSize = description != null ? description.length : 0;
 		scaleSize = fi.unit != null && fi.pixelWidth != 0 && fi.pixelHeight != 0 ? SCALE_DATA_SIZE : 0;
-		if (!bigTiff)
+		/*if (!bigTiff)
 			imageOffset =
 					HDR_SIZE + ifdSize + bpsSize + descriptionSize + scaleSize + colorMapSize + nMetaDataEntries * 4
 							+ metaDataSize;
-		else
+		else*/
 			imageOffset =
 					HDR_SIZE + ifdSize + bpsSize + descriptionSize + scaleSize + colorMapSize + nMetaDataEntries * 4
 							+ metaDataSize;

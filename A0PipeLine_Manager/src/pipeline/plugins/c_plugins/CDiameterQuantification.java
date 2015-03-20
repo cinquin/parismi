@@ -33,7 +33,7 @@ import pipeline.plugins.ExternalCallToLibrary;
 
 public class CDiameterQuantification extends ExternalCallToLibrary {
 
-	private class MethodListener extends ParameterListenerAdapter {
+	private static class MethodListener extends ParameterListenerAdapter {
 	}
 
 	private ParameterListener methodListener0 = new MethodListener();

@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import pipeline.GUI_utils.bean_table.DoNotShowInTable;
 import pipeline.GUI_utils.bean_table.MethodToGetColumnNames;
 import pipeline.misc_util.Utils;
@@ -23,7 +25,7 @@ public class Quantifiable extends QuantifiableNames implements IQuantifiable {
 		q2.quantifiedProperties.addAll(quantifiedProperties.stream().map(Float::new).collect(Collectors.toList()));
 	}
 
-	private List<Float> quantifiedProperties = new ArrayList<>();
+	private @NonNull List<Float> quantifiedProperties = new ArrayList<>();
 
 	/**
 	 * 

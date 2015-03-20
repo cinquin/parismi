@@ -9,8 +9,10 @@ package pipeline.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 public class QuantifiableNames implements IQuantifiableNames {
-	private List<String> namesOfQuantifiedProperties = new ArrayList<>();
+	private @NonNull List<String> namesOfQuantifiedProperties = new ArrayList<>();
 
 	@Override
 	public boolean hasQuantifiedProperty(String name) {

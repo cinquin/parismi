@@ -14,13 +14,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import pipeline.GUI_utils.ListOfPointsView;
 import pipeline.GUI_utils.PluginIOView;
 import pipeline.GUI_utils.XYSeriesReflection;
 import pipeline.GUI_utils.bean_table.BeanTableModel;
 import pipeline.GUI_utils.bean_table.DoNotShowInTable;
-import pipeline.misc_util.Utils;
-import pipeline.misc_util.Utils.LogLevel;
 
 public class PluginIOListOfQ<T extends IPluginIOListMemberQ<T>> extends PluginIOList<T> implements IPluginIOListOfQ<T> {
 
@@ -40,7 +40,7 @@ public class PluginIOListOfQ<T extends IPluginIOListMemberQ<T>> extends PluginIO
 		}
 	}
 
-	List<String> quantifiedPropertyNames = new ArrayList<>();
+	@NonNull List<String> quantifiedPropertyNames = new ArrayList<>();
 
 	@Override
 	public List<String> getQuantifiedPropertyNames() {
@@ -50,14 +50,6 @@ public class PluginIOListOfQ<T extends IPluginIOListMemberQ<T>> extends PluginIO
 
 	@Override
 	public void setQuantifiedPropertyNames(List<String> desc) {
-		if (desc == null) {
-			try {
-				throw new NullPointerException();// throw exception to create stack to print
-			} catch (Exception e) {
-				Utils.log("ERROR: setting null quantified property names", LogLevel.ERROR);
-				Utils.printStack(e);
-			}
-		}
 		quantifiedPropertyNames = desc;
 	}
 

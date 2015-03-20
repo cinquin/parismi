@@ -186,15 +186,6 @@ public class PluginIOCells extends PluginIOListOfQ<ClickedPoint> implements Clon
 			internalList = new ArrayList<>(20);
 			clearListeningSeries();
 		}
-		if (quantifiedPropertyNames == null) {
-			try {
-				throw new NullPointerException();
-			} catch (Exception e) {
-				Utils.log("Null q prop names", LogLevel.ERROR);
-				Utils.printStack(e);
-			}
-			setQuantifiedPropertyNames(new ArrayList<String>());
-		}
 	}
 
 	private boolean addDontFireValueChanged(ClickedPoint p) {

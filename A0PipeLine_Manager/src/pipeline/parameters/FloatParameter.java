@@ -40,7 +40,7 @@ public class FloatParameter extends AbstractParameter {
 	}
 
 	public float getFloatValue() {
-		return new Float(floatValue);
+		return floatValue;
 	}
 
 	@Override

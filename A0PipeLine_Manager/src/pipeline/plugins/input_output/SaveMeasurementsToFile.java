@@ -64,7 +64,6 @@ public class SaveMeasurementsToFile extends FourDPlugin {
 
 	public final static int skeletonJunction = 2;
 	public final static int skeletonEndPoint = 3;
-	String[] filterChoices = { "", "None", "Skeleton junction", "Skeleton end point" };
 
 	private AbstractParameter userNotes = new TextParameter("User measurements to store",
 			"User measurements to save to text file", "", true, null, null);

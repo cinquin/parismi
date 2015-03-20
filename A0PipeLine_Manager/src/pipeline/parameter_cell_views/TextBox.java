@@ -65,8 +65,10 @@ public class TextBox extends AbstractParameterCellView implements MouseListener,
 				currentValue = newValue;
 				lastValue = new String(newValue);
 				lastNonChangingValue = lastValue;
-				currentParameter.setValue(currentValue);
-				currentParameter.fireValueChanged(false, true, true);
+				if (currentParameter != null) {
+					currentParameter.setValue(currentValue);
+					currentParameter.fireValueChanged(false, true, true);
+				}
 			}
 			silenceUpdate = false;
 		}

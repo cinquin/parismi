@@ -139,6 +139,40 @@ public class XYSeriesReflection extends XYSeriesE {
 			return Double.compare(d1, o.d1);
 		}
 
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + getOuterType().hashCode();
+			long temp;
+			temp = Double.doubleToLongBits(d1);
+			result = prime * result + (int) (temp ^ (temp >>> 32));
+			temp = Double.doubleToLongBits(d2);
+			result = prime * result + (int) (temp ^ (temp >>> 32));
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			NumberPair other = (NumberPair) obj;
+			if (!getOuterType().equals(other.getOuterType()))
+				return false;
+			if (Double.doubleToLongBits(d1) != Double.doubleToLongBits(other.d1))
+				return false;
+			if (Double.doubleToLongBits(d2) != Double.doubleToLongBits(other.d2))
+				return false;
+			return true;
+		}
+
+		private XYSeriesReflection getOuterType() {
+			return XYSeriesReflection.this;
+		}
 	}
 
 	@Override

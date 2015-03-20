@@ -8,10 +8,12 @@ package pipeline.data;
 
 import java.util.List;
 
-public interface IQuantifiable extends IQuantifiableNames {
-	List<Float> getQuantifiedProperties();
+import org.eclipse.jdt.annotation.NonNull;
 
-	void setQuantifiedProperties(List<Float> qp);
+public interface IQuantifiable extends IQuantifiableNames {
+	@NonNull List<Float> getQuantifiedProperties();
+
+	void setQuantifiedProperties(@NonNull List<Float> qp);
 
 	float getQuantifiedProperty(String name);
 

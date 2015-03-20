@@ -186,7 +186,7 @@ public class CActiveContourLibraryCall extends ExternalCallToLibScalingParams im
 		actionTypeParameter.addPluginListener(this);
 		actionTypeParameter.dontPrintOutValueToExternalPrograms = true; // won't be necessary soon
 
-		actionType = (byte) actionTypeParameter.getSelectionIndex();
+		//actionType = (byte) actionTypeParameter.getSelectionIndex();
 		splitParameters = (Object[]) param[1].getValue();
 
 		contourRunTimeParameter = (FloatParameter) splitParameters[1];
@@ -231,14 +231,12 @@ public class CActiveContourLibraryCall extends ExternalCallToLibScalingParams im
 
 	private ActionParameter saveResultsParameter;
 	private ComboBoxParameter actionTypeParameter;
-	@SuppressWarnings("unused")
-	private byte actionType = 0;
 
 	private class ActionTypeListener extends ParameterListenerAdapter {
 		@Override
 		public void parameterValueChanged(boolean stillChanging, AbstractParameter parameterWhoseValueChanged,
 				boolean keepQuiet) {
-			actionType = (byte) actionTypeParameter.getSelectionIndex();
+			//actionType = (byte) actionTypeParameter.getSelectionIndex();
 		}
 
 	}
@@ -262,18 +260,16 @@ public class CActiveContourLibraryCall extends ExternalCallToLibScalingParams im
 				File f = null;
 				try {
 					f = File.createTempFile("savedEditedSegmentation", ".tiff");
+					savedModificationsPath = f.getPath();
 				} catch (IOException e) {
 					Utils.printStack(e);
 				}
-				savedModificationsPath = f.getPath();
 			}
 			try {
 				ProcessBuilder pb =
 						new ProcessBuilder("cp", getOutput().asFile(null, true).getAbsolutePath(),
 								savedModificationsPath);// getStoredOutputFileName()
 				pb.redirectErrorStream(true);
-				Utils.log("copied " + getOutput().asFile(null, true).getAbsolutePath() + " to "
-						+ savedModificationsPath, LogLevel.DEBUG);
 				Process process = pb.start();
 				try {
 					process.waitFor();
@@ -535,8 +531,6 @@ public class CActiveContourLibraryCall extends ExternalCallToLibScalingParams im
 		}
 	}
 
-	boolean obsolete = false;
-
 	@Override
 	public int mouseClicked(PluginIO clickedPoints, boolean inputHasChanged, MouseEvent generatingEvent)
 			throws InterruptedException {
@@ -552,9 +546,9 @@ public class CActiveContourLibraryCall extends ExternalCallToLibScalingParams im
 		pluginInputs.put("Preexisting segmentation protobuf", pluginOutputs.get("Seeds"));
 		pluginInputs.put("Seeds", clickedPoints);
 
+		/*
 		if (pluginInputs.get("Preexisting segmentation") != null) {
-
-		}
+		}*/
 
 		Utils.log("Calling get more work at time " + System.currentTimeMillis(), LogLevel.VERBOSE_DEBUG);
 		sendSeedsToGetMoreWork();

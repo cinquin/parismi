@@ -6,6 +6,7 @@
  ******************************************************************************/
 package pipeline.parameters;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 import pipeline.misc_util.Utils;
@@ -113,7 +114,7 @@ public class TableParameter extends AbstractParameter {
 		return Utils.printStringArray(getSelectionString());
 	}
 
-	public interface EntryPostProcessor {
+	public interface EntryPostProcessor extends Serializable {
 		Object postProcess(Object input);
 	}
 

@@ -191,7 +191,7 @@ public class PluginIOHyperstackWithToolbar extends PluginIOHyperstackViewWithIma
 	private void handlePointLabeling(int x, int y, double z, float zThickness, int t, int boxWidth, int boxHeight,
 			int modifier) {
 
-		if ((mousePluginListeners == null) || mousePluginListeners.size() == 0) {
+		if (mousePluginListeners.size() == 0) {
 			// handle labeling ourselves if no plugin is listening
 			if (modifier == PluginIOCells.DELETE_LABELS_MODIFIER) {
 				if (cellsToOverlay == null) {
@@ -323,7 +323,7 @@ public class PluginIOHyperstackWithToolbar extends PluginIOHyperstackViewWithIma
 
 		// TODO Find a more elegant structure; maybe link to a labeling plugin
 
-		if ((mousePluginListeners == null) || mousePluginListeners.size() == 0) {
+		if (mousePluginListeners.size() == 0) {
 			handlePointLabeling(x, y, z, zThickness, t, boxWidth, boxHeight, p.modifiers);
 			return;// redundant
 		}
@@ -341,7 +341,7 @@ public class PluginIOHyperstackWithToolbar extends PluginIOHyperstackViewWithIma
 		clickList.add(p);
 		PluginIOCells click = new PluginIOCells(clickList);
 		notifyMousePluginListeners(click, false);
-		if ((mousePluginListeners == null) || mousePluginListeners.size() == 0) {
+		if (mousePluginListeners.size() == 0) {
 			Utils.log("No one listening to clicks", LogLevel.WARNING);
 		}
 	}
@@ -373,7 +373,7 @@ public class PluginIOHyperstackWithToolbar extends PluginIOHyperstackViewWithIma
 			}
 		}
 		notifyMousePluginListeners(clickedPoints, inputHasChanged);
-		if ((mousePluginListeners == null) || mousePluginListeners.size() == 0) {
+		if (mousePluginListeners.size() == 0) {
 			for (ClickedPoint p : ((PluginIOCells) clickedPoints).getPoints()) {
 				// FIXME This does not test properly for set width and height
 				int width =

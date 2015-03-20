@@ -128,7 +128,7 @@ public class EmbedImageWithProtobufSeeds extends ThreeDPlugin implements Auxilia
 	private transient AtomicInteger sliceRegistry = new AtomicInteger();
 	private volatile boolean abort = false;
 
-	private final int numberOfThreadsToUse = 4;
+	private static final int numberOfThreadsToUse = 4;
 	private transient Runnable[] tasks = new Runnable[numberOfThreadsToUse];
 	private transient Future<?>[] futures = new Future[numberOfThreadsToUse];
 

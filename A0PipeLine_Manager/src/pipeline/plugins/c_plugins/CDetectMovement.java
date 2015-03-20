@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import pipeline.PreviewType;
 import pipeline.GUI_utils.PluginIOHyperstackViewWithImagePlus;
 import pipeline.GUI_utils.PluginIOView;
@@ -25,6 +27,7 @@ import pipeline.data.PluginIOImage.PixelType;
 import pipeline.data.tiff_read_write.TIFFFileAccessor;
 import pipeline.external_plugin_interfaces.JNACallToNativeLibrary;
 import pipeline.misc_util.FileNameUtils;
+import pipeline.misc_util.PluginRuntimeException;
 import pipeline.misc_util.Utils;
 import pipeline.misc_util.Utils.LogLevel;
 import pipeline.parameters.AbstractParameter;
@@ -102,7 +105,6 @@ public class CDetectMovement extends ExternalCallToLibrary implements SpecialDim
 
 	ActionParameter saveResultsParameter;
 	ComboBoxParameter actionTypeParameter;
-	byte actionType = 0;
 
 	@Override
 	public void setParameters(AbstractParameter[] param) {
@@ -196,7 +198,7 @@ public class CDetectMovement extends ExternalCallToLibrary implements SpecialDim
 		return PixelType.BYTE_TYPE;
 	}
 
-	private File getFile() {
+	private @NonNull File getFile() {
 		String fileNameString =
 				FileNameUtils.removeIncrementationMarks(workingDirectory.getValue() + Utils.fileNameSeparator
 						+ FileNameUtils.removeIncrementationMarks((String) fileName.getValue()));
@@ -204,25 +206,21 @@ public class CDetectMovement extends ExternalCallToLibrary implements SpecialDim
 		File directory = new File(fileNameString).getParentFile();
 		if (!(directory.exists() && directory.isDirectory())) {
 			if (directory.isFile()) {
-				Utils.displayMessage("Cannot save to " + directory + " because it is a file", true, LogLevel.ERROR);
-				return null;
+				throw new PluginRuntimeException("Cannot save to " + directory + " because it is a file", true);
 			}
 			if (!directory.mkdirs()) {
-				Utils.displayMessage("Directory " + directory + " does not exist and could not be created", true,
-						LogLevel.ERROR);
-				return null;
+				throw new PluginRuntimeException("Directory " + directory + " does not exist and could not be created", true);
 			}
 		}
 
 		File result = new File(fileNameString);
 
 		if (result.exists() && (result.length() > 5000000000L)) {
-			Utils.displayMessage(
+			throw new PluginRuntimeException(
 					"File "
 							+ result.getAbsolutePath()
 							+ " already exists and is over ~5GB. Not overwriting; please delete file or choose a different name",
-					true, LogLevel.ERROR);
-			return null;
+					true);
 		}
 
 		return result;

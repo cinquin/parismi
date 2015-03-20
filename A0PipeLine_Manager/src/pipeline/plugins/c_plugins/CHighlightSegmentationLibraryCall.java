@@ -26,7 +26,6 @@ import pipeline.data.PluginIOImage.PixelType;
 import pipeline.data.PluginIOListener;
 import pipeline.misc_util.FileNameUtils;
 import pipeline.misc_util.ParameterListenerWeakRef;
-import pipeline.misc_util.PluginIOListenerWeakRef;
 import pipeline.misc_util.Utils;
 import pipeline.misc_util.Utils.LogLevel;
 import pipeline.parameters.AbstractParameter;
@@ -161,8 +160,6 @@ public class CHighlightSegmentationLibraryCall extends ExternalCallToLibrary imp
 		fileName = (AbstractParameter) ((Object[]) fileParams.getValue())[0];
 		workingDirectory = (AbstractParameter) ((Object[]) fileParams.getValue())[1];
 	}
-
-	PluginIOListenerWeakRef weakRefToThis = new PluginIOListenerWeakRef(this);
 
 	@Override
 	public void postRunUpdates() {

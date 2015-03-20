@@ -858,16 +858,12 @@ public class JNACallToNativeLibrary extends LinkToExternalProgram {
 
 	private transient CallbackFunctions callback = new CallbackFunctions();
 
-	@SuppressWarnings("unused")
-	private transient List<String> lastProgramNameAndArguments = null;
-
 	private int returnValue;
 
 	@Override
 	public final void establish(final List<String> programNameAndArguments, SpecialDimPlugin dimensionAccessor)
 			throws InterruptedException {
 		returnValue = 0;
-		lastProgramNameAndArguments = programNameAndArguments;
 		transferBuffer = null;
 		if ((callThread != null) && callThread.isAlive())
 			throw new RuntimeException("Thread exists: JNA call already established");

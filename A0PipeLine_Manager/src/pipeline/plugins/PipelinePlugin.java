@@ -373,8 +373,6 @@ public interface PipelinePlugin {
 	 */
 	boolean createOutput(InputOutputDescription desc, List<PluginIOView> views);
 
-	void finalize();
-
 	/**
 	 * Called by the pipeline after input to plugin has potentially changed. If the plugin needs to recreate its outputs
 	 * (for example because dimensions have changed), it should clear the outputs and return true.

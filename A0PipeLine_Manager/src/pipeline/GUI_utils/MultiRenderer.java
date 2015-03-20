@@ -66,7 +66,7 @@ import pipeline.parameters.TextParameter;
  * Modified from original version by Bart Cremers
  **/
 public class MultiRenderer implements TableCellRenderer, TableCellEditor {
-	private TableCellRenderer defaultRenderer = new DefaultTableCellRenderer();
+	private final TableCellRenderer defaultRenderer = new DefaultTableCellRenderer();
 	private TableCellEditor defaultEditor;
 
 	private Map<Class<?>, TableCellRenderer> registeredRenderers = new HashMap<>();
@@ -169,7 +169,7 @@ public class MultiRenderer implements TableCellRenderer, TableCellEditor {
 			delegate = getDelegateRenderer(value.getClass());
 		}
 
-		if (delegate == null) {
+		if (delegate == null || value == null) {
 			delegate = defaultRenderer;
 		}
 
@@ -214,7 +214,7 @@ public class MultiRenderer implements TableCellRenderer, TableCellEditor {
 			delegateEditor = getDelegateEditor(value.getClass());
 		}
 
-		if (delegateEditor == null) {
+		if (delegateEditor == null || value == null) {
 			delegateEditor = defaultEditor;
 		}
 

@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -118,8 +117,6 @@ class BigTiffDecoder {
 		this.directory = directory;
 		this.name = name;
 	}
-
-	FileChannel fileChannel;
 
 	public BigTiffDecoder(RandomAccessFile in, String name) {
 		directory = "";
@@ -794,7 +791,7 @@ class BigTiffDecoder {
 					if (ifdCount == 1) {
 						byte[] s = getString(count, lvalue);
 						if (debugMode)
-							Utils.log("Image description is\n" + new String(s), LogLevel.VERBOSE_DEBUG);
+							Utils.log("Image description is\n" + (s != null ? new String(s) : "EMPTY"), LogLevel.VERBOSE_DEBUG);
 						if (s != null)
 							saveImageDescription(s, fi);
 					}
@@ -1191,8 +1188,7 @@ class BigTiffDecoder {
 		ifdOffset = OpenImageFileHeader();
 		if (ifdOffset < 0L) {
 			in.close();
-			Utils.log("Negative TIFF file offset", LogLevel.ERROR);
-			return null;
+			throw new RuntimeException("Negative TIFF file offset");
 		}
 		if (debugMode)
 			dInfo = "\n  " + name + ": opening\n";
@@ -1220,8 +1216,9 @@ class BigTiffDecoder {
 			}
 		}
 		if (info.size() == 0) {
-			in.close();
-			return null;
+			throw new RuntimeException("Empty TIFF info");
+			//in.close();
+			//return null;
 		} else {
 			BareBonesFileInfoLongOffsets[] fi = new BareBonesFileInfoLongOffsets[info.size()];
 			info.copyInto(fi);

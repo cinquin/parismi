@@ -89,22 +89,9 @@ public class convolveOneSliceIn3D implements convolver3D {
 				pixels_in[i] = source.getPixels(i);
 		}
 
-		if (destination == null) {
-			Utils.log("Null destination in 3D convolve", LogLevel.ERROR);
-		}
 		if (!(destination instanceof float[])) {
-			Utils.log("not float array but instead ", LogLevel.DEBUG);
-			if (destination == null) {
-				Utils.log("null pixels", LogLevel.DEBUG);
-			}
 			isByte = destination instanceof byte[];
 			isShort = destination instanceof short[];
-			if (isShort) {
-				Utils.log("short processor", LogLevel.DEBUG);
-			}
-			if (isByte) {
-				Utils.log("byte processor", LogLevel.DEBUG);
-			}
 		}
 		float[] destinationPixels = (float[]) destination;
 		for (int y = 0; y < h; y++) {

@@ -15,8 +15,7 @@ public class PluginIOPipeline extends PluginIO {
 
 	@Override
 	public File asFile(File saveTo, boolean useBigTIFF) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+		throw new RuntimeException("Unimplemented");
 	}
 
 }
