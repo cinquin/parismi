@@ -101,7 +101,10 @@ public class LoadUnknownBinary extends ThreeDPlugin implements AuxiliaryInputOut
 			if (length > Integer.MAX_VALUE)
 				throw new IllegalArgumentException("Protobuf file too large");
 			bytes = new byte[(int) length];
-			fileInput.read(bytes);
+			int read = fileInput.read(bytes);
+			if (read < length) {
+				throw new RuntimeException();
+			}
 		} catch (IOException e) {
 			Utils.printStack(e);
 		}

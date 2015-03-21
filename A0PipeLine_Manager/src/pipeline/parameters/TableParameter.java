@@ -9,21 +9,21 @@ package pipeline.parameters;
 import java.io.Serializable;
 import java.util.Arrays;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import pipeline.misc_util.Utils;
 
 // simple class for one-column editable JTable
 public class TableParameter extends AbstractParameter {
 	private static final long serialVersionUID = -4579907800837898220L;
 	private String[] elements;
-	private int[] currentChoices;
+	private @NonNull int[] currentChoices = new int [0];
 
 	public boolean hasBeenEdited = false;
 
 	public boolean displayHorizontally = false;
 
 	private int[] getValidSelectedItems() {
-		if (currentChoices == null)
-			return new int[0];
 		int[] result = new int[currentChoices.length];
 		int index = 0;
 		for (int currentChoice : currentChoices) {
@@ -60,7 +60,7 @@ public class TableParameter extends AbstractParameter {
 		return -1;
 	}
 
-	public int[] getSelection() {
+	public @NonNull int[] getSelection() {
 		return currentChoices;
 	}
 

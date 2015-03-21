@@ -205,7 +205,8 @@ public class TextBox extends AbstractParameterCellView implements MouseListener,
 	private int ourColumn = -1;
 	private int ourRow = -1;
 
-	public Component getTableCellRendererOrEditorComponent(final JTable table, Object value, boolean isSelected,
+	@Override
+	public Component getRendererOrEditorComponent(JTable table, Object value, boolean isSelected,
 			boolean hasFocus, int row, int column, boolean rendererCalled) {
 		ourColumn = column;
 		ourRow = row;
@@ -222,10 +223,7 @@ public class TextBox extends AbstractParameterCellView implements MouseListener,
 			setBackground(Utils.COLOR_FOR_ODD_ROWS);
 		textField.setBackground(getBackground());
 
-		if (value == null) {
-			currentParameter = new TextParameter("", "", "", false, null, null);
-		} else
-			currentParameter = (TextParameter) value;
+		currentParameter = (TextParameter) value;
 
 		currentParameter.addGUIListener(this);
 
@@ -248,17 +246,6 @@ public class TextBox extends AbstractParameterCellView implements MouseListener,
 		silenceUpdate = false;
 		return this;
 
-	}
-
-	@Override
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-			int row, int column) {
-		return getTableCellRendererOrEditorComponent(table, value, isSelected, hasFocus, row, column, true);
-	}
-
-	@Override
-	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-		return getTableCellRendererOrEditorComponent(table, value, isSelected, true, row, column, false);
 	}
 
 	@Override

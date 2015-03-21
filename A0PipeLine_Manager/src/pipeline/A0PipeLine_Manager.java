@@ -1980,11 +1980,15 @@ public class A0PipeLine_Manager implements PlugIn {
 
 			if (pluginObjects[pluginID] instanceof AuxiliaryInputOutputPlugin) {
 				AuxiliaryInputOutputPlugin newPlugin = (AuxiliaryInputOutputPlugin) pluginObjects[pluginID];
+				String [] inputValues = new String[newPlugin.getInputLabels().length];
+				for (int i = 0; i < newPlugin.getInputLabels().length; i++) {
+					inputValues[i] = "";
+				}
 				theRow[AUXILIARY_INPUTS] =
 						new TwoColumnTableParameter(
 								"Auxiliary inputs",
 								"Auxiliary inputs; fill in corresponding rows; relative reference by default, $ for absolute reference",
-								newPlugin.getInputLabels(), new String[newPlugin.getInputLabels().length], null);
+								newPlugin.getInputLabels(), inputValues, null);
 				theRow[AUXILIARY_OUTPUTS] =
 						new TableParameter(
 								"Auxiliary inputs",
@@ -2292,7 +2296,7 @@ public class A0PipeLine_Manager implements PlugIn {
 					if ((currentColumn == PLUGIN_PARAM_1_FIELD) || (currentColumn == PLUGIN_PARAM_2_FIELD))
 						return;
 					int currentRow = 0;
-					int[] selectedRows = table1.getSelectedRows();
+					/*int[] selectedRows = table1.getSelectedRows();
 
 					if (selectedRows.length == 1) {
 						currentRow = selectedRows[0];
@@ -2303,7 +2307,7 @@ public class A0PipeLine_Manager implements PlugIn {
 						if (selectedRows[1] != mousePressedRow) {
 							currentRow = selectedRows[1];
 						}
-					}
+					}*/
 					currentRow = table1.rowAtPoint(m.getPoint());
 					if (currentRow == -1) {
 						if (m.getPoint().y > totalRowHeights(table1))
@@ -4264,6 +4268,16 @@ public class A0PipeLine_Manager implements PlugIn {
 						}
 					}
 
+					if (newRow[AUXILIARY_INPUTS] != null) {
+						TwoColumnTableParameter auxInputs = (TwoColumnTableParameter) newRow[AUXILIARY_INPUTS];
+						Object[] rowReferences = auxInputs.getSecondColumn();
+						for (int i = 0; i < rowReferences.length ; i++) {
+							if (rowReferences[i] == null) {
+								rowReferences[i] = "";
+							}
+						}
+					}
+					
 					((AtomicBoolean) newRow[IS_UPDATING]).set(false);
 					((AtomicBoolean) newRow[UPDATE_QUEUED]).set(false);
 					if (newRow[OUTPUT_LOCKS] == null)

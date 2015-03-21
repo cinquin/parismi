@@ -16,6 +16,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JTable;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import pipeline.misc_util.Utils;
 import pipeline.parameters.ActionParameter;
 
@@ -63,9 +65,10 @@ public class Button extends AbstractParameterCellView {
 
 	private boolean evenTableRow;
 
-	Component getTableCellRendererOrEditorComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-			int row, int column) {
-
+	@Override
+	protected Component getRendererOrEditorComponent(JTable table, @NonNull Object value, boolean isSelected,
+			boolean hasFocus, int row, int column, boolean rendererCalled) {
+		
 		evenTableRow = (row % 2 == 0);
 		setOpaque(true);
 		if (evenTableRow) {
@@ -74,9 +77,6 @@ public class Button extends AbstractParameterCellView {
 			this.setBackground(Utils.COLOR_FOR_ODD_ROWS);
 		}
 		currentParameter = (ActionParameter) value;
-		if (value == null) {
-			return this;
-		}
 		silenceUpdate = true;
 
 		theButton.setEnabled(currentParameter.editable()[0]);
@@ -90,17 +90,6 @@ public class Button extends AbstractParameterCellView {
 		silenceUpdate = false;
 		return this;
 
-	}
-
-	@Override
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-			int row, int column) {
-		return getTableCellRendererOrEditorComponent(table, value, isSelected, hasFocus, row, column);
-	}
-
-	@Override
-	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-		return getTableCellRendererOrEditorComponent(table, value, isSelected, true, row, column);
 	}
 
 	@Override

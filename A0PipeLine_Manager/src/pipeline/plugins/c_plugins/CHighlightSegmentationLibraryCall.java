@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import pipeline.GUI_utils.ListOfPointsView;
 import pipeline.GUI_utils.PluginIOView;
 import pipeline.data.IPluginIO;
@@ -44,10 +46,11 @@ import pipeline.plugins.SpecialDimPlugin;
 public class CHighlightSegmentationLibraryCall extends ExternalCallToLibrary implements PluginIOListener,
 		SpecialDimPlugin, MouseEventPlugin {
 
-	private String colorWithField = "";
+	private @NonNull String colorWithField = "";
 
 	private class MethodListener extends ParameterListenerAdapter {
 
+		@SuppressWarnings("null")
 		@Override
 		public void parameterValueChanged(boolean stillChanging, AbstractParameter parameterWhoseValueChanged,
 				boolean keepQuiet) {

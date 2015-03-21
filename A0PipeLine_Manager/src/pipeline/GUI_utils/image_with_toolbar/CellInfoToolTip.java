@@ -123,7 +123,7 @@ class CellInfoToolTip extends JDialog implements MouseListener, ComponentListene
 		TwoColumnTableParameter tableParam = new TwoColumnTableParameter("Values", "", column1, column2, null);
 
 		TwoColumnJTable twoColumnTable = new TwoColumnJTable();
-		add(twoColumnTable.getTableCellRendererOrEditorComponent(null, tableParam, false, false, 0, 0));
+		add(twoColumnTable.getRendererOrEditorComponent(null, tableParam, false, false, 0, 0, false));
 		pack();
 		setPreferredSize(new Dimension(250, getHeight()));
 		// twoColumnTable.setPreferredSize(new Dimension(100, twoColumnTable.getHeight()));

@@ -23,6 +23,8 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.text.JTextComponent;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import pipeline.GUI_utils.MultiRenderer;
 import pipeline.misc_util.Utils;
 import pipeline.misc_util.Utils.LogLevel;
@@ -52,6 +54,9 @@ public class TwoColumnJTable extends AbstractParameterCellView implements TableM
 		@Override
 		public Component prepareRenderer(TableCellRenderer renderer, int rowIndex, int vColIndex) {
 			Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);
+			if (c == null) {
+				return null;
+			}
 			if (!isCellSelected(rowIndex, vColIndex)) {
 				if (evenTableRow)
 					c.setBackground(new Color(255, 255, 200));
@@ -131,7 +136,6 @@ public class TwoColumnJTable extends AbstractParameterCellView implements TableM
 			secondColumn[row] = value;
 			fireTableCellUpdated(row, col);
 		}
-
 	}
 
 	public TwoColumnJTable() {
@@ -166,7 +170,6 @@ public class TwoColumnJTable extends AbstractParameterCellView implements TableM
 		localTable.setDefaultRenderer(Object.class, multiRenderer2);
 
 		add(localTable, c);
-
 	}
 
 	@Override
@@ -186,8 +189,12 @@ public class TwoColumnJTable extends AbstractParameterCellView implements TableM
 
 	private boolean evenTableRow;
 
-	public Component getTableCellRendererOrEditorComponent(JTable table, Object value, boolean isSelected,
-			boolean hasFocus, int row, int column) {
+	@Override
+	public Component getRendererOrEditorComponent(JTable table, @NonNull Object value, boolean isSelected,
+			boolean hasFocus, int row, int column, boolean rendererCalled) {
+		if (!rendererCalled) {
+			hasFocus = true;
+		}
 		currentParameter = (TwoColumnTableParameter) value;
 
 		evenTableRow = (row % 2 == 0);
@@ -199,13 +206,8 @@ public class TwoColumnJTable extends AbstractParameterCellView implements TableM
 
 		silenceUpdate = true;
 
-		if (currentParameter != null) {
-			firstColumn = currentParameter.getFirstColumn();
-			secondColumn = currentParameter.getSecondColumn();
-		} else {
-			firstColumn = new String[0];
-			secondColumn = new String[0];
-		}
+		firstColumn = currentParameter.getFirstColumn();
+		secondColumn = currentParameter.getSecondColumn();
 
 		localTable.clearSelection();
 		((MyTableModel) localTable.getModel()).fireTableDataChanged();
@@ -213,25 +215,13 @@ public class TwoColumnJTable extends AbstractParameterCellView implements TableM
 
 		// TODO Restore selection from parameter; see how OneColumnJTable does it
 
-		int height_wanted = (int) getPreferredSize().getHeight();
+		int heightWanted = (int) getPreferredSize().getHeight();
 		if (table != null)
-			if (height_wanted > table.getRowHeight(row))
-				table.setRowHeight(row, height_wanted);
+			if (heightWanted > table.getRowHeight(row))
+				table.setRowHeight(row, heightWanted);
 
 		silenceUpdate = false;
 		return this;
-
-	}
-
-	@Override
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-			int row, int column) {
-		return getTableCellRendererOrEditorComponent(table, value, isSelected, hasFocus, row, column);
-	}
-
-	@Override
-	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-		return getTableCellRendererOrEditorComponent(table, value, isSelected, true, row, column);
 	}
 
 	@Override

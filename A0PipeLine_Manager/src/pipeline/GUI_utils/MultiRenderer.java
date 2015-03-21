@@ -158,7 +158,6 @@ public class MultiRenderer implements TableCellRenderer, TableCellEditor {
 		multiRenderer.registerEditor(ActionParameter.class, button2);
 		multiRenderer.registerEditor(List.class, bList2);
 		multiRenderer.registerEditor(DateParameter.class, dateEditor2);
-
 	}
 
 	@Override
@@ -173,11 +172,7 @@ public class MultiRenderer implements TableCellRenderer, TableCellEditor {
 			delegate = defaultRenderer;
 		}
 
-		if (delegate == null || value == null) {
-			// Utils.log("COULD NOT FIND RENDERER COMPONENT",LogLevel.ERROR);
-			return null;
-		} else
-			return delegate.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+		return delegate.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 	}
 
 	public void registerRenderer(Class<?> type, TableCellRenderer renderer) {
@@ -208,7 +203,6 @@ public class MultiRenderer implements TableCellRenderer, TableCellEditor {
 
 	@Override
 	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-		// Utils.log("Get editor for "+value,LogLevel.VERBOSE_VERBOSE_VERBOSE_DEBUG);
 		TableCellEditor delegateEditor = null;
 		if (value != null) {
 			delegateEditor = getDelegateEditor(value.getClass());
@@ -220,8 +214,7 @@ public class MultiRenderer implements TableCellRenderer, TableCellEditor {
 
 		currentEditor = delegateEditor;
 
-		if (delegateEditor == null || value == null) {
-			// Utils.log("COULD NOT FIND EDITOR COMPONENT",LogLevel.ERROR);
+		if (delegateEditor == null) {
 			return null;
 		} else
 			return delegateEditor.getTableCellEditorComponent(table, value, isSelected, row, column);

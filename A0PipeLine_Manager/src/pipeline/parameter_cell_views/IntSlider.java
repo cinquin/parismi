@@ -20,6 +20,8 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import pipeline.misc_util.Utils;
 import pipeline.parameters.IntParameter;
 
@@ -249,7 +251,8 @@ public class IntSlider extends AbstractParameterCellView {
 
 	private boolean evenTableRow;
 
-	public Component getTableCellRendererOrEditorComponent(JTable table, Object value, boolean isSelected,
+	@Override
+	public Component getRendererOrEditorComponent(JTable table, @NonNull Object value, boolean isSelected,
 			boolean hasFocus, int row, int column, boolean rendererCalled) {
 		currentParameter = (IntParameter) value;
 		evenTableRow = (row % 2 == 0);
@@ -300,17 +303,6 @@ public class IntSlider extends AbstractParameterCellView {
 			if (heightWanted > table.getRowHeight(row))
 				table.setRowHeight(row, heightWanted);
 		return this;
-	}
-
-	@Override
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-			int row, int column) {
-		return getTableCellRendererOrEditorComponent(table, value, isSelected, hasFocus, row, column, true);
-	}
-
-	@Override
-	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-		return getTableCellRendererOrEditorComponent(table, value, isSelected, true, row, column, false);
 	}
 
 	@Override

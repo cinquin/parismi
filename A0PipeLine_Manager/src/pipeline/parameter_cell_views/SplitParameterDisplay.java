@@ -26,6 +26,8 @@ import javax.swing.TransferHandler;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import pipeline.GUI_utils.MultiRenderer;
 import pipeline.misc_util.Utils;
 import pipeline.misc_util.Utils.LogLevel;
@@ -87,14 +89,15 @@ public class SplitParameterDisplay extends AbstractParameterCellView {
 
 	private LocalMouseListener localMouseListener;
 
-	public Component getTableCellRendererOrEditorComponent(JTable table, Object value, boolean isSelected,
-			boolean hasFocus, int row, int column, boolean isEditor) {
+	@Override
+	protected Component getRendererOrEditorComponent(JTable table, @NonNull Object value, boolean isSelected,
+			boolean hasFocus, int row, int column, boolean rendererCalled) {
 		if (localMouseListener == null) {
 			localMouseListener = new LocalMouseListener();
 		} else {
 			Toolkit.getDefaultToolkit().removeAWTEventListener(localMouseListener);
 		}
-		if (isEditor) {
+		if (!rendererCalled) {
 			long eventMask = AWTEvent.MOUSE_MOTION_EVENT_MASK + AWTEvent.MOUSE_EVENT_MASK;
 			Toolkit.getDefaultToolkit().addAWTEventListener(localMouseListener, eventMask);
 		}
@@ -139,10 +142,13 @@ public class SplitParameterDisplay extends AbstractParameterCellView {
 					c.weighty = 1.0;
 				}
 
-				if (isEditor) {
+				if (!rendererCalled) {
 					Component editor =
 							((TableCellEditor) comp)
 									.getTableCellEditorComponent(table, valuei, isSelected, row, column);
+					if (editor == null) {
+						throw new RuntimeException();
+					}
 					preferredSize += editor.getPreferredSize().height;
 					if (!((AbstractParameter) valuei).isCompactDisplay() &&
 							(valuei instanceof TextParameter || valuei instanceof SplitParameter
@@ -157,6 +163,9 @@ public class SplitParameterDisplay extends AbstractParameterCellView {
 					Component renderer =
 							((TableCellRenderer) comp).getTableCellRendererComponent(table, valuei, isSelected,
 									hasFocus, row, column);
+					if (renderer == null) {
+						throw new RuntimeException();
+					}
 					preferredSize += renderer.getPreferredSize().height;
 
 					if (!((AbstractParameter) valuei).isCompactDisplay() &&
@@ -247,17 +256,6 @@ public class SplitParameterDisplay extends AbstractParameterCellView {
 				Utils.printStack(e);
 			}
 		}
-	}
-
-	@Override
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-			int row, int column) {
-		return getTableCellRendererOrEditorComponent(table, value, isSelected, hasFocus, row, column, false);
-	}
-
-	@Override
-	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-		return getTableCellRendererOrEditorComponent(table, value, isSelected, true, row, column, true);
 	}
 
 	@Override

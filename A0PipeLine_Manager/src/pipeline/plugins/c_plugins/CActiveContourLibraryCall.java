@@ -621,10 +621,11 @@ public class CActiveContourLibraryCall extends ExternalCallToLibScalingParams im
 		(saveButtonListener1).buttonPressed(commandName, null, null);
 	}
 
+	@SuppressWarnings("null")
 	@Override
 	public void parameterValueChanged(boolean stillChanging, AbstractParameter parameterWhoseValueChanged,
 			boolean keepQuiet) {
-		(actionTypeListener1).parameterValueChanged(false, null, false);
+		(actionTypeListener1).parameterValueChanged(false, actionTypeParameter, false);
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.SpinnerDateModel;
 
+import org.eclipse.jdt.annotation.NonNull;
 import org.jdesktop.swingx.JXDatePicker;
 
 import pipeline.misc_util.Utils;
@@ -91,11 +92,9 @@ public class DateEditor extends AbstractParameterCellView implements ParameterLi
 		datePicker.setDate(currentDate);
 	}
 
-	public Component getTableCellRendererOrEditorComponent(JTable table, Object value, boolean isSelected,
+	@Override
+	protected Component getRendererOrEditorComponent(JTable table, @NonNull Object value, boolean isSelected,
 			boolean hasFocus, int row, int column, boolean rendererCalled) {
-		if (value == null) {
-			throw new IllegalArgumentException();
-		}
 		if (currentParameter != null)
 			currentParameter.removeListener(this);
 		currentParameter = (DateParameter) value;
@@ -123,17 +122,6 @@ public class DateEditor extends AbstractParameterCellView implements ParameterLi
 			if (heightWanted > table.getRowHeight(row))
 				table.setRowHeight(row, heightWanted);
 		return this;
-	}
-
-	@Override
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-			int row, int column) {
-		return getTableCellRendererOrEditorComponent(table, value, isSelected, hasFocus, row, column, true);
-	}
-
-	@Override
-	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-		return getTableCellRendererOrEditorComponent(table, value, isSelected, true, row, column, false);
 	}
 
 	@Override

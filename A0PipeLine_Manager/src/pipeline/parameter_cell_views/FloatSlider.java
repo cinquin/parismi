@@ -23,6 +23,8 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import pipeline.misc_util.Utils;
 import pipeline.parameters.AbstractParameter;
 import pipeline.parameters.FloatParameter;
@@ -200,22 +202,12 @@ public class FloatSlider extends AbstractParameterCellView implements ParameterL
 		f.setText("" + format(v));
 	}
 
-	@Override
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-			int row, int column) {
-		return getTableCellRendererOrEditorComponent(table, value, isSelected, row, column, true);
-	}
-
-	@Override
-	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-		return getTableCellRendererOrEditorComponent(table, value, isSelected, row, column, false);
-	}
-
 	private boolean evenTableRow;
-
+	
 	@SuppressWarnings("unused")
-	public Component getTableCellRendererOrEditorComponent(JTable table, Object value, boolean isSelected, int row,
-			int column, boolean rendererCalled) {
+	@Override
+	public Component getRendererOrEditorComponent(JTable table, @NonNull Object value, boolean isSelected,
+			boolean hasFocus, int row, int column, boolean rendererCalled) {
 
 		if (table != null) {
 			Dimension d = getPreferredSize();
@@ -228,17 +220,16 @@ public class FloatSlider extends AbstractParameterCellView implements ParameterL
 		}
 
 		currentParameter = (FloatParameter) value;
-		if (value == null) {
+		/*if (value == null) {
 			slider.setEnabled(true);
 			textMinimum.setEditable(true);
 			textMaximum.setEditable(true);
 			currentTextValue.setEditable(true);
 			return this;
-		}
-		if (currentParameter != null) {
-			currentParameter.addGUIListener(this);
-			currentParameter.validateRange();
-		}
+		}*/
+		currentParameter.addGUIListener(this);
+		currentParameter.validateRange();
+
 		silenceUpdate = true;
 		evenTableRow = (row % 2 == 0);
 		setOpaque(true);

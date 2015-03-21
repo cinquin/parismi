@@ -21,6 +21,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import pipeline.misc_util.Utils;
 import pipeline.parameters.AbstractParameter;
 import pipeline.parameters.MultiListParameter;
@@ -130,8 +132,9 @@ public class MultiList extends AbstractParameterCellView implements ParameterLis
 		silenceUpdate = saveSilenceUpdate;
 	}
 
-	Component getTableCellRendererOrEditorComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-			int row, int column) {
+	@Override
+	protected Component getRendererOrEditorComponent(JTable table, @NonNull Object value, boolean isSelected,
+			boolean hasFocus, int row, int column, boolean rendererCalled) {
 		// value should be a pair of object arrays: first is a set of choices (probably strings), and the second is the
 		// set of selected items (int [])
 
@@ -149,24 +152,11 @@ public class MultiList extends AbstractParameterCellView implements ParameterLis
 			list.setBackground(Utils.COLOR_FOR_ODD_ROWS);
 
 		currentParameter = (MultiListParameter) value;
-		if (currentParameter != null) {
-			currentParameter.addGUIListener(this);
-		}
+		currentParameter.addGUIListener(this);
 		update();
 
 		return this;
 
-	}
-
-	@Override
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-			int row, int column) {
-		return getTableCellRendererOrEditorComponent(table, value, isSelected, hasFocus, row, column);
-	}
-
-	@Override
-	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-		return getTableCellRendererOrEditorComponent(table, value, isSelected, true, row, column);
 	}
 
 	@Override

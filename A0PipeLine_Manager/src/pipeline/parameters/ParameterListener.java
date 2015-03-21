@@ -8,8 +8,10 @@ package pipeline.parameters;
 
 import java.awt.event.ActionEvent;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 public interface ParameterListener {
-	public void parameterValueChanged(boolean stillChanging, AbstractParameter parameterWhoseValueChanged,
+	public void parameterValueChanged(boolean stillChanging, @NonNull AbstractParameter parameterWhoseValueChanged,
 			boolean keepQuiet);
 
 	public void parameterPropertiesChanged(AbstractParameter parameterWhosePropertiesChanged);

@@ -27,6 +27,8 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import pipeline.misc_util.Utils;
 import pipeline.misc_util.Utils.LogLevel;
 import pipeline.parameters.AbstractParameter;
@@ -409,17 +411,16 @@ public class IntRangeSlider extends AbstractParameterCellView implements Paramet
 		silenceUpdate = saveSilenceUpdate;
 	}
 
-	private Component getRendererOrComponent(JTable table0, Object value, boolean isSelected, boolean hasFocus,
-			int row, int column, boolean rendererCalled) {
+	@Override
+	protected Component getRendererOrEditorComponent(JTable table0, @NonNull Object value, boolean isSelected,
+			boolean hasFocus, int row, int column, boolean rendererCalled) {
+
 		if (currentParameter != null) {
 			currentParameter.removeListener(this);
 		}
 
 		currentParameter = (IntRangeParameter) value;
-
-		if (currentParameter != null) {
-			currentParameter.addGUIListener(this);
-		}
+		currentParameter.addGUIListener(this);
 
 		table = table0;
 		tableRow = row;
@@ -431,11 +432,6 @@ public class IntRangeSlider extends AbstractParameterCellView implements Paramet
 		} else
 			this.setBackground(Utils.COLOR_FOR_ODD_ROWS);
 		textValueFrame.setBackground(getBackground());
-
-		if (value == null) {
-			Utils.log("null object in IntRangeSlider", LogLevel.WARNING);
-			return this;
-		}
 
 		updateValues();
 
@@ -454,17 +450,6 @@ public class IntRangeSlider extends AbstractParameterCellView implements Paramet
 
 		silenceUpdate = false;
 		return this;
-	}
-
-	@Override
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-			int row, int column) {
-		return getRendererOrComponent(table, value, isSelected, hasFocus, row, column, true);
-	}
-
-	@Override
-	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-		return getRendererOrComponent(table, value, isSelected, false, row, column, false);
 	}
 
 	@Override

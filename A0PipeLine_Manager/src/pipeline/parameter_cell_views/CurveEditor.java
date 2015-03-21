@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import pipeline.misc_util.Utils;
 import pipeline.parameter_cell_views.splines.SplineDisplay;
 import pipeline.parameters.AbstractParameter;
@@ -75,22 +77,12 @@ public class CurveEditor extends AbstractParameterCellView implements ParameterL
 		add(parameterName, c);
 	}
 
-	@Override
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-			int row, int column) {
-		return getTableCellRendererOrEditorComponent(table, value, isSelected, row, column, true);
-	}
-
-	@Override
-	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-		return getTableCellRendererOrEditorComponent(table, value, isSelected, row, column, false);
-	}
-
 	private boolean evenTableRow;
 
 	@SuppressWarnings("unchecked")
-	Component getTableCellRendererOrEditorComponent(JTable table, Object value, boolean isSelected, int row,
-			int column, boolean rendererCalled) {
+	@Override
+	protected Component getRendererOrEditorComponent(JTable table, @NonNull Object value, boolean isSelected,
+			boolean hasFocus, int row, int column, boolean rendererCalled) {
 
 		if (table != null) {
 			Dimension d = getPreferredSize();
@@ -102,15 +94,9 @@ public class CurveEditor extends AbstractParameterCellView implements ParameterL
 			currentParameter.removeListener(this);
 		}
 		currentParameter = (SplineParameter) value;
-		if (currentParameter == null) {
-			splineEditor.setCurvePoints(new ArrayList<Point2D>());
-			splineEditor.setControlPoints(new ArrayList<Point2D>());
-			return this;
-		} else {
-			currentParameter.addGUIListener(this);
-			splineEditor.setCurvePoints((ArrayList<Point2D>) ((Object[]) currentParameter.getValue())[0]);
-			splineEditor.setControlPoints((ArrayList<Point2D>) ((Object[]) currentParameter.getValue())[1]);
-		}
+		currentParameter.addGUIListener(this);
+		splineEditor.setCurvePoints((ArrayList<Point2D>) ((Object[]) currentParameter.getValue())[0]);
+		splineEditor.setControlPoints((ArrayList<Point2D>) ((Object[]) currentParameter.getValue())[1]);
 		silenceUpdate = true;
 		evenTableRow = (row % 2 == 0);
 		setOpaque(true);

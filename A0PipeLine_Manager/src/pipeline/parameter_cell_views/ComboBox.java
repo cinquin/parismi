@@ -17,6 +17,8 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import pipeline.misc_util.Utils;
 import pipeline.parameters.ComboBoxParameter;
 
@@ -100,8 +102,9 @@ public class ComboBox extends AbstractParameterCellView {
 
 	private boolean evenTableRow;
 
-	Component getTableCellRendererOrEditorComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-			int row, int column) {
+	@Override
+	protected Component getRendererOrEditorComponent(JTable table, @NonNull Object value, boolean isSelected,
+			boolean hasFocus, int row, int column, boolean rendererCalled) {
 		evenTableRow = (row % 2 == 0);
 		setOpaque(true);
 		if (evenTableRow) {
@@ -111,9 +114,6 @@ public class ComboBox extends AbstractParameterCellView {
 		}
 		parameterName.setBackground(getBackground());
 		currentParameter = (ComboBoxParameter) value;
-		if (value == null) {
-			return this;
-		}
 		silenceUpdate = true;
 		model = (DefaultComboBoxModel<Object>) theBox.getModel();
 		model.removeAllElements();
@@ -134,17 +134,6 @@ public class ComboBox extends AbstractParameterCellView {
 		silenceUpdate = false;
 		return this;
 
-	}
-
-	@Override
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-			int row, int column) {
-		return getTableCellRendererOrEditorComponent(table, value, isSelected, hasFocus, row, column);
-	}
-
-	@Override
-	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-		return getTableCellRendererOrEditorComponent(table, value, isSelected, true, row, column);
 	}
 
 	@Override

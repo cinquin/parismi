@@ -33,6 +33,8 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.table.DefaultTableModel;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import pipeline.A0PipeLine_Manager;
 import pipeline.GUI_utils.OrthogonalViewsWithComposites;
 import pipeline.GUI_utils.PluginIOView;
@@ -71,10 +73,10 @@ public class ActiveContourToolbar extends Toolbar {
 
 	private JRadioButton createNewPoints;
 	private JRadioButton editExistingCells;
-	private TableParameter annotationNames;
-	private IntParameter labelDepth, lineThickness, depthOfField;
-	private FloatParameter transparency, hoverDelay;
-	private TextParameter seedColorParam;
+	private final @NonNull TableParameter annotationNames;
+	private @NonNull IntParameter labelDepth, lineThickness, depthOfField;
+	private @NonNull FloatParameter transparency, hoverDelay;
+	private @NonNull TextParameter seedColorParam;
 
 	public int getLabelDepth() {
 		return labelDepth.getintValue();
@@ -326,8 +328,8 @@ public class ActiveContourToolbar extends Toolbar {
 		JButton newAnnotation = new JButton("+");
 		newAnnotation.addActionListener(e -> {
 			String[] nameList = annotationNames.getElements();
-			int[] selection = annotationNames.getSelection();
-			int insertAt = (selection == null || selection.length == 0) ? 0 : selection[0];
+			@NonNull int[] selection = annotationNames.getSelection();
+			int insertAt = (selection.length == 0) ? 0 : selection[0];
 
 			ArrayList<String> s = new ArrayList<>();
 			s.addAll(Arrays.asList(nameList));
@@ -339,8 +341,8 @@ public class ActiveContourToolbar extends Toolbar {
 		});
 		JButton deleteAnnotation = new JButton("-");
 		deleteAnnotation.addActionListener(e -> {
-			int[] selection = annotationNames.getSelection();
-			if (selection == null || selection.length == 0)
+			@NonNull int[] selection = annotationNames.getSelection();
+			if (selection.length == 0)
 				return;
 
 			Arrays.sort(selection);
@@ -432,7 +434,7 @@ public class ActiveContourToolbar extends Toolbar {
 		add(annotationButtons, c);
 
 		annotationNames.displayHorizontally = true;
-		add(annotationView.getTableCellRendererOrEditorComponent(null, annotationNames, false, false, 0, 0), c);
+		add(annotationView.getRendererOrEditorComponent(null, annotationNames, false, false, 0, 0, false), c);
 
 		ParameterListener labelDepthListener = new ParameterListenerAdapter() {
 
@@ -469,7 +471,7 @@ public class ActiveContourToolbar extends Toolbar {
 				new IntParameter("Label depth", "Number of slices around center label appears in", lastLabelDepth, 1,
 						Math.max(25, lastLabelDepth), true, true, labelDepthListener);
 		IntSlider labelDepthView = new IntSlider();
-		sliderPanel.add(labelDepthView.getTableCellRendererOrEditorComponent(null, labelDepth, false, false, 0, 0,
+		sliderPanel.add(labelDepthView.getRendererOrEditorComponent(null, labelDepth, false, false, 0, 0,
 				false), d);
 
 		ParameterListener transparencyListener = new ParameterListenerAdapter() {
@@ -496,7 +498,7 @@ public class ActiveContourToolbar extends Toolbar {
 						lastTransparency, 0f, 1f, true, true, true, transparencyListener);
 		FloatSlider transparencySlider = new FloatSlider();
 		sliderPanel.add(transparencySlider
-				.getTableCellRendererOrEditorComponent(null, transparency, false, 0, 0, false), d);
+				.getRendererOrEditorComponent(null, transparency, false, false, 0, 0, false), d);
 
 		ParameterListener hoverDelayListener = new ParameterListenerAdapter() {
 
@@ -542,7 +544,7 @@ public class ActiveContourToolbar extends Toolbar {
 				new IntParameter("Depth of Field", "Number of slices to project in display", lastDepthOfField, 0, 15,
 						true, true, depthOfFieldListener);
 		IntSlider depthOfFieldSlider = new IntSlider();
-		sliderPanel.add(depthOfFieldSlider.getTableCellRendererOrEditorComponent(null, depthOfField, false, false, 0,
+		sliderPanel.add(depthOfFieldSlider.getRendererOrEditorComponent(null, depthOfField, false, false, 0,
 				0, false), d);
 
 		hoverDelay =
@@ -550,7 +552,7 @@ public class ActiveContourToolbar extends Toolbar {
 						lastHoverDelay, 0f, 10f, true, true, true, hoverDelayListener);
 		FloatSlider hoverDelaySlider = new FloatSlider();
 		sliderPanel
-				.add(hoverDelaySlider.getTableCellRendererOrEditorComponent(null, hoverDelay, false, 0, 0, false), d);
+				.add(hoverDelaySlider.getRendererOrEditorComponent(null, hoverDelay, false, false, 0, 0, false), d);
 
 		ParameterListener lineThicknessListener = new ParameterListenerAdapter() {
 
@@ -575,7 +577,7 @@ public class ActiveContourToolbar extends Toolbar {
 				new IntParameter("Line thickness", "Thickness of line outlining cells", lastLineThickness, 1, 25, true,
 						true, lineThicknessListener);
 		IntSlider lineThicknessView = new IntSlider();
-		sliderPanel.add(lineThicknessView.getTableCellRendererOrEditorComponent(null, lineThickness, false, false, 0,
+		sliderPanel.add(lineThicknessView.getRendererOrEditorComponent(null, lineThickness, false, false, 0,
 				0, false), d);
 
 		ParameterListener colorListener = new ParameterListenerAdapter() {
@@ -602,7 +604,7 @@ public class ActiveContourToolbar extends Toolbar {
 
 		seedColorParam = new TextParameter("Color", "", lastSeedColor, true, colorListener, null);
 		TextBox colorChoice = new TextBox();
-		sliderPanel.add(colorChoice.getTableCellRendererOrEditorComponent(null, seedColorParam, false, false, 0, 0,
+		sliderPanel.add(colorChoice.getRendererOrEditorComponent(null, seedColorParam, false, false, 0, 0,
 				false), d);
 
 		add(sliderPanel, c);

@@ -62,6 +62,9 @@ public class JTableWithStripes extends JTable {
 	@Override
 	public Component prepareRenderer(TableCellRenderer renderer, int rowIndex, int vColIndex) {
 		Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);
+		if (c == null) {
+			return null;
+		}
 		Object[] theRow = ((MyTableModel) this.getModel()).data[rowIndex];
 		// the following creates blue and yellow stripes in the table to outline the rows
 		if ((theRow.length > A0PipeLine_Manager.COMPUTING_ERROR)

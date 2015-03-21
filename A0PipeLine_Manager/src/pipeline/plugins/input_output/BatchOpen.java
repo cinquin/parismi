@@ -25,6 +25,7 @@ import pipeline.data.PluginIOImage.PixelType;
 import pipeline.data.PluginIOString;
 import pipeline.misc_util.FileNameUtils;
 import pipeline.misc_util.ParameterListenerWeakRef;
+import pipeline.misc_util.PluginRuntimeException;
 import pipeline.misc_util.ProgressReporter;
 import pipeline.misc_util.Utils;
 import pipeline.misc_util.Utils.ImageOpenFailed;
@@ -221,6 +222,10 @@ public class BatchOpen extends FourDPlugin implements AuxiliaryInputOutputPlugin
 		if ((files == null) || files.size() == 0) {
 			// read the list from the directory
 			updateFileList();
+		}
+		
+		if (files == null) {
+			throw new PluginRuntimeException("Empty file list", true);
 		}
 
 		pluginOutputs.put("Loaded image", getImageInput());

@@ -15,6 +15,8 @@ import javax.swing.event.CellEditorListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import pipeline.parameters.AbstractParameter;
 import pipeline.parameters.ParameterListener;
 import pipeline.parameters.SpreadsheetCell;
@@ -94,50 +96,51 @@ public class SpreadsheetCellView extends AbstractParameterCellView implements Pa
 		editorListeners.forEach(ed::removeCellEditorListener);
 	}
 
+	@SuppressWarnings("null")
 	@Override
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-			int row, int column) {
-		cleanUpEditor();
-		this.table = table;
-		this.row = row;
-		this.column = column;
-		// Render the value of the expression
-		if (value == null || (!(value instanceof SpreadsheetCell)))
-			return table.getDefaultRenderer(String.class).getTableCellRendererComponent(table, null, isSelected,
-					hasFocus, row, column);
-		currentParameter = (SpreadsheetCell) value;
-		Object evaluationResult = ((Object[]) currentParameter.getValue())[0];
-		if (evaluationResult == null)
-			return table.getDefaultRenderer(String.class).getTableCellRendererComponent(table, evaluationResult,
-					isSelected, hasFocus, row, column);
-		else
-			return table.getDefaultRenderer(evaluationResult.getClass()).getTableCellRendererComponent(table,
-					evaluationResult, isSelected, hasFocus, row, column);
-	}
-
-	@Override
-	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-		cleanUpEditor();
-		this.table = table;
-		this.row = row;
-		this.column = column;
-		// Edit the String formula
-		currentParameter = (SpreadsheetCell) value;
-
-		if (formulaView == null)
-			formulaView = new TextBox();
-
-		lastFormula = currentParameter.getFormula();
-		if (formulaParameter == null) {
-			formulaParameter = new TextParameter("", "Formula", lastFormula, true, this, this);
+	protected Component getRendererOrEditorComponent(JTable table, @NonNull Object value, boolean isSelected,
+			boolean hasFocus, int row, int column, boolean rendererCalled) {
+		if (rendererCalled) {
+			cleanUpEditor();
+			this.table = table;
+			this.row = row;
+			this.column = column;
+			// Render the value of the expression
+			if (!(value instanceof SpreadsheetCell))
+				return table.getDefaultRenderer(String.class).getTableCellRendererComponent(table, null, isSelected,
+						hasFocus, row, column);
+			currentParameter = (SpreadsheetCell) value;
+			Object evaluationResult = ((Object[]) currentParameter.getValue())[0];
+			if (evaluationResult == null)
+				return table.getDefaultRenderer(String.class).getTableCellRendererComponent(table, evaluationResult,
+						isSelected, hasFocus, row, column);
+			else
+				return table.getDefaultRenderer(evaluationResult.getClass()).getTableCellRendererComponent(table,
+						evaluationResult, isSelected, hasFocus, row, column);
 		} else {
-			formulaParameter.setValue(lastFormula);
+			cleanUpEditor();
+			this.table = table;
+			this.row = row;
+			this.column = column;
+			// Edit the String formula
+			currentParameter = (SpreadsheetCell) value;
+
+			if (formulaView == null)
+				formulaView = new TextBox();
+
+			lastFormula = currentParameter.getFormula();
+			if (formulaParameter == null) {
+				formulaParameter = new TextParameter("", "Formula", lastFormula, true, this, this);
+			} else {
+				formulaParameter.setValue(lastFormula);
+			}
+			editor =
+					formulaView.getRendererOrEditorComponent(table, formulaParameter, isSelected, true, row,
+							column, false);
+			return editor;
 		}
-		editor =
-				formulaView.getTableCellRendererOrEditorComponent(table, formulaParameter, isSelected, true, row,
-						column, false);
-		return editor;
 	}
+
 
 	@Override
 	public Object getCellEditorValue() {

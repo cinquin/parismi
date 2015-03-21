@@ -23,6 +23,8 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import pipeline.misc_util.Utils;
 import pipeline.misc_util.Utils.LogLevel;
 import pipeline.parameters.AbstractParameter;
@@ -263,8 +265,9 @@ public class OneColumnJTable extends AbstractParameterCellView implements TableM
 
 	}
 
-	public Component getTableCellRendererOrEditorComponent(JTable table, Object value, boolean isSelected,
-			boolean hasFocus, int row, int column) {
+	@Override
+	public Component getRendererOrEditorComponent(JTable table, @NonNull Object value, boolean isSelected,
+			boolean hasFocus, int row, int column, boolean rendererCalled) {
 		// value should be a pair of object arrays: first is a set of choices (probably strings), and the second is the
 		// set of selected items (int [])
 
@@ -280,8 +283,7 @@ public class OneColumnJTable extends AbstractParameterCellView implements TableM
 
 		silenceUpdate = true;
 		currentParameter = (TableParameter) value;
-		if (currentParameter != null)
-			currentParameter.addGUIListener(this);
+		currentParameter.addGUIListener(this);
 
 		updateDisplay();
 
@@ -291,17 +293,6 @@ public class OneColumnJTable extends AbstractParameterCellView implements TableM
 
 		silenceUpdate = false;
 		return this;
-	}
-
-	@Override
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-			int row, int column) {
-		return getTableCellRendererOrEditorComponent(table, value, isSelected, hasFocus, row, column);
-	}
-
-	@Override
-	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-		return getTableCellRendererOrEditorComponent(table, value, isSelected, true, row, column);
 	}
 
 	@Override

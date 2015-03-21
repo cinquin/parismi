@@ -36,6 +36,7 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.eclipse.jdt.annotation.NonNull;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -465,18 +466,14 @@ public class FloatRangeSlider extends AbstractParameterCellView implements Mouse
 
 	}
 
-	private Component getRendererOrComponent(JTable table0, Object value, boolean isSelected, boolean hasFocus,
-			int row, int column, boolean rendererCalled) {
+	@Override
+	protected Component getRendererOrEditorComponent(JTable table0, @NonNull Object value, boolean isSelected,
+			boolean hasFocus, int row, int column, boolean rendererCalled) {
 		if (currentParameter != null) {
 			currentParameter.removeListener(this);
 		}
 
 		currentParameter = (FloatRangeParameter) value;
-
-		if (currentParameter == null) {
-			throw new IllegalArgumentException();
-		}
-		
 		currentParameter.addGUIListener(this);
 
 
@@ -572,17 +569,6 @@ public class FloatRangeSlider extends AbstractParameterCellView implements Mouse
 
 		silenceUpdate = false;
 		return this;
-	}
-
-	@Override
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-			int row, int column) {
-		return getRendererOrComponent(table, value, isSelected, hasFocus, row, column, true);
-	}
-
-	@Override
-	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-		return getRendererOrComponent(table, value, isSelected, false, row, column, false);
 	}
 
 	@Override
