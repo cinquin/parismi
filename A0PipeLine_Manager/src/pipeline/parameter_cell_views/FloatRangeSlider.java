@@ -473,9 +473,12 @@ public class FloatRangeSlider extends AbstractParameterCellView implements Mouse
 
 		currentParameter = (FloatRangeParameter) value;
 
-		if (currentParameter != null) {
-			currentParameter.addGUIListener(this);
+		if (currentParameter == null) {
+			throw new IllegalArgumentException();
 		}
+		
+		currentParameter.addGUIListener(this);
+
 
 		table = table0;
 		tableRow = row;

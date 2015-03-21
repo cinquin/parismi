@@ -21,6 +21,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.boris.expr.ExprDouble;
+import org.eclipse.jdt.annotation.NonNull;
 
 import pipeline.GUI_utils.ListOfPointsView;
 import pipeline.GUI_utils.PluginIOCellsListeningSeries;
@@ -151,7 +152,10 @@ public class PluginIOCells extends PluginIOListOfQ<ClickedPoint> implements Clon
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public File asFile(File saveTo, boolean useBigTIFF) throws IOException {
+	public @NonNull File asFile(File saveTo, boolean useBigTIFF) throws IOException {
+		if (saveTo == null) {
+			throw new RuntimeException("Temp file creation not yet implemented");
+		}
 		String path = saveTo.getAbsolutePath();
 		if (!path.endsWith(".proto")) {
 			path += ".proto";

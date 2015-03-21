@@ -141,16 +141,12 @@ public class SystemCallToExternalProgram extends LinkToExternalProgram {
 		}
 	}
 
-	@SuppressWarnings("null")
+
 	@Override
-	public void terminate(boolean blockUntilTerminated) {
+	synchronized public void terminate(boolean blockUntilTerminated) {
 		if (process != null) {
-			synchronized (this) {
-				if (process != null) {
-					process.destroy();
-					process = null;
-				}
-			}
+			process.destroy();
+			process = null;
 		}
 	}
 

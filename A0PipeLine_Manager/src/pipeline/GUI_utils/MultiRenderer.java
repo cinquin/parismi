@@ -173,7 +173,7 @@ public class MultiRenderer implements TableCellRenderer, TableCellEditor {
 			delegate = defaultRenderer;
 		}
 
-		if (delegate == null) {
+		if (delegate == null || value == null) {
 			// Utils.log("COULD NOT FIND RENDERER COMPONENT",LogLevel.ERROR);
 			return null;
 		} else
@@ -220,7 +220,7 @@ public class MultiRenderer implements TableCellRenderer, TableCellEditor {
 
 		currentEditor = delegateEditor;
 
-		if (delegateEditor == null) {
+		if (delegateEditor == null || value == null) {
 			// Utils.log("COULD NOT FIND EDITOR COMPONENT",LogLevel.ERROR);
 			return null;
 		} else

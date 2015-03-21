@@ -140,17 +140,17 @@ public class OrthogonalViewsWithComposites implements MouseListener, MouseMotion
 	private static boolean seenSmallRotation = false;
 
 	public void show() {
-		if (yzImage != null) {
-			yzImage.show();
+		if (yzImage == null || xzImage == null) {
+			return;
 		}
-		if (xzImage != null) {
-			xzImage.show();
-		}
+
+		yzImage.show();
+		xzImage.show();
 
 		if (listenersAdded)
 			return;
 
-		if (yzImage != null) yzImage.getWindow().getCanvas().addMouseListener(new MouseListener() {
+		yzImage.getWindow().getCanvas().addMouseListener(new MouseListener() {
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -192,7 +192,7 @@ public class OrthogonalViewsWithComposites implements MouseListener, MouseMotion
 			}
 		});
 
-		if (xzImage != null) xzImage.getWindow().getCanvas().addMouseWheelListener(e -> {
+		xzImage.getWindow().getCanvas().addMouseWheelListener(e -> {
 			if (e.getModifiers() != 0) {
 				xzImage.getWindow().dispatchEvent(e);
 				return;

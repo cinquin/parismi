@@ -93,6 +93,9 @@ public class DateEditor extends AbstractParameterCellView implements ParameterLi
 
 	public Component getTableCellRendererOrEditorComponent(JTable table, Object value, boolean isSelected,
 			boolean hasFocus, int row, int column, boolean rendererCalled) {
+		if (value == null) {
+			throw new IllegalArgumentException();
+		}
 		if (currentParameter != null)
 			currentParameter.removeListener(this);
 		currentParameter = (DateParameter) value;

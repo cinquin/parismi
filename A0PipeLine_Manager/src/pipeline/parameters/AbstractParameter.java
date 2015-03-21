@@ -237,9 +237,8 @@ public abstract class AbstractParameter implements Serializable {
 	/**
 	 * Called by the GUI class handling the displaying and editing of this parameter when the
 	 * value of the parameter has been changed. The parameter in turn notifies its listener. Note that it is possible
-	 * for more than 1
-	 * call to be made with the same parameter value; the listener might therefore want to check if the value really did
-	 * change.
+	 * for more than 1 call to be made with the same parameter value; the listener might therefore want to check if 
+	 * the value really did change.
 	 * 
 	 * @param stillChanging
 	 *            True if the user is still in the process of adjusting the parameter, e.g. if the user is using a
@@ -254,16 +253,16 @@ public abstract class AbstractParameter implements Serializable {
 	public void fireValueChanged(final boolean stillChanging, boolean notifyGUIListeners,
 			boolean notifyParameterListeners) {
 		checkListsInitialized();
-		if (notifyGUIListeners) {
-			SwingUtilities.invokeLater(() -> iterateListenersParameterValueChanged(stillChanging,
-					GUIParameterListeners, false));
-		}
-		if (notifyParameterListeners)
-			iterateListenersParameterValueChanged(stillChanging, pluginParameterListeners, false);
-		else {
-			iterateListenersParameterValueChanged(stillChanging, pluginParameterListeners, true);
-		}
-
+		SwingUtilities.invokeLater(() -> {
+			if (notifyGUIListeners) {
+				iterateListenersParameterValueChanged(stillChanging, GUIParameterListeners, false);
+			}
+			if (notifyParameterListeners)
+				iterateListenersParameterValueChanged(stillChanging, pluginParameterListeners, false);
+			else {
+				iterateListenersParameterValueChanged(stillChanging, pluginParameterListeners, true);
+			}
+		});
 	}
 
 	@SuppressWarnings("unchecked")

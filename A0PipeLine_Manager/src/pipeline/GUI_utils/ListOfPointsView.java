@@ -58,6 +58,7 @@ import org.boris.expr.ExprString;
 import org.boris.expr.engine.DependencyEngine;
 import org.boris.expr.engine.GridReference;
 import org.boris.expr.engine.Range;
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 import org.jdesktop.swingx.decorator.Highlighter;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
@@ -285,11 +286,11 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 	}
 
 	@SuppressWarnings("unchecked")
-	public void setFieldForColoring(String fieldName) {
+	public void setFieldForColoring(@NonNull String fieldName) {
 		@SuppressWarnings("rawtypes")
 		DefaultComboBoxModel comboBoxModel = (DefaultComboBoxModel) coloringComboBox.getModel();
 		for (int i = 0; i < comboBoxModel.getSize(); i++) {
-			if (comboBoxModel.getElementAt(i).equals(fieldName)) {
+			if (fieldName.equals(comboBoxModel.getElementAt(i))) {
 				comboBoxModel.setSelectedItem(fieldName);
 				return;
 			}
@@ -876,7 +877,7 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 			boolean copyOfDirty = false;
 			synchronized (dirty) {
 				try {
-					if (!dirty.get())
+					while (!dirty.get())
 						dirty.wait();
 				} catch (InterruptedException e) {
 					if (closed || frame == null)
