@@ -1036,7 +1036,6 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 			tableStructurePossiblyChanged = true;
 			dirty.notifyAll();
 		}
-
 	}
 
 	@Override

@@ -262,7 +262,7 @@ public abstract class PluginIO implements Serializable, IPluginIO {
 	 * @see pipeline.data.PluginIOInterface#fireValueChanged(boolean, boolean)
 	 */
 	@Override
-	public void fireValueChanged(boolean stillChanging, boolean dontClearProtobuf) {
+	public synchronized void fireValueChanged(boolean stillChanging, boolean dontClearProtobuf) {
 		if (silenceUpdates)
 			return;
 		if (!dontClearProtobuf)

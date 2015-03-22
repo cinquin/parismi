@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -253,7 +254,7 @@ public abstract class AbstractParameter implements Serializable {
 	public void fireValueChanged(final boolean stillChanging, boolean notifyGUIListeners,
 			boolean notifyParameterListeners) {
 		checkListsInitialized();
-		SwingUtilities.invokeLater(() -> {
+		Runnable task = () -> {
 			if (notifyGUIListeners) {
 				iterateListenersParameterValueChanged(stillChanging, GUIParameterListeners, false);
 			}
@@ -262,7 +263,16 @@ public abstract class AbstractParameter implements Serializable {
 			else {
 				iterateListenersParameterValueChanged(stillChanging, pluginParameterListeners, true);
 			}
-		});
+		};
+		if (SwingUtilities.isEventDispatchThread()) {
+			task.run();
+		} else {
+			try {
+				SwingUtilities.invokeAndWait(task);
+			} catch (InvocationTargetException | InterruptedException e) {
+				throw new RuntimeException(e);
+			}
+		}
 	}
 
 	@SuppressWarnings("unchecked")

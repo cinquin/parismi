@@ -46,8 +46,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 
 // FIXME ClickedPoints create by default 3 user cells when they are constructed. There need to be matching
 // descriptions in userCellDescriptions in the owning PluginIOCells, but PluginIOCells does not create names by default,
-// and
-// instead retrieves them from ClickedPoints it creates.
+// and instead retrieves them from ClickedPoints it creates.
 public class PluginIOCells extends PluginIOListOfQ<ClickedPoint> implements Cloneable, PluginIOCalibrable,
 		IQuantifiableNames, IDimensions {
 
