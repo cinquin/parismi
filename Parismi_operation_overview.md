@@ -25,6 +25,7 @@ the following:
   done by default for files over 2 GB in size; this behavior can be manually adjusted with
   the "Use virtual stacks to open files" checkbox). Note that some (but not all) plugins
   will trigger a read of the full contents when they are given such an input. 
+  
   - *Channels*. For multiple channel images, a subset of channels to which to apply the
   plugin can be specified by selecting from the list provided.
   - *Plugin name*. A right click in the field provides a hierarchical popup menu of all
@@ -63,6 +64,7 @@ the following:
 
 GUI views of plugin outputs include an extended ImageJ image window for image outputs, and
 a table view for cells.
+
   - *Image windows* are based on a standard ImageJ display, to which a set of controls and
   user interaction functionalities are added. The user can perform _de novo_ cell
   annotations, or edits of pre-existing annotations that can be derived from automatic
