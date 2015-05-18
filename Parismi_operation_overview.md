@@ -96,15 +96,14 @@ a table view for cells.
   cell objects, which can be the raw cell detections (made by the cell detector and/or by
   users), or the detections on which various plugins have been run to add new fields (e.g.
   fluorescence contents). Some features are as follows:
-    - Interactive histograms are displayed for each column. A range can
-  be selected by clicking in these histograms, which will cause filtering of the displayed
-  cels.
+    - Interactive histograms are displayed for each column. A range can be selected by
+    clicking in these histograms, which will cause filtering of the displayed cells.
     - Cells can be sorted on the value of any field by clicking on the column header. 
     - A scatterplot of two columns can be obtained by selecting cells in any two columns
     and clicking "Scatter plot from selected columns". In the resulting graph window, the
     x and y axes can be switched an a trendline with user-adjustable local averaging
     window can be displayed. If cells were selected from a single column, a histogram
-    is displayed instad and standard statistics reported.
+    is displayed instead and standard statistics reported.
     - Basic spreadsheet-like computing functionality is included, which is not fully
     implemented and will be documented at a later time.
     - The results can be exported to a tab-delimited text file (this is for user
