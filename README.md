@@ -16,7 +16,7 @@ archive](http://cinquin.org.uk/static/Parismi.tgz), open
 Pipelines available in [released
 datasets](http://cinquin.org.uk/static/Parismi_datasets.tgz) can be
 loaded by drag and drop of corresponding `.xml` files onto the Parismi
-control panel. See [Parismi operation overview](https://github.com/cinquin/parismi/blob/master/Parismi_operation_overview.md)
+control panel. See [Parismi operation overview](https://github.com/cinquin/parismi/blob/master/Parismi_operation_overview.pdf)
 for more detail.
 
 Parismi can also be run in batch mode, using the same pipelines that can

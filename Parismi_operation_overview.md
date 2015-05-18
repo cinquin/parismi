@@ -141,7 +141,7 @@ after user edits by selecting the appropriate row in the pipeline table and clic
 "Open next and run" button. This button closes all current plugin outputs, and goes
 through all input and output file names to increment any numbers that occur between
 braces. If datasets are structured in numbered directories, naming files following e.g.
-`~username/datasets/{1}/input_1.tiff'` will make it possible to iterate through all the
+`~username/datasets/{1}/input_1.tiff` will make it possible to iterate through all the
 directories without manual setup at each dataset change. Note that more sophisticated
 batch functionality, which gives more flexibility in terms of file naming and directory
 structure, can be achieved using the `BatchOpenV2` plugin.
