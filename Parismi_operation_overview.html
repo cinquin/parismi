@@ -323,7 +323,8 @@ structure, can be achieved using the <code>BatchOpenV2</code> plugin.</p>
 <p><em>File formats</em></p>
 
 <p>The file formats that Parismi can read and write are as follows:
-  - <em>Images</em>. Parismi can natively read 32-bit-offset Tagged Image File Format (i.e.
+  <ul>
+  <li><em>Images</em>. Parismi can natively read 32-bit-offset Tagged Image File Format (i.e.
   "regular" TIFF) or 64-bit-offset TIFF (i.e. BigTIFF); the latter removes the 2GB or 4GB
   (depending on implementation) limit on file size. Parismi also natively reads the
   proprietary Zeiss LSM file format (which is a TIFF variant). Note that other file types
@@ -331,8 +332,8 @@ structure, can be achieved using the <code>BatchOpenV2</code> plugin.</p>
   read a broad array of file types. By default Parismi writes BigTIFF with ImageJ
   metadata to specify channels, although for ease of browsing of output images (since
   BigTIFF is not always supported) it can also rely on ImageJ to output regular TIFF
-  images, in which channels can be displayed as an RGB overlay.
-  - <em>Cell annotations and segmentations</em>. All data pertaining to automatic cell
+  images, in which channels can be displayed as an RGB overlay.</li>
+  <li><em>Cell annotations and segmentations</em>. All data pertaining to automatic cell
   detections, user detections and edits, annotations, segmentations, and quantification
   results are stored in a unified format. Parismi relies on Google's <code>Protobuf</code> file
   format, with fixed fields including cell position and x, y, and z coordinates of all
@@ -342,7 +343,8 @@ structure, can be achieved using the <code>BatchOpenV2</code> plugin.</p>
   exported to tab-delimited text files (without the segmentation mask) either manually or
   through a plugin. Segmentation masks can also be exported as a single TIFF in which each
   cell receives a pixel value matching its index. Such a file can easily be reused in
-  another program such as Matlab.</p>
+  another program such as Matlab.</li>
+  </ul>
 
 <p><em>Notes on saved pipelines</em></p>
 

@@ -149,6 +149,7 @@ structure, can be achieved using the `BatchOpenV2` plugin.
 *File formats*
 
 The file formats that Parismi can read and write are as follows:
+
   - *Images*. Parismi can natively read 32-bit-offset Tagged Image File Format (i.e.
   "regular" TIFF) or 64-bit-offset TIFF (i.e. BigTIFF); the latter removes the 2GB or 4GB
   (depending on implementation) limit on file size. Parismi also natively reads the
