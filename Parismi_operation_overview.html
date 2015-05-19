@@ -169,7 +169,8 @@ or drag such a file and drop it onto the Parismi control panel.</p>
 
 <p>Each step in the pipeline corresponds to one row in the GUI table. Table columns include
 the following:
-  - <em>Primary image input</em>. A right click in the field provides a popup menu to assist with
+<ul>
+<li><em>Primary image input</em>. A right click in the field provides a popup menu to assist with
   input selection. The input can be a file on disk (specified with a full path name, in
   which <code>~/</code> or <code>~username/</code> can be used as shorthand for user home directories, or a
   path name relative to the current working directory), an image opened through ImageJ
@@ -182,9 +183,7 @@ the following:
   stacks", which means their contents are initially not fully loaded into memory (this is
   done by default for files over 2 GB in size; this behavior can be manually adjusted with
   the "Use virtual stacks to open files" checkbox). Note that some (but not all) plugins
-  will trigger a read of the full contents when they are given such an input.</p>
-
-<ul>
+  will trigger a read of the full contents when they are given such an input.</li>
 <li><em>Channels</em>. For multiple channel images, a subset of channels to which to apply the
 plugin can be specified by selecting from the list provided.</li>
 <li><em>Plugin name</em>. A right click in the field provides a hierarchical popup menu of all

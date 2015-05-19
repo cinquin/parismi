@@ -11,6 +11,7 @@ or drag such a file and drop it onto the Parismi control panel.
 
 Each step in the pipeline corresponds to one row in the GUI table. Table columns include
 the following:
+
   - *Primary image input*. A right click in the field provides a popup menu to assist with
   input selection. The input can be a file on disk (specified with a full path name, in
   which `~/` or `~username/` can be used as shorthand for user home directories, or a
