@@ -88,7 +88,7 @@ a table view for cells.
     - Orthogonal views (on which annotations also appear and can be manipulated) can be
     toggled on or off with the "Orthogonal" button.
     - By default the scrollwheel changes the displayed z slice (in the main xy view), or
-    the displayed x or y slices (in the yz and xy orthogonal views, respectively). For
+    the displayed x or y slices (in the yz and xz orthogonal views, respectively). For
     fine stepping through slices, one can press the x, y, or z keys.
     - The contrast can be adjusted by using the mouse scrollwheel while pressing shift
     - One can scroll through the channels by using the mouse scrollwheel while pressing
