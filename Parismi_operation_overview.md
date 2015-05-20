@@ -7,26 +7,33 @@ pre-existing pipeline (which can be a good way of exploring Parismi's functional
 either click the "Load table" button and select an `.xml` file from our dataset release,
 or drag such a file and drop it onto the Parismi control panel.
 
+Dragging and dropping `.tiff` or `.proto` files (containing cell detections, annotations,
+or fluorescence quantification results as explained below) onto the Parismi control panel
+will cause the files to be opened and displayed using the corresponding GUI view. If one
+`.tiff` file is dropped together with one `.proto` file, the cells in the `.proto` file will
+be displayed as an overlay on the image.
+
 *Overall pipeline structure*
 
 Each step in the pipeline corresponds to one row in the GUI table. Table columns include
 the following:
 
   - *Primary image input*. A right click in the field provides a popup menu to assist with
-  input selection. The input can be a file on disk (specified with a full path name, in
-  which `~/` or `~username/` can be used as shorthand for user home directories, or a
-  path name relative to the current working directory), an image opened through ImageJ
-  and specified by its name, or the output of another plugin. In the latter case, the
-  reference to the other plugin is given as number specifying the row offset (i.e. -1 to
-  specify the output of the preceding plugin), or as a number prefixed by `$` to specify
-  an absolute row in the table. Parismi can natively read TIFFs with 32-bit or 64-bit
-  offsets and LSM files. It can transparently decompress GNU zipped files that it
-  recognizes with the `.gz` extension. Large image files can be opened as "virtual
-  stacks", which means their contents are initially not fully loaded into memory (this is
-  done by default for files over 2 GB in size; this behavior can be manually adjusted with
-  the "Use virtual stacks to open files" checkbox). Note that some (but not all) plugins
-  will trigger a read of the full contents when they are given such an input. 
-  
+  input selection (alternatively, one can drag the file from any file manager and drop it
+  onto the field, or directly type in the input specification). The input can be a file on
+  disk (specified with a full path name, in which `~/` or `~username/` can be used as
+  shorthand for user home directories, or a path name relative to the current working
+  directory), an image opened through ImageJ and specified by its name, or the output of
+  another plugin. In the latter case, the reference to the other plugin is given as number
+  specifying the row offset (i.e. -1 to specify the output of the preceding plugin), or as
+  a number prefixed by `$` to specify an absolute row in the table. Parismi can natively
+  read TIFFs with 32-bit or 64-bit offsets and LSM files. It can transparently decompress
+  GNU zipped files that it recognizes with the `.gz` extension. Large image files can be
+  opened as "virtual stacks", which means their contents are initially not fully loaded
+  into memory (this is done by default for files over 2 GB in size; this behavior can be
+  manually adjusted with the "Use virtual stacks to open files" checkbox). Note that some
+  (but not all) plugins will trigger a read of the full contents when they are given such
+  an input. 
   - *Channels*. For multiple channel images, a subset of channels to which to apply the
   plugin can be specified by selecting from the list provided.
   - *Plugin name*. A right click in the field provides a hierarchical popup menu of all
@@ -89,7 +96,8 @@ a table view for cells.
     toggled on or off with the "Orthogonal" button.
     - By default the scrollwheel changes the displayed z slice (in the main xy view), or
     the displayed x or y slices (in the yz and xz orthogonal views, respectively). For
-    fine stepping through slices, one can press the x, y, or z keys.
+    fine stepping through slices, one can press the x, y, or z keys (use shift for reverse
+    stepping).
     - The contrast can be adjusted by using the mouse scrollwheel while pressing shift
     - One can scroll through the channels by using the mouse scrollwheel while pressing
     option
@@ -104,7 +112,7 @@ a table view for cells.
     - Cells can be sorted on the value of any field by clicking on the column header. 
     - A scatterplot of two columns can be obtained by selecting cells in any two columns
     and clicking "Scatter plot from selected columns". In the resulting graph window, the
-    x and y axes can be switched an a trendline with user-adjustable local averaging
+    x and y axes can be switched and a trendline with user-adjustable local averaging
     window can be displayed. If cells were selected from a single column, a histogram
     is displayed instead and standard statistics reported.
     - Basic spreadsheet-like computing functionality is included, which is not fully
@@ -139,13 +147,14 @@ at which it is desirable for a user to review the results and adjust them if nee
 Parismi can be paused at key steps using the `Pause` plugin; execution can be resumed
 after user edits by selecting the appropriate row in the pipeline table and clicking
 "Run". To avoid users spending time moving from one dataset to another, one can use the
-"Open next and run" button. This button closes all current plugin outputs, and goes
-through all input and output file names to increment any numbers that occur between
-braces. If datasets are structured in numbered directories, naming files following e.g.
-`~username/datasets/{1}/input_1.tiff` will make it possible to iterate through all the
+"Open next and run" button. This button closes all current plugin outputs, goes through
+all input and output file names to increment any numbers that occur between braces, and
+runs the current pipeline on the new inputs (pausing at any positions specified by the
+`Pause` plugin). If datasets are structured in numbered directories, naming files following
+e.g. `~username/datasets/{1}/input_1.tiff` will make it possible to iterate through all the
 directories without manual setup at each dataset change. Note that more sophisticated
 batch functionality, which gives more flexibility in terms of file naming and directory
-structure, can be achieved using the `BatchOpenV2` plugin.
+structure, is offered by the `BatchOpenV2` plugin.
 
 *File formats*
 
@@ -158,8 +167,8 @@ The file formats that Parismi can read and write are as follows:
   can be opened through ImageJ, in particular with the LOCI Bio-Formats plugin, which can
   read a broad array of file types. By default Parismi writes BigTIFF with ImageJ
   metadata to specify channels, although for ease of browsing of output images (since
-  BigTIFF is not always supported) it can also rely on ImageJ to output regular TIFF
-  images, in which channels can be displayed as an RGB overlay.
+  BigTIFF is not always supported by external programs) it can also rely on ImageJ to
+  output regular TIFF images, in which channels can be displayed as an RGB overlay.
   - *Cell annotations and segmentations*. All data pertaining to automatic cell
   detections, user detections and edits, annotations, segmentations, and quantification
   results are stored in a unified format. Parismi relies on Google's `Protobuf` file
