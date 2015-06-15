@@ -17,7 +17,7 @@ import pipeline.misc_util.Utils;
 public class TableParameter extends AbstractParameter {
 	private static final long serialVersionUID = -4579907800837898220L;
 	private String[] elements;
-	private @NonNull int[] currentChoices = new int [0];
+	private int @NonNull[] currentChoices = new int [0];
 
 	public boolean hasBeenEdited = false;
 
@@ -60,11 +60,11 @@ public class TableParameter extends AbstractParameter {
 		return -1;
 	}
 
-	public @NonNull int[] getSelection() {
+	public int @NonNull[] getSelection() {
 		return currentChoices;
 	}
 
-	public void setSelection(int[] s) {
+	public void setSelection(int @NonNull[] s) {
 		currentChoices = s;
 	}
 

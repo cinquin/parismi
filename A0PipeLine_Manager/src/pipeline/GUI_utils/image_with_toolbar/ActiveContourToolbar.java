@@ -328,7 +328,7 @@ public class ActiveContourToolbar extends Toolbar {
 		JButton newAnnotation = new JButton("+");
 		newAnnotation.addActionListener(e -> {
 			String[] nameList = annotationNames.getElements();
-			@NonNull int[] selection = annotationNames.getSelection();
+			int @NonNull[] selection = annotationNames.getSelection();
 			int insertAt = (selection.length == 0) ? 0 : selection[0];
 
 			ArrayList<String> s = new ArrayList<>();
@@ -341,7 +341,7 @@ public class ActiveContourToolbar extends Toolbar {
 		});
 		JButton deleteAnnotation = new JButton("-");
 		deleteAnnotation.addActionListener(e -> {
-			@NonNull int[] selection = annotationNames.getSelection();
+			int @NonNull[] selection = annotationNames.getSelection();
 			if (selection.length == 0)
 				return;
 

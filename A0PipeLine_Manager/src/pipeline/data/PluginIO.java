@@ -169,7 +169,7 @@ public abstract class PluginIO implements Serializable, IPluginIO {
 			throw new RuntimeException("Unrecognized property " + string);
 	}
 
-	private @NonNull byte[] protobuf = new byte [] {};
+	private byte @NonNull[] protobuf = new byte [] {};
 
 	/*
 	 * (non-Javadoc)
@@ -177,7 +177,7 @@ public abstract class PluginIO implements Serializable, IPluginIO {
 	 * @see pipeline.data.PluginIOInterface#asProtobufBytes()
 	 */
 	@Override
-	public @NonNull byte[] asProtobufBytes() {
+	public byte @NonNull[] asProtobufBytes() {
 		return protobuf;
 	}
 

@@ -50,7 +50,7 @@ public interface IPluginIO {
 
 	Object getProperty(String string);
 
-	@NonNull byte[] asProtobufBytes();
+	byte @NonNull[] asProtobufBytes();
 
 	void restoreFromProtobuf() throws NotRestorableFromProtobuf, InterruptedException;
 
