@@ -48,7 +48,7 @@ string TextIO_sharedLibrary::readText() {
 
 	string rn;
 	rn.assign(buffer, (unsigned int) bufferSize);
-	delete buffer;
+	delete [] buffer;
 	buffer = NULL;
 	return rn;
 }
