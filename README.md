@@ -229,7 +229,8 @@ distribute the modified project under a BSD-like license.
 Parismi uses YourKit for performance analysis and debugging of memory
 leaks. YourKit supports open source projects with its full-featured Java
 Profiler. YourKit, LLC is the creator of
-[YourKit JavaProfiler](https://www.yourkit.com/java/profiler/index.jsp")
+[YourKit JavaProfiler](https://www.yourkit.com/java/profiler/index.jsp)
 and
-[YourKit .NET Profiler](www.yourkit.com/.net/profiler/index.jsp").
+[YourKit .NET Profiler](www.yourkit.com/.net/profiler/index.jsp).
 innovative and intelligent tools for profiling Java and .NET applications.
+[![YourKit](https://www.yourkit.com/images/yklogo.png)](https://www.yourkit.com)
