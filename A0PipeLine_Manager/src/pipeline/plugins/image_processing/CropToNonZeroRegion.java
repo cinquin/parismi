@@ -260,7 +260,7 @@ public class CropToNonZeroRegion extends FourDPlugin implements SpecialDimPlugin
 		gmaxZ = globalMaxZ.get();
 
 		dimensionsComputed = true;
-
+		
 		Utils.log("Done computing dimensions", LogLevel.VERBOSE_DEBUG);
 	}
 

@@ -50,7 +50,7 @@ public interface IPluginIO {
 
 	Object getProperty(String string);
 
-	byte @NonNull[] asProtobufBytes();
+	byte @Nullable[] asProtobufBytes();
 
 	void restoreFromProtobuf() throws NotRestorableFromProtobuf, InterruptedException;
 
@@ -83,9 +83,9 @@ public interface IPluginIO {
 
 	long getLastTimeModified();
 
-	void setProtobuf(byte[] protobuf);
+	void setProtobuf(byte @Nullable[] protobuf);
 
-	byte[] getProtobuf();
+	byte @Nullable[] getProtobuf();
 
 	/**
 	 * @param persistent

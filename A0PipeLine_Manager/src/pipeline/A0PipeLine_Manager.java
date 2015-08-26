@@ -352,8 +352,6 @@ public class A0PipeLine_Manager implements PlugIn {
 			Object[] data = ((MyTableModel) table11.getModel()).data;
 			Object[] theRow = (Object[]) data[tableRow];
 			int[] outputChannelSelection = ((TableParameter) theRow[OUT_CHANNELS_FIELD]).getSelection();
-			if (outputChannelSelection == null)
-				outputChannelSelection = new int[0];
 
 			int[] newSelection = new int[outputChannelSelection.length + numberToAdd];
 			int numberAdded = 0;
@@ -488,14 +486,12 @@ public class A0PipeLine_Manager implements PlugIn {
 
 			TableParameter outFieldParameter = ((TableParameter) theRow[OUT_CHANNELS_FIELD]);
 			int[] outputChannelSelection = outFieldParameter.getSelection();
-			if (outputChannelSelection != null) {
-				for (int i = 0; i < outputChannelSelection.length; i++) {
-					if (outputChannelSelection[i] >= outFieldParameter.getElements().length) {
-						Utils.log("deleting output selection because it's out of range", LogLevel.DEBUG);
-						outFieldParameter.setSelection(new int[0]);
-						outputChannelSelection = null;
-						break;
-					}
+			for (int i = 0; i < outputChannelSelection.length; i++) {
+				if (outputChannelSelection[i] >= outFieldParameter.getElements().length) {
+					Utils.log("deleting output selection because it's out of range", LogLevel.DEBUG);
+					outFieldParameter.setSelection(new int[0]);
+					outputChannelSelection = null;
+					break;
 				}
 			}
 

@@ -216,10 +216,11 @@ public class PluginIOCells extends PluginIOListOfQ<ClickedPoint> implements Clon
 	}
 
 	@Override
-	public byte[] asProtobufBytes() {
+	public byte @NonNull[] asProtobufBytes() {
 		// FIXME Need to clean up behavior of userCells/userCellFormulas printing
-		if (getProtobuf() != null)
-			return getProtobuf();
+		byte [] local = getProtobuf();
+		if (local != null)
+			return local;
 		parseOrReallocate();
 		Builder protobufListOfPoints = SegDirectory.newBuilder();
 		protobufListOfPoints.setImageDimx(width).setImageDimy(height).setImageDimz(depth).addAllUserCellDescriptions(
@@ -362,9 +363,11 @@ public class PluginIOCells extends PluginIOListOfQ<ClickedPoint> implements Clon
 			protobufListOfPoints.addProtobufInfo(protobufPoint);
 		}
 
-		setProtobuf(protobufListOfPoints.build().toByteArray());
+		@SuppressWarnings("null")
+		byte @NonNull[] result = protobufListOfPoints.build().toByteArray();
+		setProtobuf(result);
 
-		return getProtobuf();
+		return result;
 	}
 
 	public static final int DELETE_MODIFIER = java.awt.event.InputEvent.SHIFT_MASK;

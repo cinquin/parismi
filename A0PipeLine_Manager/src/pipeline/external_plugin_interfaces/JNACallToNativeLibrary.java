@@ -520,10 +520,6 @@ public class JNACallToNativeLibrary extends LinkToExternalProgram {
 
 			}
 
-			if (protobuf == null) {
-				dataSize.setValue(0);
-				return;
-			}
 			// FileOutputStream fos = new FileOutputStream("last_protobuf_passed_to_native_library.bin");
 			// fos.write(protobuf);
 			// fos.close();

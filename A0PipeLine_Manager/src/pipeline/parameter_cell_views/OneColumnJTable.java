@@ -151,19 +151,19 @@ public class OneColumnJTable extends AbstractParameterCellView implements TableM
 
 	}
 
+	@SuppressWarnings("null")
 	private void checkSelection() {
 		if (!silenceUpdate) {
 			if (currentParameter == null)
 				return;
 
-			int[] newChoices;
+			int @NonNull[] newChoices;
 			if (currentParameter.displayHorizontally)
 				newChoices = localJTable.getSelectedColumns();
 			else
 				newChoices = localJTable.getSelectedRows();
 
 			if (!Arrays.equals(currentParameter.getSelection(), newChoices)) {
-
 				currentParameter.setSelection(newChoices);
 				currentParameter.fireValueChanged(false, false, true);
 			}

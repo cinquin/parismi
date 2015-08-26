@@ -29,6 +29,10 @@ public class PluginIOUnknownBinary extends PluginIO {
 
 	@Override
 	public byte[] asProtobufBytes() {
-		return getProtobuf();
+		byte [] local = getProtobuf();
+		if (local == null) {
+			throw new RuntimeException();
+		}
+		return local;
 	}
 }

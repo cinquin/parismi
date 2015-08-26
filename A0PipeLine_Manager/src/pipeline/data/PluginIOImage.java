@@ -6,6 +6,8 @@
  ******************************************************************************/
 package pipeline.data;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import ij.measure.Calibration;
 import pipeline.GUI_utils.PluginIOHyperstackViewWithImagePlus;
 import pipeline.data.InputOutputObjectDimensions.dimensionType;
@@ -132,8 +134,12 @@ public abstract class PluginIOImage extends PluginIO implements IPluginIO, IPlug
 	 * @see pipeline.data.PluginIOImageInterface#asProtobufBytes()
 	 */
 	@Override
-	public byte[] asProtobufBytes() {
-		return getProtobuf();
+	public byte @NonNull[] asProtobufBytes() {
+		byte [] local = getProtobuf();
+		if (local == null) {
+			throw new RuntimeException();
+		}
+		return local;
 	}
 
 	/*
