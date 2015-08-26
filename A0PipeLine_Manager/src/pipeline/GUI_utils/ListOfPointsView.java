@@ -571,6 +571,7 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 			if (selectedColumns.length == 1) {
 				// display a histogram rather than a scatter plot
 				scv = new XYScatterPlotView(1);
+				scv.setWindowTitle("Histogram of " + name1);
 
 				int nFilteredRows = table.getNumberFilteredRows();
 				if (nFilteredRows == 0) {
@@ -625,6 +626,7 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 				// Utils.log("Creating pairwise plot for columns "+name1+" and "+name2,LogLevel.DEBUG);
 				// For now just deal with the first two columns
 				scv = new XYScatterPlotView(0);
+				scv.setWindowTitle("Scatterplot: " + name2 + " vs " + name1);
 				int nFilteredRows = table.getNumberFilteredRows();
 				ColumnInformation columnInfox = tableModel.columns.get(selectedColumns[0]);
 				ColumnInformation columnInfoy = tableModel.columns.get(selectedColumns[1]);

@@ -395,7 +395,7 @@ public class OrthogonalViewsWithComposites implements MouseListener, MouseMotion
 				((CompositeImage) xzImage).setLuts(imp.getLuts());
 			} else
 				xzImage = xzImageAsImp;
-			xzImage.setTitle("yz orth view");
+			xzImage.setTitle("xz orth view");
 
 			ImageCanvasWithAnnotations xzCanvas =
 					new ImageCanvasWithAnnotations(xzImage, cellsToOverlay, null, "x", "z", "y", "t", "xyCalibration",

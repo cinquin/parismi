@@ -6,6 +6,7 @@
  ******************************************************************************/
 package pipeline.plugins.gui_control;
 
+import ij.plugin.frame.Channels;
 import pipeline.PreviewType;
 import pipeline.data.IPluginIO;
 import pipeline.data.IPluginIOImage;
@@ -43,6 +44,7 @@ public class MakeComposite extends FourDPlugin {
 		return NO_IMP_OUTPUT;
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public void run(ProgressReporter r, MultiListParameter inChannels, TableParameter outChannels,
 			PreviewType previewType, boolean inputHasChanged, AbstractParameter parameterWhoseValueChanged,
@@ -52,7 +54,18 @@ public class MakeComposite extends FourDPlugin {
 			if (source instanceof IPluginIOImage) {
 				IPluginIOImage image = (IPluginIOImage) source;
 				if (image.getImp() != null) {
+					final boolean reopenChannels;
+					Channels channels = (Channels) Channels.getInstance();
+					if (channels != null) {
+						reopenChannels = true;
+						channels.close();
+					} else {
+						reopenChannels = false;
+					}
 					image.getImp().toComposite();
+					if (reopenChannels) {
+						new Channels();
+					}
 				} else {
 					Utils.log("Source " + source + " has no associated view; cannot convert to composite",
 							LogLevel.WARNING);

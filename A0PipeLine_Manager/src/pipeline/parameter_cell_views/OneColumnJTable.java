@@ -245,7 +245,7 @@ public class OneColumnJTable extends AbstractParameterCellView implements TableM
 			selection = new int[0];
 		localJTable.getSelectionModel().clearSelection();
 
-		if (currentParameter != null & selection != null && selection.length > 0) {
+		if (currentParameter != null && selection.length > 0) {
 			for (int element : selection) {
 				if (element >= data.length) {
 					Utils.log("Invalid selection index " + element, LogLevel.VERBOSE_VERBOSE_DEBUG);

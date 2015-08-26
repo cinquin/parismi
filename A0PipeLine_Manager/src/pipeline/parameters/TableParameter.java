@@ -12,6 +12,7 @@ import java.util.Arrays;
 import org.eclipse.jdt.annotation.NonNull;
 
 import pipeline.misc_util.Utils;
+import pipeline.misc_util.Utils.LogLevel;
 
 // simple class for one-column editable JTable
 public class TableParameter extends AbstractParameter {
@@ -60,7 +61,12 @@ public class TableParameter extends AbstractParameter {
 		return -1;
 	}
 
+	@SuppressWarnings({ "unused", "null" })
 	public int @NonNull[] getSelection() {
+		if (currentChoices == null) { // Can happen when deserializing an older table
+			Utils.log("Null current selection", LogLevel.DEBUG);
+			currentChoices = new int[0];
+		}
 		return currentChoices;
 	}
 

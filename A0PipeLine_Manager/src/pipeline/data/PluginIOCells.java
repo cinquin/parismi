@@ -128,7 +128,7 @@ public class PluginIOCells extends PluginIOListOfQ<ClickedPoint> implements Clon
 
 	public PluginIOCells() {
 		this.internalList = new ArrayList<>(20);
-		setName("No name specified");
+		setName("Cell list");
 		int i = 0;
 		while (userCellDescriptions.size() < 3) {
 			userCellDescriptions.add("userCell " + (i + 1));

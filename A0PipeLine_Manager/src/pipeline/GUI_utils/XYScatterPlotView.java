@@ -513,4 +513,15 @@ public class XYScatterPlotView<CollectionType extends AbstractSeriesDataset & Fr
 		throw new RuntimeException("Unimplemented");
 	}
 
+	public void setWindowTitle(String title) {
+		this.windowTitle = title;
+		if (windowWithGraph != null) {
+			Runnable r = () -> windowWithGraph.setTitle(title);
+			if (java.awt.EventQueue.isDispatchThread())
+				r.run();
+			else
+				javax.swing.SwingUtilities.invokeLater(r);
+		}
+	}
+
 }
