@@ -241,10 +241,8 @@ class SequentialTiffSliceEncoder {
 		if (nSlicesWritten == fi.nImages)
 			throw new RuntimeException("Trying to write more slices than the number previously declared: " + fi.nImages);
 		singleSliceFi.pixels = pixels;
-		// Utils.log(" WRITING STRIP AT OFFSET "+nBytesWritten,LogLevel.VERBOSE_DEBUG);
 		writer.write();
 		nSlicesWritten++;
-		// Utils.log("In writeSlice: Wrote "+nSlicesWritten+" slices",LogLevel.VERBOSE_DEBUG);
 		int arrayLength;
 		if (pixels instanceof float[])
 			arrayLength = ((float[]) pixels).length;

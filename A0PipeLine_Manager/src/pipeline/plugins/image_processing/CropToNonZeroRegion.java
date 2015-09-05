@@ -404,7 +404,7 @@ public class CropToNonZeroRegion extends FourDPlugin implements SpecialDimPlugin
 
 		setOutput("Default destination", createdOutput, true);
 
-		ArrayList<PluginIOView> imagesToShow = new ArrayList<>();
+		List<PluginIOView> imagesToShow = new ArrayList<>();
 
 		PluginIOHyperstackViewWithImagePlus display = null;
 		if (!Utils.headless) {

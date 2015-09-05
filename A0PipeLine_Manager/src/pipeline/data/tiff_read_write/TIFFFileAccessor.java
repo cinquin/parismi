@@ -8,11 +8,6 @@
  ******************************************************************************/
 package pipeline.data.tiff_read_write;
 
-import ij.ImageJ;
-import ij.io.FileInfo;
-import ij.measure.Calibration;
-import ij.process.ImageProcessor;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileDescriptor;
@@ -25,17 +20,25 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.nio.channels.FileChannel;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+import java.util.TreeMap;
 import java.util.Vector;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.jdt.annotation.NonNull;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+
+import ij.ImageJ;
+import ij.io.FileInfo;
+import ij.measure.Calibration;
+import ij.process.ImageProcessor;
 import pipeline.data.ChannelInfo;
 import pipeline.data.IPluginIOHyperstack;
 import pipeline.data.IPluginIOStack;
@@ -52,10 +55,6 @@ import pipeline.misc_util.FormatException;
 import pipeline.misc_util.SettableBoolean;
 import pipeline.misc_util.Utils;
 import pipeline.misc_util.Utils.LogLevel;
-
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 
 // FIXME When opened for writing and accessed as a stack to write out slices, this class might not behave properly
 // TODO Honor caching for writing
@@ -422,7 +421,7 @@ public class TIFFFileAccessor extends PluginIOHyperstack implements ImageAccesso
 		if (getName() == null)
 			setName(FileNameUtils.compactPath(f.getName()));
 
-		setChannels(new HashMap<String, IPluginIOStack>());
+		setChannels(new TreeMap<String, IPluginIOStack>());
 		for (int i = 0; i < getnChannels(); i++) {
 			PluginIOStack stack = new PluginIOStack(this, i, "Ch" + i);
 			if ((infoArray != null) && (infoArray.length > 0)) {

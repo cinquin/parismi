@@ -38,7 +38,7 @@ class ImageWriterNIO {
 
 	private static final int queueCapacity = 2;
 	private BlockingDeque<BufferPair> freeBuffers = new LinkedBlockingDeque<BufferPair>(queueCapacity);
-	private BlockingQueue<BufferPair> pendingWrites = new ArrayBlockingQueue<>(queueCapacity, false);
+	private BlockingQueue<BufferPair> pendingWrites = new ArrayBlockingQueue<>(queueCapacity, true);
 
 	public long timeWaitingForData = 0;
 	public long timeInIOThreadNotWaiting = 0;

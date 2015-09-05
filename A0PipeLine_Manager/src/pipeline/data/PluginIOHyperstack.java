@@ -6,20 +6,19 @@
  ******************************************************************************/
 package pipeline.data;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
+
+import org.eclipse.jdt.annotation.NonNull;
+
 import ij.ImagePlus;
 import ij.gui.Roi;
 import ij.io.FileInfo;
 import ij.measure.Calibration;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.eclipse.jdt.annotation.NonNull;
-
 import pipeline.GUI_utils.PluginIOHyperstackViewWithImagePlus;
 import pipeline.data.InputOutputObjectDimensions.dimensionType;
 import pipeline.data.tiff_read_write.TIFFFileAccessor;
@@ -71,7 +70,7 @@ public class PluginIOHyperstack extends PluginIOImage implements IPluginIO, IPlu
 
 	PluginIOHyperstack(boolean justOneChannel, String name) {
 		setSupportsWritingToPixels(true);
-		setChannels(new HashMap<String, IPluginIOStack>());
+		setChannels(new TreeMap<String, IPluginIOStack>());
 		this.setName(name);
 		if (justOneChannel)
 			getChannels().put("Ch0", (PluginIOStack) this);// this is probably wrong; cast should fail
@@ -79,7 +78,7 @@ public class PluginIOHyperstack extends PluginIOImage implements IPluginIO, IPlu
 
 	public PluginIOHyperstack(ImagePlus imp) {
 		setSupportsWritingToPixels(true);
-		setChannels(new HashMap<String, IPluginIOStack>());
+		setChannels(new TreeMap<String, IPluginIOStack>());
 		setnChannels(imp.getNChannels());
 		setName(imp.getTitle());
 		this.setImagePlusDisplay(imp);
@@ -149,7 +148,7 @@ public class PluginIOHyperstack extends PluginIOImage implements IPluginIO, IPlu
 	public PluginIOHyperstack(String name, int width, int height, int depth, int nChannels, int nTimePoints,
 			PixelType pType, boolean dontAllocatePixels) throws InterruptedException {
 		setSupportsWritingToPixels(true);
-		setChannels(new HashMap<String, IPluginIOStack>());
+		setChannels(new TreeMap<String, IPluginIOStack>());
 		this.setnChannels(nChannels);
 		this.setName(name);
 		this.setWidth(width);
@@ -163,7 +162,7 @@ public class PluginIOHyperstack extends PluginIOImage implements IPluginIO, IPlu
 		setDerivation("De novo hyperstack creation");
 
 		pixelArray = new Object[nChannels][depth * nTimePoints];
-		setChannels(new HashMap<String, IPluginIOStack>());
+		setChannels(new TreeMap<String, IPluginIOStack>());
 
 		for (int c = 0; c < nChannels; c++) {
 			for (int z = 0; z < depth * nTimePoints; z++) {
@@ -194,7 +193,7 @@ public class PluginIOHyperstack extends PluginIOImage implements IPluginIO, IPlu
 		setSupportsWritingToPixels(true);
 	}
 
-	private Map<String, IPluginIOStack> channels;
+	private SortedMap<String, IPluginIOStack> channels;
 
 	private static final long serialVersionUID = 1L;
 
@@ -473,7 +472,7 @@ public class PluginIOHyperstack extends PluginIOImage implements IPluginIO, IPlu
 		if (forceNSlices > -1)
 			duplicate.setDepth(forceNSlices);
 		duplicate.pixelArray = new Object[getnChannels()][duplicate.getDepth() * getnTimePoints()];
-		duplicate.setChannels(new HashMap<String, IPluginIOStack>());
+		duplicate.setChannels(new TreeMap<String, IPluginIOStack>());
 		duplicate.setnTimePoints(getnTimePoints());
 		duplicate.setName("Derived from " + getName());
 		if (forceNChannels >= 0)
@@ -826,7 +825,7 @@ public class PluginIOHyperstack extends PluginIOImage implements IPluginIO, IPlu
 	 * @see pipeline.data.PluginIOHyperstackInterface#setChannels(java.util.HashMap)
 	 */
 	@Override
-	public void setChannels(Map<String, IPluginIOStack> channels) {
+	public void setChannels(SortedMap<String, IPluginIOStack> channels) {
 		this.channels = channels;
 	}
 
@@ -836,9 +835,9 @@ public class PluginIOHyperstack extends PluginIOImage implements IPluginIO, IPlu
 	 * @see pipeline.data.PluginIOHyperstackInterface#getChannels()
 	 */
 	@Override
-	public Map<String, IPluginIOStack> getChannels() {
+	public SortedMap<String, IPluginIOStack> getChannels() {
 		if (channels == null)
-			channels = new HashMap<>();
+			channels = new TreeMap<>();
 		return channels;
 	}
 

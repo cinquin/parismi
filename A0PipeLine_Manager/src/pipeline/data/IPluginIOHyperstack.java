@@ -6,10 +6,10 @@
  ******************************************************************************/
 package pipeline.data;
 
+import java.util.SortedMap;
+
 import ij.ImagePlus;
 import ij.gui.Roi;
-
-import java.util.Map;
 
 public interface IPluginIOHyperstack extends IPluginIOImage, IPluginIO {
 
@@ -97,12 +97,12 @@ public interface IPluginIOHyperstack extends IPluginIOImage, IPluginIO {
 	 * @param channels
 	 *            the channels to set
 	 */
-	abstract void setChannels(Map<String, IPluginIOStack> channels);
+	abstract void setChannels(SortedMap<String, IPluginIOStack> channels);
 
 	/**
 	 * @return the channels
 	 */
-	abstract Map<String, IPluginIOStack> getChannels();
+	abstract SortedMap<String, IPluginIOStack> getChannels();
 
 	abstract void setImagePlusDisplay(ImagePlus imagePlusDisplay);
 

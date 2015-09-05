@@ -103,7 +103,7 @@ public class LazyCopy extends FourDPlugin implements SpecialDimPlugin, Auxiliary
 						InputOutputDescription.NOT_SPECIFIED, false, false));
 				break;
 			default:
-				throw new IllegalStateException("Unkonwn conversion choice " + pixelDepth);
+				throw new IllegalStateException("Unknown conversion choice " + pixelDepth);
 		}
 		return result;
 	}

@@ -54,7 +54,7 @@ public class CellBallQuantify extends ThreeDPlugin implements AuxiliaryInputOutp
 
 	@Override
 	public Map<String, InputOutputDescription> getInputDescriptions() {
-		HashMap<String, InputOutputDescription> result = new HashMap<>();
+		Map<String, InputOutputDescription> result = new HashMap<>();
 		result.put("Default source", new InputOutputDescription(null, null, new PixelType[] { PixelType.FLOAT_TYPE,
 				PixelType.SHORT_TYPE, PixelType.BYTE_TYPE }, InputOutputDescription.NOT_SPECIFIED,
 				InputOutputDescription.NOT_SPECIFIED, false, false));
