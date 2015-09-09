@@ -367,8 +367,10 @@ public class OrthogonalViewsWithComposites implements MouseListener, MouseMotion
 				yzImage = new CompositeImage(yzImageAsImp, CompositeImage.COMPOSITE, null);// imp
 				imp.getLuts();
 				((CompositeImage) yzImage).setLuts(imp.getLuts());
-			} else
+			} else {
 				yzImage = yzImageAsImp;
+				yzImage.getProcessor().setColorModel(imp.getProcessor().getCurrentColorModel());
+			}
 			yzImage.setTitle("yz orth view");
 			ImageCanvasWithAnnotations yzCanvas =
 					new ImageCanvasWithAnnotations(yzImage, cellsToOverlay, null, "z", "y", "x", "t", "xyCalibration",
@@ -393,8 +395,10 @@ public class OrthogonalViewsWithComposites implements MouseListener, MouseMotion
 			if (imp instanceof CompositeImage) {
 				xzImage = new CompositeImage(xzImageAsImp, CompositeImage.COMPOSITE, null);
 				((CompositeImage) xzImage).setLuts(imp.getLuts());
-			} else
+			} else {
 				xzImage = xzImageAsImp;
+				xzImage.getProcessor().setColorModel(imp.getProcessor().getCurrentColorModel());
+			}
 			xzImage.setTitle("xz orth view");
 
 			ImageCanvasWithAnnotations xzCanvas =
