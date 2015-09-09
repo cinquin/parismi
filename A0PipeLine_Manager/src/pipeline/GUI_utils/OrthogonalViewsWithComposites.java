@@ -109,10 +109,7 @@ public class OrthogonalViewsWithComposites implements MouseListener, MouseMotion
 	private ImageProcessor[] xzImages;
 	private ImageProcessor[] yzImages;
 	private double ax, ay, az;
-	// private static boolean rotate=(boolean)Prefs.getBoolean(YROT,false);
-	// private static boolean sticky=(boolean)Prefs.getBoolean(SPANELS,false);
 	private static boolean rotate = false;
-	private static boolean sticky = true;
 
 	private int xyX, xyY;
 	private Calibration cal = null, cal_xz = new Calibration(), cal_yz = new Calibration();
