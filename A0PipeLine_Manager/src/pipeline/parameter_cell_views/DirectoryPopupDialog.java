@@ -39,7 +39,7 @@ public class DirectoryPopupDialog extends TextBox {
 						currentValue += "/" + dialog.getFile();
 						System.setProperty("apple.awt.fileDialogForDirectories", "false");
 					} else {
-						JFileChooser chooser = new JFileChooser(currentValue) {
+						JFileChooser chooser = new JFileChooser(FileNameUtils.expandPath(currentValue)) {
 							private static final long serialVersionUID = 8327157924854042679L;
 
 							@Override
