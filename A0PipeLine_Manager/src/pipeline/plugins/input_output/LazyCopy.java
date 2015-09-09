@@ -110,19 +110,38 @@ public class LazyCopy extends FourDPlugin implements SpecialDimPlugin, Auxiliary
 
 	@Override
 	public int getOutputDepth(IPluginIO input) {
-		depth = ((IPluginIOImage) input).getDimensions().depth;
-		return depth;
+		int maxDepth = -1;
+		for (IPluginIO io : pluginInputs.values()) {
+			int depth = ((IPluginIOImage) io).getDimensions().depth;
+			if (depth > maxDepth) {
+				maxDepth = depth;
+			}
+		}
+		return maxDepth;
 	}
 
 	@Override
 	public int getOutputNTimePoints(IPluginIO input) {
-		nTimePoints = ((IPluginIOImage) input).getDimensions().nTimePoints;
-		return nTimePoints;
+		int maxNTP = -1;
+		for (IPluginIO io : pluginInputs.values()) {
+			int nTimePoints = ((IPluginIOImage) io).getDimensions().nTimePoints;
+			if (nTimePoints > maxNTP) {
+				maxNTP = nTimePoints;
+			}
+		}
+		return maxNTP;
 	}
 
 	@Override
 	public int getOutputHeight(IPluginIO input) {
-		return ((IPluginIOImage) input).getDimensions().height;
+		int maxHeight = -1;
+		for (IPluginIO io : pluginInputs.values()) {
+			int height = ((IPluginIOImage) io).getDimensions().height;
+			if (height > maxHeight) {
+				maxHeight = height;
+			}
+		}
+		return maxHeight;
 	}
 
 	@Override
@@ -138,10 +157,15 @@ public class LazyCopy extends FourDPlugin implements SpecialDimPlugin, Auxiliary
 
 	@Override
 	public int getOutputWidth(IPluginIO input) {
-		return ((IPluginIOImage) input).getDimensions().width;
+		int maxWidth = -1;
+		for (IPluginIO io : pluginInputs.values()) {
+			int width = ((IPluginIOImage) io).getDimensions().width;
+			if (width > maxWidth) {
+				maxWidth = width;
+			}
+		}
+		return maxWidth;
 	}
-
-	private int depth, nTimePoints;
 
 	@Override
 	public boolean shouldClearOutputs() {
@@ -190,11 +214,17 @@ public class LazyCopy extends FourDPlugin implements SpecialDimPlugin, Auxiliary
 					pluginOutputs.put("File name", new PluginIOString(fileName));
 				}
 				IPluginIOHyperstack hst = (IPluginIOHyperstack) io;
-				if (hst.getWidth() != getImageInput().getDimensions().width
+				
+				boolean xyDimensionMismatch = 
+						hst.getWidth() != destination.getDimensions().width
+						|| hst.getHeight() != destination.getDimensions().height;
+				
+				/*if (hst.getWidth() != getImageInput().getDimensions().width
 						|| hst.getHeight() != getImageInput().getDimensions().height
 						|| hst.getDepth() != getImageInput().getDimensions().depth)
 					throw new DimensionMismatchException("Dimension mismatch between inputs of LazyCopy plugin", true);
-
+				*/
+				
 				// FIXME Should concatenate (or rather structure properly) metadata from different pluginInputs rather
 				// than just keeping the metadata from the last source we iterate over
 				destination.setImageAcquisitionMetadata(hst.getImageAcquisitionMetadata());
@@ -205,11 +235,38 @@ public class LazyCopy extends FourDPlugin implements SpecialDimPlugin, Auxiliary
 					} else
 						destinationChannel = destinationIterator.next();
 					destinationChannel.setImageAcquisitionMetadata(channel.getImageAcquisitionMetadata());
-					for (int z = 0; z < depth * nTimePoints; z++) {
-						if (channel.getPixels(z) == null) {
-							Utils.log("Null input slice", LogLevel.WARNING);
+					//TODO Loop below will need adjusting if more than 1 time point
+					for (int z = 0; z < channel.getDepth() * channel.getnTimePoints(); z++) {
+						if (xyDimensionMismatch) {
+							final Object pixels;
+							final int length = destinationChannel.getWidth() * destinationChannel.getHeight();
+							switch(destinationChannel.getPixelType()) {
+								case BYTE_TYPE:
+									pixels = new byte[length];
+									break;
+								case FLOAT_TYPE:
+									pixels = new float[length];
+									break;
+								case SHORT_TYPE:
+									pixels = new short[length];
+									break;
+								default:
+									throw new RuntimeException("Unknown pixel type " + 
+											destinationChannel.getPixelType());
+							}
+							destinationChannel.setPixels(pixels, z);
+							for (int x = 0; x < hst.getWidth(); x++) {
+								for (int y = 0; y < hst.getHeight(); y++) {
+									destinationChannel.setPixelValue(x, y, z, 
+											channel.getPixelValue(x, y, z));
+								}
+							}
+						} else {
+							if (channel.getPixels(z) == null) {
+								Utils.log("Null input slice", LogLevel.WARNING);
+							}
+							destinationChannel.setPixels(channel.getPixels(z), z);
 						}
-						destinationChannel.setPixels(channel.getPixels(z), z);
 					}
 
 				}
