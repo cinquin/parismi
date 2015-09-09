@@ -569,7 +569,7 @@ public class OrthogonalViewsWithComposites implements MouseListener, MouseMotion
 
 	}
 
-	void arrangeWindows(boolean sticky) {
+	void arrangeWindows() {
 		ImageWindow xyWin = imp.getWindow();
 		if (xyWin == null)
 			return;
@@ -942,7 +942,7 @@ public class OrthogonalViewsWithComposites implements MouseListener, MouseMotion
 				updateCrosses(p.x, p.y, arat, brat);
 				if (syncZoom)
 					updateMagnification(p.x, p.y);
-				arrangeWindows(sticky);
+				arrangeWindows();
 			});
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
@@ -1125,12 +1125,12 @@ public class OrthogonalViewsWithComposites implements MouseListener, MouseMotion
 		ImageCanvas ic = imp.getCanvas();
 		if (ic != null)
 			canvas.requestFocus();
-		arrangeWindows(sticky);
+		//arrangeWindows();
 	}
 
 	@Override
 	public void focusLost(FocusEvent e) {
-		arrangeWindows(sticky);
+		//arrangeWindows();
 	}
 
 	/**
