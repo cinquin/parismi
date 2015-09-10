@@ -4,17 +4,6 @@
  ******************************************************************************/
 package pipeline;
 
-import ij.CompositeImage;
-import ij.IJ;
-import ij.ImagePlus;
-import ij.Menus;
-import ij.Prefs;
-import ij.WindowManager;
-import ij.gui.ImageWindow;
-import ij.plugin.PlugIn;
-import ij.process.ImageProcessor;
-import ij.util.StringSorter;
-
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Dimension;
@@ -127,6 +116,24 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.xml.sax.InputSource;
 
+import com.beust.jcommander.JCommander;
+import com.sun.jna.Library;
+import com.sun.jna.NativeLong;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
+import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
+import com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider;
+
+import ij.CompositeImage;
+import ij.IJ;
+import ij.ImagePlus;
+import ij.Menus;
+import ij.Prefs;
+import ij.WindowManager;
+import ij.gui.ImageWindow;
+import ij.plugin.PlugIn;
+import ij.process.ImageProcessor;
+import ij.util.StringSorter;
 import pipeline.GUI_utils.JTableWithStripes;
 import pipeline.GUI_utils.ListOfPointsView;
 import pipeline.GUI_utils.MultiRenderer;
@@ -198,14 +205,6 @@ import pipeline.plugins.input_output.BatchOpenV2;
 import pipeline.plugins.input_output.LazyCopy;
 import pipeline.plugins.input_output.LazyCopy.DimensionMismatchException;
 import pipeline.plugins.input_output.SaveTable;
-
-import com.beust.jcommander.JCommander;
-import com.sun.jna.Library;
-import com.sun.jna.NativeLong;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
-import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
-import com.thoughtworks.xstream.converters.reflection.Sun14ReflectionProvider;
 
 /**
  * This is the main class, which implements most of the pipeline task scheduling, and provides the glue between the
@@ -1252,6 +1251,8 @@ public class A0PipeLine_Manager implements PlugIn {
 
 					try {
 
+						progressSetIndeterminateThreadSafe((ProgressRenderer) pluginTableRow[PERCENT_DONE], true,
+								tableRow);
 						if ((plugin.getFlags() & PipelinePlugin.NO_INPUT) == 0)
 							updateSourceFieldAtRow(tableRow);
 						// Resolve the input so we have a valid source_imp to pass to the plugin
@@ -1332,8 +1333,6 @@ public class A0PipeLine_Manager implements PlugIn {
 
 						updateDestinationFieldAtRow(tableRow, 1);
 
-						progressSetIndeterminateThreadSafe((ProgressRenderer) pluginTableRow[PERCENT_DONE], true,
-								tableRow);
 						((ProgressRenderer) pluginTableRow[PERCENT_DONE]).setPlugin(plugin);
 
 						PreviewType previewType = null;
