@@ -37,6 +37,7 @@ public class SaveTable extends FourDPlugin implements AuxiliaryInputOutputPlugin
 
 	public static boolean disableSaving = false;
 
+	@SuppressWarnings("null")
 	@Override
 	public void run(final ProgressReporter r, final MultiListParameter inChannels, final TableParameter outChannels,
 			final PreviewType previewType, boolean inputHasChanged, AbstractParameter parameterWhoseValueChanged,

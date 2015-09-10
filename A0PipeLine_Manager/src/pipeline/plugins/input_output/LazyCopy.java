@@ -15,6 +15,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import pipeline.PreviewType;
 import pipeline.GUI_utils.PluginIOHyperstackViewWithImagePlus;
 import pipeline.GUI_utils.PluginIOView;
@@ -191,6 +193,7 @@ public class LazyCopy extends FourDPlugin implements SpecialDimPlugin, Auxiliary
 		}
 	}
 
+	@SuppressWarnings("null")
 	@Override
 	public void run(ProgressReporter r, MultiListParameter inChannels, TableParameter outChannels,
 			PreviewType previewType, boolean inputHasChanged, AbstractParameter parameterWhoseValueChanged,
@@ -204,7 +207,7 @@ public class LazyCopy extends FourDPlugin implements SpecialDimPlugin, Auxiliary
 			if (io instanceof IPluginIOHyperstack) {
 				if (io.getDiskLocation() != null) {
 					String filePath = io.getDiskLocation();
-					String fileName = new File(filePath).getName();
+					@NonNull String fileName = new File(filePath).getName();
 					// Be careful when stripping the extension that the file might not have an extension,
 					// and a "." character could occur in a parent directory name
 					if (fileName.contains(".")) {
@@ -275,7 +278,7 @@ public class LazyCopy extends FourDPlugin implements SpecialDimPlugin, Auxiliary
 	}
 
 	@Override
-	public List<PluginIOView> createOutput(String outputName, PluginIOHyperstackViewWithImagePlus impForDisplay,
+	public List<PluginIOView> createOutput(@NonNull String outputName, PluginIOHyperstackViewWithImagePlus impForDisplay,
 			Map<String, IPluginIO> linkedOutputs) throws InterruptedException {
 		PluginIOHyperstack createdOutput =
 				new PluginIOHyperstack(outputName, getOutputWidth(getInput()), getOutputHeight(getInput()),

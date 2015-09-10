@@ -87,6 +87,7 @@ public class LoadProtobufBinary extends ThreeDPlugin implements AuxiliaryInputOu
 		return 0;
 	}
 
+	@SuppressWarnings("null")
 	public static byte[] readProtobufFile(File f) {
 		byte[] bytes = null;
 		try (FileInputStream fileInput = new FileInputStream(f)) {

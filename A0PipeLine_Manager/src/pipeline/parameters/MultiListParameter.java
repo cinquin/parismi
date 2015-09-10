@@ -10,13 +10,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import pipeline.misc_util.Utils;
 import pipeline.misc_util.Utils.LogLevel;
 
 public class MultiListParameter extends AbstractParameter {
 	private static final long serialVersionUID = 4948350199914290055L;
 
-	private String[] choices;
+	private @NonNull String[] choices;
 	private int[] currentSelection;
 
 	public boolean[] getSelectedChoices() {
@@ -29,7 +31,8 @@ public class MultiListParameter extends AbstractParameter {
 		return result;
 	}
 
-	public MultiListParameter(String name, String explanation, String[] choices, int[] initialChoices,
+	public MultiListParameter(String name, String explanation, @NonNull String @NonNull[] choices,
+			int[] initialChoices,
 			ParameterListener listener) {
 		super(listener, null);
 		this.choices = choices;
@@ -42,7 +45,7 @@ public class MultiListParameter extends AbstractParameter {
 		return choices;
 	}
 
-	public String[] getSelectionString() {
+	public @NonNull String @NonNull [] getSelectionString() {
 		ArrayList<String> selectedItems = new ArrayList<>(currentSelection.length);
 		for (int currentChoice : currentSelection) {
 			if (currentChoice < choices.length)
@@ -51,7 +54,7 @@ public class MultiListParameter extends AbstractParameter {
 				Utils.log("In getSelectionString: argument out of bounds: " + currentChoice + " length is "
 						+ choices.length, LogLevel.DEBUG);
 		}
-		String[] returnArray = new String[selectedItems.size()];
+		@NonNull String @NonNull[] returnArray = new @NonNull String[selectedItems.size()];
 		selectedItems.toArray(returnArray);
 		return returnArray;
 	}
@@ -118,12 +121,13 @@ public class MultiListParameter extends AbstractParameter {
 		return array;
 	}
 
-	public void setChoices(String[] newChoices) {
+	@SuppressWarnings({ "unused", "null" })
+	public void setChoices(@NonNull String @NonNull[] newChoices) {
 		List<Integer> newSelection = new ArrayList<>();
 		for (int aCurrentSelection : currentSelection) {
 			int match = -1;
 			for (int j = 0; j < newChoices.length; j++) {
-				if (newChoices[j] == null) {
+				if (newChoices[j] == null) { //Should not be possible
 					throw new IllegalArgumentException(Arrays.toString(newChoices));
 				}
 				if (aCurrentSelection < choices.length && newChoices[j].equals(choices[aCurrentSelection])) {

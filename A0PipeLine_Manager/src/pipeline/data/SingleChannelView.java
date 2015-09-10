@@ -31,6 +31,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import org.eclipse.jdt.annotation.NonNull;
 import org.jdom.Document;
 
 import pipeline.ParseImageMetadata;
@@ -333,7 +334,7 @@ public class SingleChannelView extends PluginIOStack {
 	 * @param name
 	 *            TODO
 	 */
-	public SingleChannelView(ImagePlus imp, int channel, String name) {
+	public SingleChannelView(ImagePlus imp, int channel, @NonNull String name) {
 		super(name);
 
 		this.setImagePlusDisplay(imp);

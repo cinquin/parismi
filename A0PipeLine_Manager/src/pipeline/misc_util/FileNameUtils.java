@@ -61,8 +61,8 @@ public class FileNameUtils {
 		return newName;
 	}
 
-	public static List<String> getPathExpansions(String path, boolean sortByTime) {
-		List<String> result = new ArrayList<>();
+	public static List<@NonNull String> getPathExpansions(@NonNull String path, boolean sortByTime) {
+		List<@NonNull String> result = new ArrayList<>();
 
 		String command = "ls -d" + (sortByTime ? "t" : "") + " " + path.replace(" ", "\\ ");
 		Process shellExec;
@@ -158,7 +158,8 @@ public class FileNameUtils {
 
 	private static final Pattern homeDirPattern = Pattern.compile("^~[^/]*");
 
-	public static String expandPath(String path) {
+	@SuppressWarnings("null")
+	public static @NonNull String expandPath(@NonNull String path) {
 
 		if (path.contains("*") || path.contains("?"))
 			return expandPathUsingShell(path);
@@ -178,7 +179,7 @@ public class FileNameUtils {
 	}
 
 	// Adapted from http://stackoverflow.com/questions/7163364/how-to-handle-in-file-paths
-	public static String expandPathUsingShell(String path) {
+	public static @NonNull String expandPathUsingShell(@NonNull String path) {
 		try {
 			String command = "ls -dt " + path.replace(" ", "\\ ");
 			Process shellExec = Runtime.getRuntime().exec(new String[] { "bash", "-c", command });
@@ -221,7 +222,7 @@ public class FileNameUtils {
 		return path;
 	}
 
-	public static String removeIncrementationMarks(String input) {
+	public static @NonNull String removeIncrementationMarks(@NonNull String input) {
 		// remove "{" and "}" so the caller can open the file
 		// A SIMPLER WAY OF DOING IT WOULD BE input.replaceAll("\\{|\\}", "");
 

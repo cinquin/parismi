@@ -18,6 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import pipeline.PreviewType;
 import pipeline.GUI_utils.PluginIOHyperstackViewWithImagePlus;
 import pipeline.GUI_utils.PluginIOView;
@@ -138,12 +140,12 @@ public class Plot3DProfileV2 extends ThreeDPlugin {
 	@Override
 	public List<PluginIOView> createOutput(String outputName, PluginIOHyperstackViewWithImagePlus impForDisplay,
 			Map<String, IPluginIO> linkedOutputs) {
-		String[] sourceChannels = getInput().listOfSubObjects();
+		@NonNull String @NonNull[] sourceChannels = getInput().listOfSubObjects();
 		ArrayList<PluginIOView> plotViewList = new ArrayList<>();
 		XYScatterPlotView<XYSeriesCollectionGenericManipulator, XYSeriesReflection> plotView =
 				new XYScatterPlotView<>(0);
 		plotViewList.add(plotView);
-		for (String sourceChannel : sourceChannels) {
+		for (@NonNull String sourceChannel : sourceChannels) {
 			initializeOutputs();
 			PluginIOCells series = new PluginIOCells(sourceChannel);
 			plotView.addSeries(sourceChannel, series.getJFreeChartXYSeries("x", "y", -1, -1, null, null));

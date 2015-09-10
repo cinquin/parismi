@@ -547,5 +547,10 @@ public abstract class PluginIO implements Serializable, IPluginIO {
 	public PluginIOView createView() {
 		throw new RuntimeException("Not implemented");
 	}
+	
+	@Override
+	public boolean defaultToNoSaving() {
+		return false;
+	}
 
 }

@@ -16,6 +16,8 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import pipeline.PreviewType;
 import pipeline.data.IPluginIO;
 import pipeline.data.InputOutputDescription;
@@ -42,12 +44,13 @@ public class LazyCopyChannel extends TwoDPlugin implements AuxiliaryInputOutputP
 		return 0;
 	}
 
+	@SuppressWarnings("null")
 	@Override
 	public void postRun() {
 		for (IPluginIO io : pluginInputs.values()) {
 			if (io.getDiskLocation() != null) {
 				String filePath = io.getDiskLocation();
-				String fileName = new File(filePath).getName();
+				@NonNull String fileName = new File(filePath).getName();
 				// Be careful when stripping the extension that the file might not have an extension,
 				// and a "." character could occur in a parent directory name
 				if (fileName.contains(".")) {

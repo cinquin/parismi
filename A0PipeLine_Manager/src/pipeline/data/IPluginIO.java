@@ -146,5 +146,7 @@ public interface IPluginIO {
 	List<ListOfPointsView<?>> getViews();
 
 	void addView(ListOfPointsView<?> view);
+	
+	boolean defaultToNoSaving();
 
 }

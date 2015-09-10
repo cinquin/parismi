@@ -219,6 +219,7 @@ public class Utils {
 	public static void openVirtualTiff(File file, ImagePlus image, boolean displayErrorMessage) throws ImageOpenFailed {
 		TiffDecoder td = new TiffDecoder(file.getParent(), file.getName());
 
+		@SuppressWarnings("null")
 		String shortName = FileNameUtils.compactPath(file.getAbsolutePath());
 
 		FileInfo[] fiArray = null;

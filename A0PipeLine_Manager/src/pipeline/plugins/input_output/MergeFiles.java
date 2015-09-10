@@ -13,7 +13,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
+
+import org.eclipse.jdt.annotation.NonNull;
 
 import pipeline.data.IPluginIO;
 import pipeline.data.ImageAccessor;
@@ -80,10 +83,12 @@ public abstract class MergeFiles extends FourDPlugin implements AuxiliaryInputOu
 	}
 
 	private ParameterListener pathListener = new ParameterListenerAdapter() {
+		@SuppressWarnings("null")
 		@Override
 		public void parameterValueChanged(boolean stillChanging, AbstractParameter parameterWhoseValueChanged,
 				boolean keepQuiet) {
-			List<String> paths = FileNameUtils.getPathExpansions(path, false);
+			Objects.requireNonNull(path);
+			List<@NonNull String> paths = FileNameUtils.getPathExpansions(path, false);
 			((MultiListParameter) getParameter("selectedFiles")).setChoices(paths.toArray(new String[] {}));
 			((MultiListParameter) getParameter("selectedFiles")).fireValueChanged(false, true, false);
 			try {
@@ -104,7 +109,8 @@ public abstract class MergeFiles extends FourDPlugin implements AuxiliaryInputOu
 		getParameter("path").addPluginListener(pathListener);
 	}
 
-	static IPluginIO openInputFile(String path) throws IOException, FormatException {
+	@SuppressWarnings("null")
+	static IPluginIO openInputFile(@NonNull String path) throws IOException, FormatException {
 		if (path.endsWith(".tif") || path.endsWith(".tiff")) {
 			TIFFFileAccessor tiffReader;
 			File file = new File(path);
@@ -132,12 +138,14 @@ public abstract class MergeFiles extends FourDPlugin implements AuxiliaryInputOu
 
 	}
 
+	@SuppressWarnings("null")
 	protected List<IPluginIO> openInputFiles(ProgressReporter prog) throws InterruptedException {
 		List<IPluginIO> result = new ArrayList<>();
 		final List<String> paths = FileNameUtils.getPathExpansions(path, false);
 		((MultiListParameter) getParameter("selectedFiles")).setChoices(paths.toArray(new String[] {}));
 
-		final String[] fileNames = ((MultiListParameter) getParameter("selectedFiles")).getSelectionString();
+		final @NonNull String @NonNull [] fileNames = 
+				((MultiListParameter) getParameter("selectedFiles")).getSelectionString();
 
 		/*
 		 * prog.setMin(0);
@@ -149,7 +157,7 @@ public abstract class MergeFiles extends FourDPlugin implements AuxiliaryInputOu
 		for (int i = 0; i < parFor.getNThreads(); i++)
 			parFor.addLoopWorker((loopIndex, threadIndex) -> {
 				IPluginIO pluginIO = null;
-				String path1 = null;
+				@NonNull String path1 = "";
 				try {
 					path1 = fileNames[loopIndex];
 					pluginIO = openInputFile(FileNameUtils.expandPath(path1));

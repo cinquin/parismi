@@ -110,6 +110,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import org.apache.commons.lang3.text.WordUtils;
+import org.eclipse.jdt.annotation.NonNull;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -416,6 +417,7 @@ public class A0PipeLine_Manager implements PlugIn {
 		 * @param tableRow
 		 * @param nTries
 		 */
+		@SuppressWarnings("null")
 		private void updateDestinationFieldAtRow(int tableRow, int nTries) {
 
 			Object[] data = ((MyTableModel) table1.getModel()).data;
@@ -448,7 +450,7 @@ public class A0PipeLine_Manager implements PlugIn {
 
 				HashMap<String, ImagePlus> imageList = computeImagePlusList();
 
-				String outputName;
+				@NonNull String outputName;
 				if (!theRow[OUTPUT_NAME_FIELD].toString().equals("")) {
 					// We got here because the user specified a name but no such image existed
 					outputName = theRow[OUTPUT_NAME_FIELD].toString();
@@ -609,6 +611,7 @@ public class A0PipeLine_Manager implements PlugIn {
 		 * @param tempHashMap
 		 *            non-null HashMap that will be cleared and filled with new entries
 		 */
+		@SuppressWarnings("null")
 		private void workoutInputOrOutputFromString(String userInput, int tableRow, boolean convertImpToPluginIO,
 				boolean stuffAllPluginIOs, String forceNameTo, final Map<String, IPluginIO> tempHashMap) {
 
@@ -681,7 +684,7 @@ public class A0PipeLine_Manager implements PlugIn {
 			} else {
 				// This might be the name of an ImagePlus
 
-				String cleanedUpName = FileNameUtils.removeIncrementationMarks(userInput);
+				@NonNull String cleanedUpName = FileNameUtils.removeIncrementationMarks(userInput);
 
 				HashMap<String, ImagePlus> impList = computeImagePlusList();
 				ImagePlus imp = impList.get(cleanedUpName);
@@ -770,7 +773,7 @@ public class A0PipeLine_Manager implements PlugIn {
 								}
 								SwingUtilities.invokeLater(() -> {
 									// decompressionProgress.setValue(decompressionProgress.getMaximum());
-									});
+								});
 
 								file = tempUncompressedFile;
 								originalCleanedUpName = cleanedUpName;
@@ -1549,6 +1552,7 @@ public class A0PipeLine_Manager implements PlugIn {
 			}
 			for (int element : ImageIDList) {
 				ImagePlus imp = WindowManager.getImage(element);
+				@SuppressWarnings("null")
 				String name = imp != null ? FileNameUtils.removeIncrementationMarks(imp.getTitle()) : "";
 				result.put(name, WindowManager.getImage(element));
 			}
@@ -1583,7 +1587,9 @@ public class A0PipeLine_Manager implements PlugIn {
 					if (theRow[PLUGIN_INSTANCE] == null)
 						return;
 					IPluginIO source = ((PipelinePlugin) theRow[PLUGIN_INSTANCE]).getInput();
-					String[] channelNames = source == null ? new String[] {} : source.listOfSubObjects();
+					@SuppressWarnings("null")
+					@NonNull String @NonNull[] channelNames = source == null ? new String[] {} :
+						source.listOfSubObjects();
 					((MultiListParameter) theRow[WORK_ON_CHANNEL_FIELD]).setChoices(channelNames);
 					((MultiListParameter) theRow[WORK_ON_CHANNEL_FIELD]).trimSelection();
 					if ((((MultiListParameter) theRow[WORK_ON_CHANNEL_FIELD]).getSelection().length == 0)
@@ -1647,6 +1653,7 @@ public class A0PipeLine_Manager implements PlugIn {
 					File file = FileNameUtils.chooseFile("Choose an image to open", FileDialog.LOAD);
 					if (file == null)
 						return;
+					@SuppressWarnings("null")
 					final String path = FileNameUtils.compactPath(file.getAbsolutePath());
 					Runnable r = () -> {
 						((TextParameter) ((Object[]) data[row])[column]).setValue(path);
@@ -1838,7 +1845,8 @@ public class A0PipeLine_Manager implements PlugIn {
 			public void updateWorkOnChannelField(int row) {
 				Object[] data = ((MyTableModel) table1.getModel()).data;
 				Object[] theRow = (Object[]) data[row];
-				String[] channelNames = ((PipelinePlugin) theRow[PLUGIN_INSTANCE]).getInput().listOfSubObjects();
+				@NonNull String @NonNull[] channelNames = 
+						((PipelinePlugin) theRow[PLUGIN_INSTANCE]).getInput().listOfSubObjects();
 				((MultiListParameter) theRow[WORK_ON_CHANNEL_FIELD]).setChoices(channelNames);
 				((MultiListParameter) theRow[WORK_ON_CHANNEL_FIELD]).trimSelection();
 			}
@@ -2447,7 +2455,7 @@ public class A0PipeLine_Manager implements PlugIn {
 					}
 
 					// DnDUtils dndUtils=new DnDUtils();
-					@SuppressWarnings("unchecked")
+					@SuppressWarnings({ "unchecked", "null" })
 					@Override
 					public boolean importData(TransferSupport support) {
 						/*
@@ -4688,6 +4696,7 @@ public class A0PipeLine_Manager implements PlugIn {
 
 		public class MyTableModel extends AbstractTableModel {
 
+			@SuppressWarnings("null")
 			private boolean setFileParameter(int row, int column, File f) {
 				if ((column == PLUGIN_PARAM_1_FIELD) || (column == PLUGIN_PARAM_2_FIELD)) {
 					Object param = table1.getModel().getValueAt(row, column);
@@ -4748,7 +4757,8 @@ public class A0PipeLine_Manager implements PlugIn {
 					};
 
 			private MultiListParameter channelsParameter = new MultiListParameter("channels",
-					"Choose while channels to process", new String[] { "Ch0", "Ch1" }, new int[] { 1, 2 }, null);
+					"Choose while channels to process", new @NonNull String @NonNull[] { "Ch0", "Ch1" },
+					new int[] { 1, 2 }, null);
 			private TableParameter outputChannelParameter = new TableParameter("Output channels",
 					"Choose output channel names", new String[] { "Ch0", "Ch1" }, null);
 
@@ -5129,8 +5139,8 @@ public class A0PipeLine_Manager implements PlugIn {
 				newarray[position + 1][LAST_TIME_RUN] = (long) 0;
 
 				MultiListParameter newChannelsParameter =
-						new MultiListParameter("channels", "Choose while channels to process", new String[] { "Ch0",
-								"Ch1" }, new int[] { 1, 2 }, null);
+						new MultiListParameter("channels", "Choose while channels to process",
+								new @NonNull String @NonNull[] { "Ch0", "Ch1" }, new int[] { 1, 2 }, null);
 				newarray[position + 1][WORK_ON_CHANNEL_FIELD] = newChannelsParameter;
 
 				((ProgressRenderer) newarray[position + 1][PERCENT_DONE]).setIndeterminate(false);

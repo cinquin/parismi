@@ -25,6 +25,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.SwingUtilities;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import pipeline.PipelineCallback;
 import pipeline.GUI_utils.PluginIOHyperstackViewWithImagePlus;
 import pipeline.GUI_utils.PluginIOView;
@@ -162,7 +164,7 @@ public abstract class BasePipelinePlugin implements ImageListener, PipelinePlugi
 	 * pipeline.GUI_utils.PluginIOHyperstackViewWithImagePlus)
 	 */
 	@Override
-	public List<PluginIOView> createOutput(String outputName, PluginIOHyperstackViewWithImagePlus impForDisplay,
+	public List<PluginIOView> createOutput(@NonNull String outputName, PluginIOHyperstackViewWithImagePlus impForDisplay,
 			Map<String, IPluginIO> linkedOutputs) throws InterruptedException {
 		throw new RuntimeException("Non overriden version of createDestination called");
 	}

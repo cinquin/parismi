@@ -14,6 +14,9 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
+import org.eclipse.jdt.annotation.NonNull;
 
 import pipeline.PreviewType;
 import pipeline.GUI_utils.PluginIOHyperstackViewWithImagePlus;
@@ -133,6 +136,7 @@ public class BatchOpenV2 extends FourDPlugin implements AuxiliaryInputOutputPlug
 
 	}
 
+	@SuppressWarnings("null")
 	private void updateFileList() {
 		fileIndex = 0;
 		files = new ArrayList<>();
@@ -179,9 +183,9 @@ public class BatchOpenV2 extends FourDPlugin implements AuxiliaryInputOutputPlug
 		}
 		Collections.sort(files, (o1, o2) -> o1.compareTo(o2));
 
-		String[] compactedFileNames = new String[files.size()];
+		@NonNull String @NonNull [] compactedFileNames = new String[files.size()];
 		int i = 0;
-		for (String s : files) {
+		for (@NonNull String s : files) {
 			compactedFileNames[i] = FileNameUtils.compactPath(s);
 			i++;
 		}
@@ -220,7 +224,7 @@ public class BatchOpenV2 extends FourDPlugin implements AuxiliaryInputOutputPlug
 	}
 
 	private transient int fileIndex = 0;
-	private transient ArrayList<String> files = null;
+	private transient ArrayList<@NonNull String> files = null;
 
 	public void prepareForBatchRun() {
 		updateFileList();
@@ -236,6 +240,7 @@ public class BatchOpenV2 extends FourDPlugin implements AuxiliaryInputOutputPlug
 			// read the list from the directory
 			updateFileList();
 		}
+		Objects.requireNonNull(files);
 
 		if (files.size() > 0) {
 			r.setIndeterminate(false);

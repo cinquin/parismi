@@ -95,7 +95,7 @@ public class SaveObjectsToXML extends FourDPlugin implements AuxiliaryInputOutpu
 		int result = 0;
 		while (it.hasNext()) {
 			Entry<String, IPluginIO> entry = it.next();
-			if ("File name".equals(entry.getKey()))
+			if ("File name".equals(entry.getKey()) || entry.getValue().defaultToNoSaving())
 				continue;
 			if (entry.getValue() instanceof PluginIOImage)
 				continue;
@@ -104,6 +104,7 @@ public class SaveObjectsToXML extends FourDPlugin implements AuxiliaryInputOutpu
 		return result;
 	}
 
+	@SuppressWarnings("null")
 	@Override
 	public void run(ProgressReporter r, MultiListParameter inChannels, TableParameter outChannels,
 			PreviewType previewType, boolean inputHasChanged, AbstractParameter parameterWhoseValueChanged,
@@ -115,12 +116,12 @@ public class SaveObjectsToXML extends FourDPlugin implements AuxiliaryInputOutpu
 		Iterator<Entry<String, IPluginIO>> it = pluginInputs.entrySet().iterator();
 
 		boolean oneSavedEntry = false;
-
+		
 		boolean needTypeName = nSavableInputs(pluginInputs.entrySet().iterator()) > 1;
 
 		while (it.hasNext()) {
 			Entry<String, IPluginIO> source = it.next();
-			if (source.getKey().equals("File name"))
+			if (source.getKey().equals("File name") || source.getValue().defaultToNoSaving())
 				continue;// Don't save file name to disk
 			String fileNameString =
 					FileNameUtils.removeIncrementationMarks(workingDirectory.getValue() + "/" + fileNamePrefix

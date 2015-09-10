@@ -111,7 +111,7 @@ public interface PipelinePlugin {
 	 *         those, for example showing/hiding them.
 	 * @throws InterruptedException
 	 */
-	List<PluginIOView> createOutput(String outputName, PluginIOHyperstackViewWithImagePlus impForDisplay,
+	List<PluginIOView> createOutput(@NonNull String outputName, PluginIOHyperstackViewWithImagePlus impForDisplay,
 			Map<String, IPluginIO> linkedOutputs) throws InterruptedException;
 
 	/**
