@@ -377,7 +377,7 @@ public class A0PipeLine_Manager implements PlugIn {
 				oldIndex++;
 			}
 
-			Utils.log("updated output selection to a total of " + newSelection.length + " elements: "
+			Utils.log("Updated output selection to a total of " + newSelection.length + " elements: "
 					+ Utils.printIntArray(newSelection), LogLevel.DEBUG);
 			((TableParameter) theRow[OUT_CHANNELS_FIELD]).setSelection(newSelection);
 			((MyTableModel) table11.getModel()).fireTableCellUpdated(tableRow, OUT_CHANNELS_FIELD);
@@ -1502,6 +1502,8 @@ public class A0PipeLine_Manager implements PlugIn {
 					} catch (Throwable t) {
 						System.err.println("Problem logging exception");
 					}
+					scrollTableToRow(tableRow - 1);
+					tableFrame.toFront();
 					Utils.printStack(e, LogLevel.ERROR);
 					if (e instanceof PluginRuntimeException && ((PluginRuntimeException) e).getDisplayUserDialog()
 							&& !Utils.causedByInterruption(e)) {
