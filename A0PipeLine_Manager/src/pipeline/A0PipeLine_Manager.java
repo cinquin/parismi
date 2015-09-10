@@ -2135,20 +2135,20 @@ public class A0PipeLine_Manager implements PlugIn {
 					int col = columnAtPoint(p);
 					int row = rowAtPoint(p);
 					if (row == -1 || col == -1) {
-						return null;
+						return super.getToolTipText(e);
 					}
 					if (col == PLUGIN_NAME_FIELD) {
 						String pluginName = (String) table1.getValueAt(row, col);
 						if (pluginName == null)
-							return null;
+							return super.getToolTipText(e);
 						PluginHolder holder = plugins.get(pluginName);
 						if (holder == null) {
-							return null;
+							return super.getToolTipText(e);
 						}
 						return Utils.encodeHTML(WordUtils.wrap(holder.toolTip, 50, null, true)).
 								replace("\n", "<br>\n");
 					} else {
-						return null;
+						return super.getToolTipText(e);
 					}
 				}
 
