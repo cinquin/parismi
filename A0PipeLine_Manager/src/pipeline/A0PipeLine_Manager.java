@@ -957,8 +957,8 @@ public class A0PipeLine_Manager implements PlugIn {
 								// Don't give a warning if the row referred to itself, because in that case
 								// the first time it runs there can be no output
 								Utils.displayMessage(
-										"Warning: did not find any outputs from row " + j + " to use in row "
-												+ tableRow + "; you might need to run row " + j + " first.", true,
+										"Warning: did not find any outputs from row " + (j + 1) + " to use in row "
+												+ (tableRow + 1) + "; you might need to run row " + (j + 1) + " first.", true,
 										LogLevel.WARNING);
 							}
 						}
@@ -3930,7 +3930,7 @@ public class A0PipeLine_Manager implements PlugIn {
 			try {
 				output = getTableAsString(last_row);
 			} catch (TableNotComputed e1) {
-				Utils.displayMessage("Output not computed for row " + e1.lastRow + "; run before saving table.", true,
+				Utils.displayMessage("Output not computed for row " + (e1.lastRow + 1) + "; run before saving table.", true,
 						LogLevel.ERROR);
 				return;
 			} catch (Exception e) {
