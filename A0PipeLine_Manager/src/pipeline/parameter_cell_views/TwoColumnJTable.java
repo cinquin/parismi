@@ -10,6 +10,9 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
 import java.util.EventObject;
 
 import javax.swing.DefaultCellEditor;
@@ -19,12 +22,15 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import javax.swing.text.JTextComponent;
 
 import org.eclipse.jdt.annotation.NonNull;
 
+import pipeline.GUI_utils.ColumnHeaderToolTips;
 import pipeline.GUI_utils.MultiRenderer;
 import pipeline.misc_util.Utils;
 import pipeline.misc_util.Utils.LogLevel;
@@ -35,6 +41,7 @@ public class TwoColumnJTable extends AbstractParameterCellView implements TableM
 	private static final long serialVersionUID = 1L;
 
 	private JTable localTable;
+	private ColumnHeaderToolTips tips;
 	private Object[] firstColumn;
 	private Object[] secondColumn;
 
@@ -76,6 +83,25 @@ public class TwoColumnJTable extends AbstractParameterCellView implements TableM
 			}
 
 			return c;
+		}
+		
+		@Override
+		//Adapted from http://stackoverflow.com/questions/27102546/show-tooltips-in-jtable-only-when-column-is-cut-off
+		public String getToolTipText(MouseEvent e) {
+			Point p = e.getPoint();
+			int col = columnAtPoint(p);
+			int row = rowAtPoint(p);
+			if (row == -1 || col == -1) {
+				return null;
+			}
+			Rectangle bounds = getCellRect(row, col, false);
+			Object value = getValueAt(row, col);
+			Component comp = prepareRenderer(getCellRenderer(row, col), row, col);
+			if (comp.getPreferredSize().width > bounds.width) {
+			    return(value.toString());
+			} else {
+				return null;
+			}
 		}
 	}
 
@@ -168,6 +194,10 @@ public class TwoColumnJTable extends AbstractParameterCellView implements TableM
 
 		localTable.setDefaultEditor(Object.class, multiRenderer);
 		localTable.setDefaultRenderer(Object.class, multiRenderer2);
+		
+	    tips = new ColumnHeaderToolTips();
+		JTableHeader header = localTable.getTableHeader();
+	    header.addMouseMotionListener(tips);
 
 		add(localTable, c);
 	}
@@ -208,10 +238,16 @@ public class TwoColumnJTable extends AbstractParameterCellView implements TableM
 
 		firstColumn = currentParameter.getFirstColumn();
 		secondColumn = currentParameter.getSecondColumn();
-
+		
 		localTable.clearSelection();
 		((MyTableModel) localTable.getModel()).fireTableDataChanged();
 		localTable.createDefaultColumnsFromModel();
+		
+	    tips.clear();
+	    for (int c = 0; c < localTable.getColumnCount(); c++) {
+	      TableColumn col = localTable.getColumnModel().getColumn(c);
+	      tips.setToolTip(col, localTable.getColumnName(c));
+	    }
 
 		// TODO Restore selection from parameter; see how OneColumnJTable does it
 

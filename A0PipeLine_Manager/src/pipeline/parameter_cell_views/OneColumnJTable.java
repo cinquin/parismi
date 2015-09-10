@@ -9,6 +9,8 @@ package pipeline.parameter_cell_views;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -52,6 +54,25 @@ public class OneColumnJTable extends AbstractParameterCellView implements TableM
 		public Component prepareRenderer(TableCellRenderer renderer, int rowIndex, int vColIndex) {
 			Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);
 			return c;
+		}
+		
+		@Override
+		//Adapted from http://stackoverflow.com/questions/27102546/show-tooltips-in-jtable-only-when-column-is-cut-off
+		public String getToolTipText(MouseEvent e) {
+			Point p = e.getPoint();
+			int col = columnAtPoint(p);
+			int row = rowAtPoint(p);
+			if (row == -1 || col == -1) {
+				return null;
+			}
+			Rectangle bounds = getCellRect(row, col, false);
+			Object value = getValueAt(row, col);
+			Component comp = prepareRenderer(getCellRenderer(row, col), row, col);
+			if (comp.getPreferredSize().width > bounds.width) {
+			    return(value.toString());
+			} else {
+				return null;
+			}
 		}
 	}
 

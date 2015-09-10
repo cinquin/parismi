@@ -105,6 +105,7 @@ import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
@@ -134,6 +135,7 @@ import ij.gui.ImageWindow;
 import ij.plugin.PlugIn;
 import ij.process.ImageProcessor;
 import ij.util.StringSorter;
+import pipeline.GUI_utils.ColumnHeaderToolTips;
 import pipeline.GUI_utils.JTableWithStripes;
 import pipeline.GUI_utils.ListOfPointsView;
 import pipeline.GUI_utils.MultiRenderer;
@@ -2123,7 +2125,43 @@ public class A0PipeLine_Manager implements PlugIn {
 			GridBagConstraints c = new GridBagConstraints();
 			c.fill = GridBagConstraints.BOTH;
 
-			table1 = new JTableWithStripes(new MyTableModel());
+			table1 = new JTableWithStripes(new MyTableModel()) {
+				private static final long serialVersionUID = -4771266607962392023L;
+				
+				@Override
+				//Adapted from http://stackoverflow.com/questions/27102546/show-tooltips-in-jtable-only-when-column-is-cut-off
+				public String getToolTipText(MouseEvent e) {
+					Point p = e.getPoint();
+					int col = columnAtPoint(p);
+					int row = rowAtPoint(p);
+					if (row == -1 || col == -1) {
+						return null;
+					}
+					if (col == PLUGIN_NAME_FIELD) {
+						String pluginName = (String) table1.getValueAt(row, col);
+						if (pluginName == null)
+							return null;
+						PluginHolder holder = plugins.get(pluginName);
+						if (holder == null) {
+							return null;
+						}
+						return Utils.encodeHTML(WordUtils.wrap(holder.toolTip, 50, null, true)).
+								replace("\n", "<br>\n");
+					} else {
+						return null;
+					}
+				}
+
+			};
+			
+		    ColumnHeaderToolTips tips = new ColumnHeaderToolTips();
+			JTableHeader header = table1.getTableHeader();
+		    header.addMouseMotionListener(tips);
+		    for (int colIndex = 0; colIndex < table1.getColumnCount(); colIndex++) {
+		      TableColumn col = table1.getColumnModel().getColumn(colIndex);
+		      tips.setToolTip(col, table1.getColumnName(colIndex));
+		    }
+		    
 			table1.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 			table1.setPreferredScrollableViewportSize(new Dimension(900, 250));
 			table1.setFillsViewportHeight(true);
@@ -5143,7 +5181,7 @@ public class A0PipeLine_Manager implements PlugIn {
 
 			@Override
 			public boolean isCellEditable(int row, int col) {
-				return (col > 0);// Do not want the row numbers to be editable
+				return (col > 0 && col != PLUGIN_NAME_FIELD);// Do not want the row numbers to be editable
 			}
 
 			@Override

@@ -16,6 +16,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import org.apache.commons.collections.primitives.ArrayFloatList;
@@ -392,6 +394,8 @@ public class JXTablePerColumnFiltering extends JXTable {
 	}
 
 	private transient AtomicInteger silenceUpdates = new AtomicInteger(0);
+	
+	private ColumnHeaderToolTips tips;
 
 	@Override
 	public void setModel(TableModel newModel) {
@@ -399,6 +403,14 @@ public class JXTablePerColumnFiltering extends JXTable {
 		super.setModel(newModel);
 		updateFilteringTable();
 		this.setRowFilter(filter);
+		if (tips == null) {
+			tips = new ColumnHeaderToolTips();
+		}
+		tips.clear();
+	    for (int colIndex = 0; colIndex < this.getColumnCount(); colIndex++) {
+		      TableColumn col = this.getColumnModel().getColumn(colIndex);
+		      tips.setToolTip(col, this.getColumnName(colIndex));
+		}
 	}
 
 	private void updateFilteringTable() {
@@ -466,5 +478,14 @@ public class JXTablePerColumnFiltering extends JXTable {
 
 		this.setRowFilter(filter);
 
+		JTableHeader header = this.getTableHeader();
+		if (tips == null) {
+			tips = new ColumnHeaderToolTips();
+		}
+	    header.addMouseMotionListener(tips);
+	    for (int colIndex = 0; colIndex < this.getColumnCount(); colIndex++) {
+	      TableColumn col = this.getColumnModel().getColumn(colIndex);
+	      tips.setToolTip(col, this.getColumnName(colIndex));
+	    }
 	}
 }
