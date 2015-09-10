@@ -115,7 +115,7 @@ public class TIFFFileAccessor extends PluginIOHyperstack implements ImageAccesso
 		}
 	}
 
-	public TIFFFileAccessor(@NonNull File f, String name) {
+	public TIFFFileAccessor(@NonNull File f, @NonNull String name) {
 		setDiskLocation(f.getAbsolutePath());
 		setSupportsWritingToPixels(false);
 		// TODO We need a special implementation for virtual stacks
@@ -136,7 +136,7 @@ public class TIFFFileAccessor extends PluginIOHyperstack implements ImageAccesso
 	 * @param cal
 	 * @param useBigTIFF
 	 */
-	public TIFFFileAccessor(@NonNull File f, String name, PixelType pType, Calibration cal, boolean useBigTIFF) {
+	public TIFFFileAccessor(@NonNull File f, @NonNull String name, PixelType pType, Calibration cal, boolean useBigTIFF) {
 		calibration = cal;
 		openedForWriting = true;
 		this.pType = pType;
@@ -178,7 +178,7 @@ public class TIFFFileAccessor extends PluginIOHyperstack implements ImageAccesso
 	private static boolean shownNativeLibError = false;
 
 	// File is kept open on purpose
-	@SuppressWarnings("resource")
+	@SuppressWarnings({ "resource", "null" })
 	@Override
 	public void openForSequentialRead() throws IOException, FormatException {
 		long time0 = System.currentTimeMillis();
@@ -418,7 +418,7 @@ public class TIFFFileAccessor extends PluginIOHyperstack implements ImageAccesso
 		} else
 			throw new FormatException("Unsupported pixel type " + pType);
 		Utils.log("Time to end of open method: " + (System.currentTimeMillis() - time0), LogLevel.VERBOSE_DEBUG);
-		if (getName() == null)
+		if ("".equals(getName()))
 			setName(FileNameUtils.compactPath(f.getName()));
 
 		setChannels(new TreeMap<String, IPluginIOStack>());

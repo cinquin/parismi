@@ -22,6 +22,9 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
+
 import pipeline.misc_util.Utils.LogLevel;
 
 /**
@@ -143,7 +146,8 @@ public class FileNameUtils {
 		}
 	}
 
-	public static String compactPath(String path) {
+	@SuppressWarnings("null")
+	public static @NonNull String compactPath(@NonNull String path) {
 		for (Entry<String, String> set : userHomeDirs.entrySet()) {
 			if (path.startsWith(set.getValue())) {
 				return path.replaceFirst(set.getValue(), set.getKey());
@@ -253,11 +257,12 @@ public class FileNameUtils {
 		return newName;
 	}
 
-	public static String compactPath(File file) {
+	@SuppressWarnings("null")
+	public static @NonNull String compactPath(@NonNull File file) {
 		return compactPath(file.getAbsolutePath());
 	}
 
-	public static String getShortNameFromPath(String path, int maxLength) {
+	public static @NonNull String getShortNameFromPath(String path, int maxLength) {
 		int end = path.contains(".") ? path.lastIndexOf(".") : path.length();
 		path = path.substring(0, end);
 		if (path.length() > maxLength)
@@ -266,7 +271,7 @@ public class FileNameUtils {
 			return path;
 	}
 
-	public static File chooseFile(String message, int dialogType) {
+	public static @Nullable File chooseFile(String message, int dialogType) {
 		FileDialog dialog = new FileDialog(new Frame(), message, dialogType);
 		dialog.setVisible(true);
 		String filePath = dialog.getDirectory();

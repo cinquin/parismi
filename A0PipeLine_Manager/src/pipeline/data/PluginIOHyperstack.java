@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -68,7 +69,7 @@ public class PluginIOHyperstack extends PluginIOImage implements IPluginIO, IPlu
 		return result;
 	}
 
-	PluginIOHyperstack(boolean justOneChannel, String name) {
+	PluginIOHyperstack(boolean justOneChannel, @NonNull String name) {
 		setSupportsWritingToPixels(true);
 		setChannels(new TreeMap<String, IPluginIOStack>());
 		this.setName(name);
@@ -80,7 +81,9 @@ public class PluginIOHyperstack extends PluginIOImage implements IPluginIO, IPlu
 		setSupportsWritingToPixels(true);
 		setChannels(new TreeMap<String, IPluginIOStack>());
 		setnChannels(imp.getNChannels());
-		setName(imp.getTitle());
+		String impTitle = imp.getTitle();
+		Objects.requireNonNull(impTitle);
+		setName(impTitle);
 		this.setImagePlusDisplay(imp);
 		calibration = imp.getCalibration();
 		setImageAcquisitionMetadata(imp.getProperty("Info"));
@@ -145,7 +148,7 @@ public class PluginIOHyperstack extends PluginIOImage implements IPluginIO, IPlu
 
 	}
 
-	public PluginIOHyperstack(String name, int width, int height, int depth, int nChannels, int nTimePoints,
+	public PluginIOHyperstack(@NonNull String name, int width, int height, int depth, int nChannels, int nTimePoints,
 			PixelType pType, boolean dontAllocatePixels) throws InterruptedException {
 		setSupportsWritingToPixels(true);
 		setChannels(new TreeMap<String, IPluginIOStack>());
@@ -431,12 +434,13 @@ public class PluginIOHyperstack extends PluginIOImage implements IPluginIO, IPlu
 	 * 
 	 * @see pipeline.data.PluginIOHyperstackInterface#listOfSubObjects()
 	 */
+	@SuppressWarnings("null")
 	@Override
-	public String[] listOfSubObjects() {
+	public @NonNull String @NonNull[] listOfSubObjects() {
 		if (getChannels() == null) {
 			if (this instanceof IPluginIOStack)
-				return new String[] { "Only channel" };
-			return new String[] {};
+				return new @NonNull String[] { "Only channel" };
+			return new @NonNull String[] {};
 		}
 		return getChannels().keySet().toArray(new String[] {});
 	}

@@ -7,6 +7,7 @@
 package pipeline.parameters;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import pipeline.misc_util.Utils;
@@ -122,6 +123,9 @@ public class MultiListParameter extends AbstractParameter {
 		for (int aCurrentSelection : currentSelection) {
 			int match = -1;
 			for (int j = 0; j < newChoices.length; j++) {
+				if (newChoices[j] == null) {
+					throw new IllegalArgumentException(Arrays.toString(newChoices));
+				}
 				if (aCurrentSelection < choices.length && newChoices[j].equals(choices[aCurrentSelection])) {
 					match = j;
 					break;

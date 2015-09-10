@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import pipeline.PreviewType;
 import pipeline.GUI_utils.PluginIOHyperstackViewWithImagePlus;
 import pipeline.GUI_utils.PluginIOView;
@@ -120,7 +122,7 @@ public class Plot3DProfile extends ThreeDPlugin {
 				resultPixels[i] = resultPixels[i] / pixelMaxFilter;
 			}
 		}
-		String name = input.getName() == null ? "__" : input.getName();
+		@NonNull String name = input.getName();
 		String truncatedChannelName = name.substring(0, Utils.min(10, name.length() - 1));
 
 		PluginIOCells plot = (PluginIOCells) pluginOutputs.get("Plot of " + input.getName());// new PluginIOCells()
@@ -186,7 +188,7 @@ public class Plot3DProfile extends ThreeDPlugin {
 	@Override
 	public List<PluginIOView> createOutput(String outputName, PluginIOHyperstackViewWithImagePlus impForDisplay,
 			Map<String, IPluginIO> linkedOutputs) {
-		String[] sourceChannels = getInput().listOfSubObjects();
+		@NonNull String @NonNull[] sourceChannels = getInput().listOfSubObjects();
 		ArrayList<PluginIOView> plotViewList = new ArrayList<>();
 		XYScatterPlotView<XYSeriesCollectionGenericManipulator, XYSeriesReflection> plotView =
 				new XYScatterPlotView<>(0);

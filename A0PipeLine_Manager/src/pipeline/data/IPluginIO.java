@@ -44,7 +44,7 @@ public interface IPluginIO {
 	 * @return A list of strings describing individually-accessible parts of this input/output
 	 * 
 	 */
-	String[] listOfSubObjects();
+	@NonNull String @NonNull[] listOfSubObjects();
 
 	void copyInto(IPluginIO outputCells);
 
@@ -75,9 +75,9 @@ public interface IPluginIO {
 	 */
 	InputOutputDescription getDescription();
 
-	void setName(String name);
+	void setName(@NonNull String name);
 
-	String getName();
+	@NonNull String getName();
 
 	void setLastTimeModified(long lastTimeModified);
 

@@ -143,7 +143,7 @@ public class PluginIOCells extends PluginIOListOfQ<ClickedPoint> implements Clon
 		setName(FileNameUtils.getShortNameFromPath(inputFile.getAbsolutePath(), 40));
 	}
 
-	public PluginIOCells(String name) {
+	public PluginIOCells(@NonNull String name) {
 		this();
 		this.setName(name);
 	}
@@ -654,10 +654,7 @@ public class PluginIOCells extends PluginIOListOfQ<ClickedPoint> implements Clon
 	@Override
 	public XYSeriesReflection getJFreeChartXYSeries(String xName, String yName, int xIndex, int yIndex,
 			String displayNameForXSeries, String displayNameForYSeries) {
-		XYSeriesReflection jFreeChartSeries;
-		if (getName() == null)
-			setName("");
-		jFreeChartSeries = new XYSeriesReflection(getName());
+		XYSeriesReflection jFreeChartSeries = new XYSeriesReflection(getName());
 		addSeriesListener(jFreeChartSeries);
 		if (internalList.size() > 0)
 			jFreeChartSeries.setNameForXSeries(xName, xIndex, internalList.get(0));

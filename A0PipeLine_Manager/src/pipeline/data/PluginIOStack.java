@@ -66,7 +66,7 @@ public class PluginIOStack extends PluginIOHyperstack implements IPluginIOStack 
 		this.imageAcquisitionMetadata = imageAcquisitionMetadata;
 	}
 
-	public PluginIOStack(PluginIOHyperstack parent, int channelIndex, String name) {
+	public PluginIOStack(PluginIOHyperstack parent, int channelIndex, @NonNull String name) {
 		super();
 		this.setName(name);
 		setParentHyperstack(parent);
@@ -83,7 +83,7 @@ public class PluginIOStack extends PluginIOHyperstack implements IPluginIOStack 
 		computePixelArray();
 	}
 
-	PluginIOStack(String name) {
+	PluginIOStack(@NonNull String name) {
 		super(true, name);
 	}
 
@@ -98,8 +98,7 @@ public class PluginIOStack extends PluginIOHyperstack implements IPluginIOStack 
 	 * }
 	 */
 
-	public PluginIOStack(String name, ImageStack tempStack, int width, int height, int depth, int nTimePoints) {
-		// TODO
+	public PluginIOStack(@NonNull String name, ImageStack tempStack, int width, int height, int depth, int nTimePoints) {
 		super(true, name);
 		setWidth(width);
 		setHeight(height);
@@ -121,7 +120,7 @@ public class PluginIOStack extends PluginIOHyperstack implements IPluginIOStack 
 
 	}
 
-	public PluginIOStack(String name, int width, int height, int depth, int nTimePoints, PixelType pType)
+	public PluginIOStack(@NonNull String name, int width, int height, int depth, int nTimePoints, PixelType pType)
 			throws InterruptedException {
 		super(true, name);
 		setStackPixelArray(new Object[depth]);

@@ -38,6 +38,13 @@ public abstract class PluginIO implements Serializable, IPluginIO {
 
 	private static final long serialVersionUID = 1L;
 
+	public PluginIO(@NonNull String name) {
+		this.name = name;
+	}
+	
+	public PluginIO() {
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -68,7 +75,7 @@ public abstract class PluginIO implements Serializable, IPluginIO {
 		inputForRows = list;
 	}
 
-	private String name;
+	private @NonNull String name = "";
 
 	/**
 	 * Any plugin that is using this object as an input and does not want it modified until it is done
@@ -126,8 +133,8 @@ public abstract class PluginIO implements Serializable, IPluginIO {
 	 * @see pipeline.data.PluginIOInterface#listOfSubObjects()
 	 */
 	@Override
-	public String[] listOfSubObjects() {
-		return new String[] { getName() };
+	public @NonNull String @NonNull[] listOfSubObjects() {
+		return new @NonNull String[] { getName() };
 	}
 
 	/*
@@ -351,7 +358,7 @@ public abstract class PluginIO implements Serializable, IPluginIO {
 	 * @see pipeline.data.PluginIOInterface#setName(java.lang.String)
 	 */
 	@Override
-	public void setName(String name) {
+	public void setName(@NonNull String name) {
 		this.name = name;
 	}
 
@@ -362,7 +369,7 @@ public abstract class PluginIO implements Serializable, IPluginIO {
 	 */
 	@Override
 	@DoNotShowInTable
-	public String getName() {
+	public @NonNull String getName() {
 		return name;
 	}
 
