@@ -27,6 +27,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.TableModelEvent;
 
+import org.apache.commons.lang3.text.WordUtils;
+
 import pipeline.A0PipeLine_Manager.TableSelectionDemo.MyTableModel;
 import pipeline.misc_util.Utils;
 import pipeline.misc_util.Utils.LogLevel;
@@ -190,8 +192,9 @@ public class TextBox extends AbstractParameterCellView implements MouseListener,
 
 		currentValue = (String) currentParameter.getValue();
 		lastValue = new String(currentValue);
-		setToolTipText(currentParameter.getParamNameDescription()[1]);
-
+		setToolTipText(Utils.encodeHTML(WordUtils.wrap(currentParameter.getParamNameDescription()[1], 50, null, true)).
+				replace("\n", "<br>\n"));
+		
 		parameterName.setText(currentParameter.getParamNameDescription()[0]);
 		hideShowParameterName(!parameterName.getText().equals(""));
 

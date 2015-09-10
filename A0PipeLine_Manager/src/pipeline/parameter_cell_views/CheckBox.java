@@ -16,6 +16,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JCheckBox;
 import javax.swing.JTable;
 
+import org.apache.commons.lang3.text.WordUtils;
 import org.eclipse.jdt.annotation.NonNull;
 
 import pipeline.misc_util.Utils;
@@ -86,7 +87,8 @@ public class CheckBox extends AbstractParameterCellView {
 		jCheckBox.setSelected(selected);
 		jCheckBox.setText(currentParameter.getParamNameDescription()[0]);
 
-		this.setToolTipText(currentParameter.getParamNameDescription()[1]);
+		setToolTipText(Utils.encodeHTML(WordUtils.wrap(currentParameter.getParamNameDescription()[1], 50, null, true))
+				.replace("\n", "<br>\n"));
 		int height_wanted = (int) getPreferredSize().getHeight();
 		if ((table != null) && (height_wanted > table.getRowHeight(row)))
 			table.setRowHeight(row, height_wanted);

@@ -27,6 +27,7 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.apache.commons.lang3.text.WordUtils;
 import org.eclipse.jdt.annotation.NonNull;
 
 import pipeline.misc_util.Utils;
@@ -268,7 +269,8 @@ public class IntRangeSlider extends AbstractParameterCellView implements Paramet
 			parameterName.setVisible(!currentParameter.getParamNameDescription()[0].equals(""));
 			textMinimum.setEditable(currentParameter.editable()[0]);
 			textMaximum.setEditable(currentParameter.editable()[1]);
-			setToolTipText(currentParameter.getParamNameDescription()[1]);
+			setToolTipText(Utils.encodeHTML(WordUtils.wrap(currentParameter.getParamNameDescription()[1], 50, null, true)).
+					replace("\n", "<br>\n"));
 			int height_wanted = (int) getPreferredSize().getHeight();
 			if (height_wanted > table.getRowHeight(tableRow))
 				table.setRowHeight(tableRow, height_wanted);

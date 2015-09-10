@@ -77,7 +77,7 @@ public class ButtonForListDisplay extends AbstractParameterCellView {
 		theButton.setEnabled(true);
 		theButton.setText(list.toString());
 
-		this.setToolTipText("");
+		setToolTipText("");
 		int height_wanted = (int) getPreferredSize().getHeight();
 		if (height_wanted > table.getRowHeight(row))
 			table.setRowHeight(row, height_wanted);

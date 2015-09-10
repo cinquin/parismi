@@ -17,6 +17,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 
+import org.apache.commons.lang3.text.WordUtils;
 import org.eclipse.jdt.annotation.NonNull;
 
 import pipeline.misc_util.Utils;
@@ -126,7 +127,8 @@ public class ComboBox extends AbstractParameterCellView {
 
 		parameterName.setText(currentParameter.getParamNameDescription()[0]);
 		parameterName.setVisible(!currentParameter.getParamNameDescription()[0].equals(""));
-		this.setToolTipText(currentParameter.getParamNameDescription()[1]);
+		setToolTipText(Utils.encodeHTML(WordUtils.wrap(currentParameter.getParamNameDescription()[1], 50, null, true)).
+				replace("\n", "<br>\n"));
 		theBox.setEditable(currentParameter.editable()[0]);
 		int heightWanted = (int) getPreferredSize().getHeight();
 		if (heightWanted > table.getRowHeight(row))

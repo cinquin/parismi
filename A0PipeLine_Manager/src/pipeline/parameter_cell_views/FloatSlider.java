@@ -23,6 +23,7 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.apache.commons.lang3.text.WordUtils;
 import org.eclipse.jdt.annotation.NonNull;
 
 import pipeline.misc_util.Utils;
@@ -342,8 +343,9 @@ public class FloatSlider extends AbstractParameterCellView implements ParameterL
 		textMinimum.setEditable(currentParameter.editable()[0]);
 		textMaximum.setEditable(currentParameter.editable()[1]);
 		currentTextValue.setEditable(currentParameter.isEditable());
-		this.setToolTipText(currentParameter.getParamNameDescription()[1]);
-
+		setToolTipText(Utils.encodeHTML(WordUtils.wrap(currentParameter.getParamNameDescription()[1], 50, null, true)).
+				replace("\n", "<br>\n"));
+		
 		this.revalidate();
 		silenceUpdate = saveSilenceUpdate;
 	}

@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 
+import org.apache.commons.lang3.text.WordUtils;
 import org.eclipse.jdt.annotation.NonNull;
 
 import pipeline.misc_util.Utils;
@@ -135,7 +136,8 @@ public class CurveEditor extends AbstractParameterCellView implements ParameterL
 
 		parameterName.setText(currentParameter.getParamNameDescription()[0]);
 		parameterName.setVisible(!currentParameter.getParamNameDescription()[0].equals(""));
-		this.setToolTipText(currentParameter.getParamNameDescription()[1]);
+		setToolTipText(Utils.encodeHTML(WordUtils.wrap(currentParameter.getParamNameDescription()[1], 50, null, true)).
+				replace("\n", "<br>\n"));
 
 		splineEditor.setCurvePoints((ArrayList<Point2D>) ((Object[]) currentParameter.getValue())[0]);
 		splineEditor.setControlPoints((ArrayList<Point2D>) ((Object[]) currentParameter.getValue())[1]);

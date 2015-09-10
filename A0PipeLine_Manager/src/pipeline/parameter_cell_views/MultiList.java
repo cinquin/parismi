@@ -21,6 +21,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 
+import org.apache.commons.lang3.text.WordUtils;
 import org.eclipse.jdt.annotation.NonNull;
 
 import pipeline.misc_util.Utils;
@@ -127,8 +128,9 @@ public class MultiList extends AbstractParameterCellView implements ParameterLis
 		if (owningTable != null && heightWanted > owningTable.getRowHeight(ourRow))
 			owningTable.setRowHeight(ourRow, heightWanted);
 
-		setToolTipText(currentParameter.getParamNameDescription()[1]);
-
+		setToolTipText(Utils.encodeHTML(WordUtils.wrap(currentParameter.getParamNameDescription()[1], 50, null, true)).
+				replace("\n", "<br>\n"));
+		
 		silenceUpdate = saveSilenceUpdate;
 	}
 

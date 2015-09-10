@@ -10,6 +10,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.SpinnerDateModel;
 
+import org.apache.commons.lang3.text.WordUtils;
 import org.eclipse.jdt.annotation.NonNull;
 import org.jdesktop.swingx.JXDatePicker;
 
@@ -113,8 +114,9 @@ public class DateEditor extends AbstractParameterCellView implements ParameterLi
 
 		parameterName.setText(currentParameter.getParamNameDescription()[0]);
 		parameterName.setVisible(!currentParameter.getParamNameDescription()[0].equals(""));
-		setToolTipText(currentParameter.getParamNameDescription()[1]);
-
+		setToolTipText(Utils.encodeHTML(WordUtils.wrap(currentParameter.getParamNameDescription()[1], 50, null, true)).
+				replace("\n", "<br>\n"));
+		
 		silenceUpdate = false;
 
 		int heightWanted = (int) getPreferredSize().getHeight();
