@@ -20,8 +20,9 @@ import pipeline.data.PluginIOImage.PixelType;
 import pipeline.misc_util.IntrospectionParameters.ParameterInfo;
 import pipeline.misc_util.IntrospectionParameters.ParameterType;
 import pipeline.misc_util.ProgressReporter;
-import pipeline.misc_util.Utils;
+import pipeline.misc_util.parfor.ParFor;
 import pipeline.plugins.AuxiliaryInputOutputPlugin;
+import pipeline.plugins.BasePipelinePlugin;
 import pipeline.plugins.ThreeDPlugin;
 
 /**
@@ -47,7 +48,7 @@ public class ImageMath extends ThreeDPlugin implements AuxiliaryInputOutputPlugi
 	}
 
 	@ParameterInfo(userDisplayName = "Operation", changeTriggersUpdate = false, changeTriggersLiveUpdates = false,
-			stringChoices = { "Multiplication", "Weighted addition" }, stringValue = "Multiplication",
+			stringChoices = { "Multiplication", "Weighted addition", "Division" }, stringValue = "Multiplication",
 			editable = false, noErrorIfMissingOnReload = true)
 	@ParameterType(parameterType = "ComboBox", printValueAsString = true)
 	private String operation;
@@ -60,13 +61,9 @@ public class ImageMath extends ThreeDPlugin implements AuxiliaryInputOutputPlugi
 			floatValue = 0, permissibleFloatRange = { -1000, 10000 }, noErrorIfMissingOnReload = true)
 	private float offset;
 
-	private boolean cancelled;
-
 	@Override
 	public void runChannel(final IPluginIOStack input, final IPluginIOStack output, final ProgressReporter p,
 			PreviewType previewType, boolean inputHasChanged) throws InterruptedException {
-
-		cancelled = false;
 
 		IPluginIOStack auxStack = null;
 
@@ -84,11 +81,6 @@ public class ImageMath extends ThreeDPlugin implements AuxiliaryInputOutputPlugi
 
 		progressSetIndeterminateThreadSafe(p, true);
 		progressSetValueThreadSafe(p, 0);
-		indeterminateProgress = true;
-
-		nCpus = Runtime.getRuntime().availableProcessors();
-		if (input.getDepth() < nCpus)
-			nCpus = input.getDepth();
 
 		input.computePixelArray();
 		auxStack.computePixelArray();
@@ -98,60 +90,34 @@ public class ImageMath extends ThreeDPlugin implements AuxiliaryInputOutputPlugi
 		final Object[] outputSlices = output.getStackPixelArray();
 		final Object[] auxSlices = auxStack.getStackPixelArray();
 
-		slice_registry.set(0);
-		threads = newThreadArray();
-
 		final int depth = input.getDepth();
 
-		for (int ithread = 0; ithread < nCpus; ithread++) {
-			threads[ithread] = new Thread("Image math worker thread") {
-				@Override
-				public void run() {
-					try {
+		ParFor pf = new ParFor(0, depth - 1, null, BasePipelinePlugin.threadPool, true);
+		pf.addLoopWorker((z, workerIndex) -> {
 
-						for (int z = slice_registry.getAndIncrement(); z < depth; z = slice_registry.getAndIncrement()) {
+			float[] inputArray = (float[]) inputSlices[z];
+			float[] outputArray = (float[]) outputSlices[z];
+			float[] auxArray = (float[]) auxSlices[z];
 
-							float[] inputArray = (float[]) inputSlices[z];
-							float[] outputArray = (float[]) outputSlices[z];
-							float[] auxArray = (float[]) auxSlices[z];
-
-							for (int i = 0; i < inputArray.length; i++) {
-								switch (operation) {
-									case "Multiplication":
-										outputArray[i] = inputArray[i] * auxArray[i];
-										break;
-									case "Weighted addition":
-										outputArray[i] = inputArray[i] + auxArray[i] * weight + offset;
-										break;
-									default:
-										throw new IllegalStateException("Unknown opearation " + operation);
-								}
-							}
-
-							int our_progress = ((int) (100.0 * ((z)) / (depth)));
-							if (our_progress > p.getValue())
-								progressSetValueThreadSafe(p, our_progress); // not perfect but at least does not
-																				// required synchronization
-							if (indeterminateProgress) {
-								progressSetIndeterminateThreadSafe(p, false);
-								indeterminateProgress = false;
-							}
-							if (Thread.interrupted()) {
-								cancelled = true;
-							}
-							if (cancelled)
-								return;
-						}
-					} catch (Exception e) {
-						Utils.printStack(e);
-					}
+			for (int i = 0; i < inputArray.length; i++) {
+				switch (operation) {
+					case "Multiplication":
+						outputArray[i] = inputArray[i] * auxArray[i];
+						break;
+					case "Weighted addition":
+						outputArray[i] = inputArray[i] + auxArray[i] * weight + offset;
+						break;
+					case "Division":
+						outputArray[i] = inputArray[i] / auxArray[i];
+						break;
+					default:
+						throw new IllegalStateException("Unknown opearation " + operation);
 				}
-			};
-		}
-		startAndJoin(threads);
+			}
+			return null;
+			});
+		pf.run(true);
 
-		if (cancelled)
-			throw new InterruptedException();
 	}
 
 	@Override
