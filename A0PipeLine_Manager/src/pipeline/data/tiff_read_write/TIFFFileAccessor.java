@@ -52,6 +52,7 @@ import pipeline.data.SliceAccessor;
 import pipeline.data.SliceAccessorAdapter;
 import pipeline.misc_util.FileNameUtils;
 import pipeline.misc_util.FormatException;
+import pipeline.misc_util.PluginRuntimeException;
 import pipeline.misc_util.SettableBoolean;
 import pipeline.misc_util.Utils;
 import pipeline.misc_util.Utils.LogLevel;
@@ -312,6 +313,12 @@ public class TIFFFileAccessor extends PluginIOHyperstack implements ImageAccesso
 		 */
 		isBigTIFF = decoder.bigTIFF;
 		littleEndian = decoder.littleEndian;
+		
+		if (fiArray[0].pixelHeight < 0 | fiArray[0].pixelWidth < 0) {
+			throw new PluginRuntimeException("Read negative calibration from file " + f.getAbsolutePath() +
+					"; please fix, e.g. opening through ImageJ, using Image -> Properties, and saving through ImageJ. "
+					+ "Incorrect image calibration will lead to incorrect results for a number of plugins.", true);
+		}
 
 		if ((getWidth() > 0) && (fiArray[0].width != getWidth())) {
 			throw new RuntimeException(
