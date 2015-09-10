@@ -155,7 +155,7 @@ public class ParFor {
 
 							Thread.currentThread().setName(name + workerID);
 
-							final ILoopWorker localWorker = workers[workerID];
+							final ILoopWorker localWorker = workers[workerID] == null ? workers[0] : workers[workerID];
 							@SuppressWarnings("unchecked")
 							final List<Object> localResults = (List<Object>) partialResults[workerID];
 
