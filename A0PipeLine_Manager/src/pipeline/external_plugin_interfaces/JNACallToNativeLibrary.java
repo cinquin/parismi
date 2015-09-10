@@ -941,15 +941,16 @@ public class JNACallToNativeLibrary extends LinkToExternalProgram {
 							libraryInstance.run(byteBuffer, dim, callback, nullTerminatedArguments
 									.toArray(new String[0]));
 					returnValue += result;
-					isAlive = false;
-					isComputing = false;
-					synchronized (isComputingSemaphore) {
-						isComputingSemaphore.notifyAll();
-					}
 					Utils.log("-------- External library call returned", LogLevel.VERBOSE_DEBUG);
 				} catch (Exception e) {
 					Utils.printStack(e);
 					returnValue = 1;
+				} finally {
+					isAlive = false;
+					isComputing = false;
+					synchronized (isComputingSemaphore) {
+						isComputingSemaphore.notifyAll();
+					}					
 				}
 			}
 		};
