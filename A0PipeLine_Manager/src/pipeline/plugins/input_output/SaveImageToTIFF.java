@@ -122,6 +122,7 @@ public class SaveImageToTIFF extends ThreeDPlugin implements AuxiliaryInputOutpu
 		// FIXME If there is more than 1 channel the last one will overwrite the other ones, because they all have the
 		// same file name
 
+		@SuppressWarnings("null")
 		String fileNameString =
 				FileNameUtils.removeIncrementationMarks(workingDirectory.getValue() + Utils.fileNameSeparator
 						+ fileNamePrefix + FileNameUtils.removeIncrementationMarks((String) fileName.getValue())

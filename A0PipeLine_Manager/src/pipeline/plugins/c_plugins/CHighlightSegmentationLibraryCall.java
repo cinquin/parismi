@@ -175,6 +175,7 @@ public class CHighlightSegmentationLibraryCall extends ExternalCallToLibrary imp
 
 		// See if the user wants us to save the protobuf file
 
+		@SuppressWarnings("null")
 		String fileNameString =
 				FileNameUtils.removeIncrementationMarks(workingDirectory.getValue() + "/"
 						+ FileNameUtils.removeIncrementationMarks((String) fileName.getValue()));

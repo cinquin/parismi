@@ -130,10 +130,12 @@ public class Plot3DProfile extends ThreeDPlugin {
 			throw new IllegalStateException("Plot \"Plot of " + input.getName() + "\"has not been created for channel "
 					+ input.getName());
 
+		@SuppressWarnings("null")
 		String fileNameString =
 				FileNameUtils.removeIncrementationMarks((String) (workingDirectory.getValue())) + "/"
 						+ truncatedChannelName + "_"
 						+ FileNameUtils.removeIncrementationMarks((String) fileName.getValue());
+		@SuppressWarnings("null")
 		File directory = new File(FileNameUtils.removeIncrementationMarks((String) workingDirectory.getValue()));
 		if (!(directory.exists() && directory.isDirectory())) {
 			Utils.displayMessage("File " + fileNameString + " does not exist or is not a directory", true,
@@ -302,7 +304,7 @@ public class Plot3DProfile extends ThreeDPlugin {
 	private AbstractParameter fileName = new FileNameParameter("Save to file", "Save to file", "xxxxxxxxx", true,
 			saveToFileListener1);
 
-	private MultiListParameter optionsParameter = new MultiListParameter("Options", "", new String[] { "Use ROI",
+	private MultiListParameter optionsParameter = new MultiListParameter("Options", "", new @NonNull String[] { "Use ROI",
 			"Include xy borders" }, new int[] {}, optionsListener1);
 
 	private AbstractParameter splitOptionsAndMethod = null;

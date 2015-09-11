@@ -41,6 +41,7 @@ public class MergeProtobuf extends MergeFiles {
 				+ "therefore potentially not unique after merge.";
 	}
 
+	@SuppressWarnings("null")
 	@Override
 	protected void readInputFileHook(IPluginIO input) {
 		List<String> names = new ArrayList<>();

@@ -90,6 +90,7 @@ public class AnnotateAndSave extends FourDPlugin implements AuxiliaryInputOutput
 
 			FileSaver saver = new FileSaver(imp);
 
+			@SuppressWarnings("null")
 			String fileNameString =
 					FileNameUtils.removeIncrementationMarks(workingDirectory.getValue() + Utils.fileNameSeparator
 							+ fileNamePrefix + FileNameUtils.removeIncrementationMarks((String) fileName.getValue())

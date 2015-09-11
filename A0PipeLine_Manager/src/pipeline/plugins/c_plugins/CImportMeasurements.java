@@ -137,6 +137,7 @@ public class CImportMeasurements extends ExternalCallToLibrary {
 	}
 
 	private @NonNull File getFile() {
+		@SuppressWarnings("null")
 		String fileNameString =
 				FileNameUtils.removeIncrementationMarks(workingDirectory.getValue() + Prefs.separator
 						+ FileNameUtils.removeIncrementationMarks((String) fileName.getValue()));

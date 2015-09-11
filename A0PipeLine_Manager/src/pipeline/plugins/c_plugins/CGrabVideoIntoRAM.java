@@ -206,6 +206,7 @@ public class CGrabVideoIntoRAM extends ExternalCallToLibrary implements SpecialD
 	private File f;
 
 	private @NonNull File getFile() {
+		@SuppressWarnings("null")
 		String fileNameString =
 				FileNameUtils.removeIncrementationMarks(workingDirectory.getValue() + Utils.fileNameSeparator
 						+ FileNameUtils.removeIncrementationMarks((String) fileName.getValue()));

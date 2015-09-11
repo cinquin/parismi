@@ -86,6 +86,7 @@ public class LoadUnknownBinary extends ThreeDPlugin implements AuxiliaryInputOut
 	public void runChannel(IPluginIOStack input, IPluginIOStack output, ProgressReporter r, PreviewType previewType,
 			boolean inputHasChanged) {
 
+		@SuppressWarnings("null")
 		String fileNameString =
 				FileNameUtils.removeIncrementationMarks(workingDirectory.getValue() + "/"
 						+ FileNameUtils.removeIncrementationMarks((String) fileName.getValue()));

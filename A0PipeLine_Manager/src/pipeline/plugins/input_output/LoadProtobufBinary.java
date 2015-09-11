@@ -116,6 +116,7 @@ public class LoadProtobufBinary extends ThreeDPlugin implements AuxiliaryInputOu
 		String fileNameString =
 				FileNameUtils.removeIncrementationMarks(workingDirectory.getValue() + "/"
 						+ FileNameUtils.removeIncrementationMarks(fileNamePrefix + fileName.getValue()));
+		@SuppressWarnings("null")
 		File directory =
 				new File(FileNameUtils.expandPath(FileNameUtils.removeIncrementationMarks((String) workingDirectory
 						.getValue())));

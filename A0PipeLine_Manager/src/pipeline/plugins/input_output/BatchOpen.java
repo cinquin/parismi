@@ -144,8 +144,9 @@ public class BatchOpen extends FourDPlugin implements AuxiliaryInputOutputPlugin
 	private void updateFileList() {
 		fileIndex = 0;
 		files = new ArrayList<>();
+		@SuppressWarnings("null")
 		String directoryName = FileNameUtils.removeIncrementationMarks((String) workingDirectory.getValue());
-		if ((directoryName == null) || (directoryName.equals("")))
+		if (directoryName.equals(""))
 			return;
 		File directory = new File(directoryName);
 		if (!directory.exists()) {
@@ -214,6 +215,7 @@ public class BatchOpen extends FourDPlugin implements AuxiliaryInputOutputPlugin
 		pipelineCallback.setInputPath(ourRow, files.get(fileIndex).getAbsolutePath());
 	}
 
+	@SuppressWarnings("null")
 	@Override
 	public void run(ProgressReporter r, MultiListParameter inChannels, TableParameter outChannels,
 			PreviewType previewType, boolean inputHasChanged, AbstractParameter parameterWhoseValueChanged,

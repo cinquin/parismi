@@ -72,7 +72,7 @@ public abstract class ExternalCallToCommandLine extends ExternalCall {
 				if (c.filePaths[0] == null) {// the output of targetRow has not been stored to disk
 					Boolean programNeedsToReloadInput = new Boolean(true);
 					String storedInputName =
-							(new SingleChannelView((ImagePlus) auxInput, 1, null))
+							(new SingleChannelView((ImagePlus) auxInput, 1, ""))
 									.getStoreFile(programNeedsToReloadInput);
 					c.filePaths[0] = storedInputName;
 				}

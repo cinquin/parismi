@@ -257,6 +257,7 @@ public class BatchOpenV2 extends FourDPlugin implements AuxiliaryInputOutputPlug
 		} else
 			throw new PluginRuntimeException("Unrecognized file type for " + path, null, true);
 
+		@SuppressWarnings("null")
 		String dirPath = new File(FileNameUtils.expandPath(FileNameUtils.removeIncrementationMarks(directory))).getAbsolutePath();
 		Utils.log("directory: " + directory, LogLevel.VERBOSE_DEBUG);
                 Utils.log("dirPath: " + dirPath, LogLevel.VERBOSE_DEBUG);

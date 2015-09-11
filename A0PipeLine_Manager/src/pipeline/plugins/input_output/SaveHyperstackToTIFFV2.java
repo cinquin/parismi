@@ -26,9 +26,13 @@ import pipeline.misc_util.IntrospectionParameters.ParameterType;
 import pipeline.misc_util.PluginRuntimeException;
 import pipeline.misc_util.ProgressReporter;
 import pipeline.misc_util.Utils;
+import pipeline.misc_util.drag_and_drop.DropProcessorIgnore;
+import pipeline.misc_util.drag_and_drop.DropProcessorKeepDirectory;
+import pipeline.misc_util.drag_and_drop.DropProcessorKeepFileName;
 import pipeline.parameters.AbstractParameter;
 import pipeline.parameters.MultiListParameter;
 import pipeline.parameters.TableParameter;
+import pipeline.parameters.TextParameter;
 import pipeline.plugins.AuxiliaryInputOutputPlugin;
 import pipeline.plugins.FourDPlugin;
 
@@ -110,6 +114,7 @@ public class SaveHyperstackToTIFFV2 extends FourDPlugin implements AuxiliaryInpu
 			fileNamePrefix = userPrefix + fileNamePrefix;
 		}
 
+		@SuppressWarnings("null")
 		String fileNameString =
 				FileNameUtils.removeIncrementationMarks(directory + Utils.fileNameSeparator + fileNamePrefix
 						+ FileNameUtils.removeIncrementationMarks(fileName));
@@ -151,4 +156,12 @@ public class SaveHyperstackToTIFFV2 extends FourDPlugin implements AuxiliaryInpu
 		return result;
 	}
 
+	@Override
+	//Only for backward compatibility
+	public void setParameters(AbstractParameter[] params) {
+		super.setParameters(params);
+		((TextParameter) getParameter("fileName")).setDropProcessor(new DropProcessorKeepFileName());
+		((TextParameter) getParameter("directory")).setDropProcessor(new DropProcessorKeepDirectory());
+		((TextParameter) getParameter("userPrefix")).setDropProcessor(new DropProcessorIgnore());
+	}
 }

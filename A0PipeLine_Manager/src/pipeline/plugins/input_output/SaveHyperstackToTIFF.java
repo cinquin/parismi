@@ -111,6 +111,7 @@ public class SaveHyperstackToTIFF extends FourDPlugin implements AuxiliaryInputO
 		IPluginIO prefix = pluginInputs.get("File name");
 		String fileNamePrefix = prefix != null ? ((PluginIOString) prefix).getString() : "";
 
+		@SuppressWarnings("null")
 		String fileNameString =
 				FileNameUtils.removeIncrementationMarks(workingDirectory.getValue() + Utils.fileNameSeparator
 						+ fileNamePrefix + FileNameUtils.removeIncrementationMarks((String) fileName.getValue()));

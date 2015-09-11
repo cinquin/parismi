@@ -110,6 +110,7 @@ public class Plot3DProfileV2 extends ThreeDPlugin {
 			throw new IllegalStateException("Plot \"Plot of " + input.getName() + "\"has not been created for channel "
 					+ input.getName());
 
+		@SuppressWarnings("null")
 		String fileNameString = FileNameUtils.removeIncrementationMarks(saveTo.getAbsolutePath());
 		File file1 = new File(fileNameString);
 

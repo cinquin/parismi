@@ -199,6 +199,7 @@ public class CDetectMovement extends ExternalCallToLibrary implements SpecialDim
 	}
 
 	private @NonNull File getFile() {
+		@SuppressWarnings("null")
 		String fileNameString =
 				FileNameUtils.removeIncrementationMarks(workingDirectory.getValue() + Utils.fileNameSeparator
 						+ FileNameUtils.removeIncrementationMarks((String) fileName.getValue()));

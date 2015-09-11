@@ -39,6 +39,7 @@ public class SaveMeasurementsToFile extends FourDPlugin {
 			final PreviewType previewType, boolean inputHasChanged, AbstractParameter parameterWhoseValueChanged,
 			boolean stayInCoreLoop) {
 
+		@SuppressWarnings("null")
 		String fileNameString =
 				FileNameUtils.removeIncrementationMarks(workingDirectory.getValue() + Utils.fileNameSeparator
 						+ FileNameUtils.removeIncrementationMarks((String) fileName.getValue()));

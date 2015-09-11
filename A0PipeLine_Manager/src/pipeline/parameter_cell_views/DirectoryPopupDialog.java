@@ -23,7 +23,7 @@ public class DirectoryPopupDialog extends TextBox {
 		super();
 
 		textField.addMouseListener(new MouseAdapter() {
-			@SuppressWarnings("unused")
+			@SuppressWarnings({ "unused", "null" })
 			@Override
 			public void mousePressed(MouseEvent m) {
 				if (!silenceUpdate) {

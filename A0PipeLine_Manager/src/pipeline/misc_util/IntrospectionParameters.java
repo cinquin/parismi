@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import pipeline.misc_util.Utils.LogLevel;
 import pipeline.misc_util.drag_and_drop.DropProcessorIgnore;
 import pipeline.misc_util.drag_and_drop.DropProcessorKeepDirectory;
@@ -245,7 +247,8 @@ public class IntrospectionParameters {
 			} else if (parameterType != null && parameterType.parameterType().equalsIgnoreCase("MultiList")) {
 				@SuppressWarnings("unused")
 				String initialValue = parameterInfo.stringValue();
-				String[] choices = parameterInfo.stringChoices();
+				@SuppressWarnings("null")
+				@NonNull String @NonNull[] choices = parameterInfo.stringChoices();
 
 				@SuppressWarnings("unused")
 				boolean editable = parameterInfo.editable().length == 0 ? true : parameterInfo.editable()[0];

@@ -18,12 +18,14 @@ public class TextParameter extends AbstractParameter implements DropAcceptingPar
 
 	@SuppressWarnings("unused")
 	private static Object stupid = new DropProcessor() {
+
 		// Pacify xstream by creating anonymous inner class
 		// Keep this here or some old pipeline xml files won't reload properly
 		@Override
 		public Object process(Object o) {
 			return null;
 		}
+		private static final long serialVersionUID = 1L;
 	};
 
 	public TextParameter(String name, String explanation, String initial_value, boolean editable,
@@ -103,7 +105,7 @@ public class TextParameter extends AbstractParameter implements DropAcceptingPar
 		dropProcessor = processor;
 	}
 
-	protected transient DropProcessor dropProcessor = defaultProcessor;
+	protected DropProcessor dropProcessor = defaultProcessor;
 
 	protected static DropProcessor defaultProcessor = o -> o;
 

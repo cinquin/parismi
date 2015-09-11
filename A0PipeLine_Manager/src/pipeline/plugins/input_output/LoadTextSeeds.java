@@ -87,6 +87,7 @@ public class LoadTextSeeds extends FourDPlugin implements AuxiliaryInputOutputPl
 			PreviewType previewType, boolean inputHasChanged, AbstractParameter parameterWhoseValueChanged,
 			boolean stayInCoreLoop) {
 
+		@SuppressWarnings("null")
 		String fileNameString =
 				FileNameUtils.removeIncrementationMarks(directory + Utils.fileNameSeparator
 						+ FileNameUtils.removeIncrementationMarks(fileName));

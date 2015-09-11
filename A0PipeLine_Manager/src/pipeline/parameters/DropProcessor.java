@@ -1,5 +1,7 @@
 package pipeline.parameters;
 
-public interface DropProcessor {
+import java.io.Serializable;
+
+public interface DropProcessor extends Serializable {
 	Object process(Object o);
 }
