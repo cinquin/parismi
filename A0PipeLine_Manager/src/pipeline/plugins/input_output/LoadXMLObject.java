@@ -79,9 +79,11 @@ public class LoadXMLObject extends FourDPlugin {
 			PreviewType previewType, boolean inputHasChanged, AbstractParameter parameterWhoseValueChanged,
 			boolean stayInCoreLoop) {
 
+		@SuppressWarnings("null")
 		String fileNameString =
 				FileNameUtils.removeIncrementationMarks(workingDirectory.getValue() + "/"
 						+ FileNameUtils.removeIncrementationMarks((String) fileName.getValue()));
+		@SuppressWarnings("null")
 		File directory = new File(FileNameUtils.removeIncrementationMarks((String) workingDirectory.getValue()));
 		if (!(directory.exists() && directory.isDirectory())) {
 			throw new PluginRuntimeException("Directory " + directory.getAbsolutePath()

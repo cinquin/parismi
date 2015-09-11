@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import ncsa.util.ReaderTokenizer;
 import pipeline.A0PipeLine_Manager;
@@ -252,6 +253,7 @@ public class SVMCellDetector extends ThreeDPlugin implements AuxiliaryInputOutpu
 			List<String> remoteExecutionArgs = new ArrayList<>(15);
 			List<String> nameAndArgs = new ArrayList<>(15);
 
+			Objects.requireNonNull(fileName);
 			String trainingDataFileName = FileNameUtils.removeIncrementationMarks(fileName);
 			String trainingDataFullPath =
 					FileNameUtils.expandPath(FileNameUtils.removeIncrementationMarks(workingDirectory.getAbsolutePath()

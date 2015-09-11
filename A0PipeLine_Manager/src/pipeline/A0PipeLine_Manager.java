@@ -1094,10 +1094,11 @@ public class A0PipeLine_Manager implements PlugIn {
 		 * @param stayInCoreLoop
 		 *            If true, plugin called by pipeline should not return and keep performing live updates as long as
 		 *            changedParameter is still changing.
+		 * @param batchRun TODO
 		 */
 		private void processStep(int tableRow, int triggerRow, PluginIO clickedPoints,
 				boolean allowInterruptionOfUpdateAlreadyUnderway, AbstractParameter changedParameter,
-				boolean stayInCoreLoop) throws InterruptedException {
+				boolean stayInCoreLoop, boolean batchRun) throws InterruptedException {
 
 			Utils.log("Process step called on row " + tableRow + ", triggered by row " + triggerRow, LogLevel.DEBUG);
 
@@ -1231,7 +1232,7 @@ public class A0PipeLine_Manager implements PlugIn {
 								"ProcessingSteps", processing);
 
 						if (((MyTableModel) table1.getModel()).updatePipeline)
-							processStep(tableRow + 1, triggerRow, null, true, changedParameter, stayInCoreLoop);
+							processStep(tableRow + 1, triggerRow, null, true, changedParameter, stayInCoreLoop, batchRun);
 						pluginTableRow[WORKER_THREAD] = null;
 					}
 
@@ -1535,10 +1536,10 @@ public class A0PipeLine_Manager implements PlugIn {
 				System.exit(1);
 			}
 
-			if ((((MyTableModel) table1.getModel()).updatePipeline) && (!(plugin instanceof Pause && !Utils.headless))
+			if ((((MyTableModel) table1.getModel()).updatePipeline || batchRun) && (!(plugin instanceof Pause && !Utils.headless && !batchRun))
 					&& (!wasInterrupted) && !(((Boolean) pluginTableRow[COMPUTING_ERROR]) && stopOnError)
 					&& tableRow + 1 < data.length)
-				processStep(tableRow + 1, triggerRow, null, true, changedParameter, stayInCoreLoop);
+				processStep(tableRow + 1, triggerRow, null, true, changedParameter, stayInCoreLoop, batchRun);
 
 			if (wasInterrupted)
 				throw new InterruptedException();
@@ -1814,7 +1815,7 @@ public class A0PipeLine_Manager implements PlugIn {
 					final boolean allowInterruptionOfUpdateAlreadyUnderway, boolean blockUntilCompleted) {
 				if (blockUntilCompleted)
 					try {
-						processStep(row, row, clickedPoints, allowInterruptionOfUpdateAlreadyUnderway, null, false);
+						processStep(row, row, clickedPoints, allowInterruptionOfUpdateAlreadyUnderway, null, false, false);
 					} catch (InterruptedException e) {
 						Utils.printStack(e);
 					}
@@ -1823,7 +1824,7 @@ public class A0PipeLine_Manager implements PlugIn {
 							() -> {
 								try {
 									processStep(row, row, clickedPoints, allowInterruptionOfUpdateAlreadyUnderway,
-											null, false);
+											null, false, false);
 								} catch (InterruptedException e) {
 									Utils.printStack(e);
 								}
@@ -3682,7 +3683,7 @@ public class A0PipeLine_Manager implements PlugIn {
 					try {
 						do {
 							try {
-								processStep(0, 0, null, true, null, false);
+								processStep(0, 0, null, true, null, false, true);
 							} catch (InterruptedException e) {
 								Utils.printStack(e, LogLevel.DEBUG);
 								doneOrInterrupted = "interrupted by user";
@@ -4430,7 +4431,7 @@ public class A0PipeLine_Manager implements PlugIn {
 			@Override
 			public void run() {
 				try {
-					processStep(row, row, null, true, changedParameter, stayInCoreLoop);
+					processStep(row, row, null, true, changedParameter, stayInCoreLoop, false);
 				} catch (Exception e) {
 					Utils.printStack(e, LogLevel.DEBUG);
 				} finally {
