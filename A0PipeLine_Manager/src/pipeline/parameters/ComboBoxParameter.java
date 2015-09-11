@@ -116,6 +116,9 @@ public class ComboBoxParameter extends AbstractParameter {
 	}
 
 	public void setItemName(int index, String s) {
+		if (index == 0 && choices.length == 0) {
+			choices = new String[1];
+		}
 		choices[index] = s;
 		if (currentChoiceIndex == index)
 			currentChoice = s;
