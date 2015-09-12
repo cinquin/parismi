@@ -42,7 +42,8 @@ import pipeline.plugins.MouseEventPlugin;
 import pipeline.plugins.PluginInfo;
 import pipeline.plugins.SpecialDimPlugin;
 
-@PluginInfo(displayToUser = false, obsolete = true)
+@PluginInfo(displayToUser = false, obsolete = true, suggestedReplacement = "DisplaySolidSegmentation, "
+		+ "DisplaySeedFieldValue, or DisplaySegmentationPerimeter")
 public class CHighlightSegmentationLibraryCall extends ExternalCallToLibrary implements PluginIOListener,
 		SpecialDimPlugin, MouseEventPlugin {
 

@@ -10,7 +10,7 @@ import pipeline.misc_util.IntrospectionParameters.ParameterInfo;
 import pipeline.plugins.ExternalCallToLibScalingParams;
 import pipeline.plugins.PluginInfo;
 
-@PluginInfo(displayToUser = false, obsolete = true)
+@PluginInfo(displayToUser = false, obsolete = true, suggestedReplacement = "Blur3D")
 public class CBlurLibraryCall extends ExternalCallToLibScalingParams {
 
 	@Override

@@ -37,7 +37,7 @@ import pipeline.plugins.ThreeDPlugin;
  * Reads an input file as binary and stores it in a PluginIO of type UnknownBinary.
  *
  */
-@PluginInfo(obsolete = true)
+@PluginInfo(obsolete = true, suggestedReplacement = "LoadProtobufBinary")
 public class LoadUnknownBinary extends ThreeDPlugin implements AuxiliaryInputOutputPlugin {
 
 	@Override

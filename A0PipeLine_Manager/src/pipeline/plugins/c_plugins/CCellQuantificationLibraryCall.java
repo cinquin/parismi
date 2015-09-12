@@ -31,7 +31,7 @@ import pipeline.parameters.TextParameter;
 import pipeline.plugins.ExternalCallToLibrary;
 import pipeline.plugins.PluginInfo;
 
-@PluginInfo(displayToUser = false, obsolete = true)
+@PluginInfo(displayToUser = false, obsolete = true, suggestedReplacement = "CellBallQuantify")
 public class CCellQuantificationLibraryCall extends ExternalCallToLibrary {
 
 	private String method = "";
