@@ -13,8 +13,10 @@ import ij.io.FileInfo;
 import ij.io.FileOpener;
 import ij.io.TiffDecoder;
 import ij.plugin.FileInfoVirtualStack;
+import ij.text.TextPanel;
 
 import java.awt.Color;
+import java.awt.Frame;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -179,7 +181,19 @@ public class Utils {
 			if (headless) {
 				System.err.println(finalMessage);
 			} else
-				SwingUtilities.invokeLater(() -> IJ.log(finalMessage));
+				SwingUtilities.invokeLater(() -> {
+					IJ.log(finalMessage);
+					if (logLevel <= LogLevel.WARNING) {
+						try {
+							Field logPanelField = IJ.class.getDeclaredField("logPanel");
+							logPanelField.setAccessible(true);
+							TextPanel panel = (TextPanel) logPanelField.get(null);
+							((Frame) panel.getParent()).toFront();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
 		}
 
 	}
