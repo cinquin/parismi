@@ -62,12 +62,12 @@
   
     <jar jarfile="A0PipeLine_Manager.jar" manifest="standalone_MANIFEST.MF">
       <fileset dir="." includes="plugins.config"/>
-      <fileset dir="${build}" includes="**/*" excludes="**/.DS_Store" />
+      <fileset dir="${bin}" includes="**/*" excludes="**/.DS_Store" />
       <fileset dir="." includes="rebel.xml" />
     </jar>
   	
     <jar jarfile="pipeline_video.jar">
-      <fileset dir="${build}" includes="pipeline/data/video/*.class"/>
+      <fileset dir="${bin}" includes="pipeline/data/video/*.class"/>
       <fileset dir="." includes="rebel.xml" />
     </jar>
   	
