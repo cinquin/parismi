@@ -500,6 +500,10 @@ public class FloatRangeSlider extends AbstractParameterCellView implements Mouse
 		if (currentParameter.histogram instanceof XYSeries) {
 
 			XYSeries xyData = (XYSeries) currentParameter.histogram;
+			
+			if (chart != null && chart.getXYPlot().getDataset() != null) {
+				chart.getXYPlot().getDataset(0).removeChangeListener(chart.getXYPlot());
+			}
 
 			chart = ChartFactory.createXYLineChart(null, // chart title
 					null,// "Category", // domain axis label
@@ -509,6 +513,9 @@ public class FloatRangeSlider extends AbstractParameterCellView implements Mouse
 					true, false);
 
 		} else if (currentParameter.histogram != null) { // assume for now it's a histogram
+			if (chart != null && chart.getXYPlot().getDataset() != null) {
+				chart.getXYPlot().getDataset(0).removeChangeListener(chart.getXYPlot());
+			}
 
 			String plotTitle = "Histogram";
 			String xaxis = "number";
@@ -520,6 +527,11 @@ public class FloatRangeSlider extends AbstractParameterCellView implements Mouse
 			chart =
 					ChartFactory.createHistogram(plotTitle, xaxis, yaxis,
 							(IntervalXYDataset) currentParameter.histogram, orientation, show, toolTips, urls);// dataset
+		} else {
+			if (chart != null && chart.getXYPlot().getDataset() != null) {
+				chart.getXYPlot().getDataset(0).removeChangeListener(chart.getXYPlot());
+			}
+			chart = null;
 		}
 
 		if (currentParameter.histogram != null) {

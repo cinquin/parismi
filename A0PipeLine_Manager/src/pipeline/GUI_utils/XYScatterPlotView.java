@@ -113,6 +113,10 @@ public class XYScatterPlotView<CollectionType extends AbstractSeriesDataset & Fr
 				return;
 
 			final XYPlot plot;
+			
+			if (chart != null && chart.getXYPlot().getDataset() != null) {
+				chart.getXYPlot().getDataset(0).removeChangeListener(chart.getXYPlot());
+			}
 
 			if (freeChartSeriesCollection.getSeries().get(0) instanceof XYSeries) {
 				PlotOrientation orientation =
@@ -453,6 +457,11 @@ public class XYScatterPlotView<CollectionType extends AbstractSeriesDataset & Fr
 	@Override
 	public void close() {
 		// Utils.log("Closing plot view",LogLevel.DEBUG);
+		if (contentPanel != null) {
+			if (contentPanel.chart != null && contentPanel.chart.getXYPlot().getDataset() != null) {
+				contentPanel.chart.getXYPlot().getDataset(0).removeChangeListener(contentPanel.chart.getXYPlot());
+			}
+		}
 		if (windowWithGraph != null) {
 			windowWithGraph.setVisible(false);
 			windowWithGraph.dispose();
