@@ -152,7 +152,7 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 		}
 	}
 
-	private boolean closed = false;
+	private volatile boolean closed = false;
 
 	@Override
 	public void close() {
@@ -879,7 +879,7 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 			boolean copyOfDirty = false;
 			synchronized (dirty) {
 				try {
-					while (!dirty.get())
+					while (!dirty.get() && !closed)
 						dirty.wait();
 				} catch (InterruptedException e) {
 					if (closed || frame == null)
