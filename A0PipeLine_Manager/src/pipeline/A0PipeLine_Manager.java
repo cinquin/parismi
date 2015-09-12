@@ -261,7 +261,7 @@ public class A0PipeLine_Manager implements PlugIn {
 	private static final int LAST_TIME_RUN = 32;
 	private static final int IMP_FOR_DISPLAY = 33;
 	private static final int TABLE_WIDTH = 34;
-	private static final int LAST_VISIBLE_COLUMN = 19;
+	private static final int LAST_VISIBLE_COLUMN = 16;
 
 	private static final int PLUGIN_EXPERT_LEVEL_DISPLAY = 1;
 
@@ -276,7 +276,7 @@ public class A0PipeLine_Manager implements PlugIn {
 	private JPopupMenu pluginListMenu;
 
 	private int imageListMenuXCellIndex;
-	private int imageListMenuYCellIndex;
+	private int imageListMenuYCellIndexModel;
 
 	public static int setup(String arg, ImagePlus img) {
 		Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
@@ -1082,7 +1082,7 @@ public class A0PipeLine_Manager implements PlugIn {
 		 * cancel upon update), or flag it for re-updating when it's done. If we're processing the step as a result of
 		 * the user clicking in a window, clickedPoints contains the list of points.
 		 * 
-		 * @param tableRow
+		 * @param modelRow
 		 *            Row index in the table
 		 * @param triggerRow
 		 *            Row that initially triggered updating of the table
@@ -1096,23 +1096,23 @@ public class A0PipeLine_Manager implements PlugIn {
 		 *            changedParameter is still changing.
 		 * @param batchRun TODO
 		 */
-		private void processStep(int tableRow, int triggerRow, PluginIO clickedPoints,
+		private void processStep(int modelRow, int triggerRow, PluginIO clickedPoints,
 				boolean allowInterruptionOfUpdateAlreadyUnderway, AbstractParameter changedParameter,
 				boolean stayInCoreLoop, boolean batchRun) throws InterruptedException {
 
-			Utils.log("Process step called on row " + tableRow + ", triggered by row " + triggerRow, LogLevel.DEBUG);
+			Utils.log("Process step called on row " + modelRow + ", triggered by row " + triggerRow, LogLevel.DEBUG);
 
 			boolean shouldClearUpdateQueued = false;
 			boolean wasInterrupted = false;
 			Object[] data = ((MyTableModel) table1.getModel()).data;
-			if ((tableRow < 0) || (tableRow >= data.length)) {
+			if ((modelRow < 0) || (modelRow >= data.length)) {
 				throw new IllegalArgumentException();
 			}
 
-			Object[] pluginTableRow = (Object[]) data[tableRow];
+			Object[] pluginTableRow = (Object[]) data[modelRow];
 			if (((AtomicBoolean) pluginTableRow[IS_UPDATING]).get()) {
 				// The step is already being updated
-				if ((tableRow == triggerRow) && ((MyTableModel) table1.getModel()).cancelUponChange
+				if ((modelRow == triggerRow) && ((MyTableModel) table1.getModel()).cancelUponChange
 						&& allowInterruptionOfUpdateAlreadyUnderway) {
 					// Signal to the thread working on the row that it should give up
 					Thread thread = (Thread) pluginTableRow[WORKER_THREAD];
@@ -1138,19 +1138,19 @@ public class A0PipeLine_Manager implements PlugIn {
 					} else {
 						while (((AtomicBoolean) pluginTableRow[UPDATE_QUEUED]).get()) {
 							try {
-								Utils.log("Waiting for row " + tableRow + " to be done with updates", LogLevel.DEBUG);
+								Utils.log("Waiting for row " + modelRow + " to be done with updates", LogLevel.DEBUG);
 								Thread.currentThread().setName("Pipeline scheduler [blocked]");
 								pluginTableRow[UPDATE_QUEUED].wait();
 							} catch (InterruptedException e) {
-								Utils.log("Interrupted while waiting for row " + tableRow + " to be done updating",
+								Utils.log("Interrupted while waiting for row " + modelRow + " to be done updating",
 										LogLevel.DEBUG);
 								throw e;
 							}
 						}
 						((AtomicBoolean) pluginTableRow[UPDATE_QUEUED]).set(true);
-						((MyTableModel) table1.getModel()).fireTableCellUpdated(tableRow, UPDATE_QUEUED);
+						((MyTableModel) table1.getModel()).fireTableCellUpdated(modelRow, UPDATE_QUEUED);
 						pluginTableRow[QUEUED_WORKER_THREAD] = Thread.currentThread();
-						((MyTableModel) table1.getModel()).fireTableCellUpdated(tableRow, QUEUED_WORKER_THREAD);
+						((MyTableModel) table1.getModel()).fireTableCellUpdated(modelRow, QUEUED_WORKER_THREAD);
 						shouldClearUpdateQueued = true;
 					}
 				}
@@ -1161,20 +1161,20 @@ public class A0PipeLine_Manager implements PlugIn {
 			synchronized (pluginTableRow[IS_UPDATING]) {
 				try {
 					while (((AtomicBoolean) pluginTableRow[IS_UPDATING]).get()) {
-						Utils.log("waiting for update to row " + tableRow + " to complete", LogLevel.DEBUG);
+						Utils.log("waiting for update to row " + modelRow + " to complete", LogLevel.DEBUG);
 						pluginTableRow[IS_UPDATING].wait();
-						Utils.log("Done waiting for row " + tableRow + " to complete", LogLevel.DEBUG);
+						Utils.log("Done waiting for row " + modelRow + " to complete", LogLevel.DEBUG);
 					}
 					((AtomicBoolean) pluginTableRow[IS_UPDATING]).set(true);
-					((MyTableModel) table1.getModel()).fireTableCellUpdated(tableRow, IS_UPDATING);
+					((MyTableModel) table1.getModel()).fireTableCellUpdated(modelRow, IS_UPDATING);
 
 					pluginTableRow[WORKER_THREAD] = Thread.currentThread();
 
 					if (shouldClearUpdateQueued) {
 						synchronized (pluginTableRow[UPDATE_QUEUED]) {
-							((MyTableModel) table1.getModel()).fireTableCellUpdated(tableRow, UPDATE_QUEUED);
+							((MyTableModel) table1.getModel()).fireTableCellUpdated(modelRow, UPDATE_QUEUED);
 							pluginTableRow[QUEUED_WORKER_THREAD] = null;
-							((MyTableModel) table1.getModel()).fireTableCellUpdated(tableRow, QUEUED_WORKER_THREAD);
+							((MyTableModel) table1.getModel()).fireTableCellUpdated(modelRow, QUEUED_WORKER_THREAD);
 							((AtomicBoolean) pluginTableRow[UPDATE_QUEUED]).set(false);
 							pluginTableRow[UPDATE_QUEUED].notify();
 						}
@@ -1187,10 +1187,10 @@ public class A0PipeLine_Manager implements PlugIn {
 							// plugin to finish; we have already set theRow[IS_UPDATING] to true, so no further plugins
 							// should attempt to use [one of] our output[s] as input until we finish
 							// FIXME This might lead to deadlocks
-							Utils.log("Row " + tableRow + " waiting for output lock to be released", LogLevel.DEBUG);
+							Utils.log("Row " + modelRow + " waiting for output lock to be released", LogLevel.DEBUG);
 							pluginTableRow[OUTPUT_LOCKS].wait();
 						}
-						Utils.log("Done waiting for output lock to be released at row " + tableRow, LogLevel.DEBUG);
+						Utils.log("Done waiting for output lock to be released at row " + modelRow, LogLevel.DEBUG);
 					}
 					// The output should not be locked again before we finish because anyone trying to lock it
 					// will check that theRow[IS_UPDATING] is false first, and we have already set theRow[IS_UPDATING]
@@ -1202,7 +1202,7 @@ public class A0PipeLine_Manager implements PlugIn {
 						// Save metadata anyway in case we want to activate the step after reusing the metadata
 
 						String sourceName = pluginTableRow[INPUT_NAME_FIELD].toString();
-						Element p = new Element("Step" + tableRow);
+						Element p = new Element("Step" + modelRow);
 						p.addContent(new Element("PluginDescription").setText(""));
 						p.addContent(new Element("SourceFile").setText(sourceName));
 						p.addContent(new Element("PluginVersion").setText("ND"));
@@ -1217,14 +1217,14 @@ public class A0PipeLine_Manager implements PlugIn {
 										Utils.objectToXMLString(pluginTableRow[i])));
 						}
 
-						int previousActiveRow = getPreviousActiveRow(tableRow);
+						int previousActiveRow = getPreviousActiveRow(modelRow);
 						Document doc = null;
 						if (previousActiveRow > -1) {
-							doc = (Document) ((Object[]) data[tableRow - 1])[OUTPUT_XML];
+							doc = (Document) ((Object[]) data[modelRow - 1])[OUTPUT_XML];
 						} else
 							doc = plugin.getInput().getMetadata();
 
-						Element processing = addProcessingStepToXML((Document) doc.clone(), p, tableRow);
+						Element processing = addProcessingStepToXML((Document) doc.clone(), p, modelRow);
 
 						if (pluginTableRow[OUTPUT_XML] == null)
 							pluginTableRow[OUTPUT_XML] = new Document();
@@ -1232,7 +1232,7 @@ public class A0PipeLine_Manager implements PlugIn {
 								"ProcessingSteps", processing);
 
 						if (((MyTableModel) table1.getModel()).updatePipeline)
-							processStep(tableRow + 1, triggerRow, null, true, changedParameter, stayInCoreLoop, batchRun);
+							processStep(modelRow + 1, triggerRow, null, true, changedParameter, stayInCoreLoop, batchRun);
 						pluginTableRow[WORKER_THREAD] = null;
 					}
 
@@ -1248,19 +1248,19 @@ public class A0PipeLine_Manager implements PlugIn {
 									((PipelinePlugin) pluginObjects[pluginID]).getClass().newInstance();
 							((PipelinePlugin) pluginTableRow[PLUGIN_INSTANCE])
 									.setpipeLineListener(new PluginCallBack());
-							((PipelinePlugin) pluginTableRow[PLUGIN_INSTANCE]).setRow(tableRow);
+							((PipelinePlugin) pluginTableRow[PLUGIN_INSTANCE]).setRow(modelRow);
 						} else {
 							throw new Exception("Cannot find plugin " + pluginTableRow[PLUGIN_NAME_FIELD]
-									+ " for update at row " + tableRow + ", triggered from row triggerRow");
+									+ " for update at row " + modelRow + ", triggered from row triggerRow");
 						}
 					}
 
 					try {
 
 						progressSetIndeterminateThreadSafe((ProgressRenderer) pluginTableRow[PERCENT_DONE], true,
-								tableRow);
+								modelRow);
 						if ((plugin.getFlags() & PipelinePlugin.NO_INPUT) == 0)
-							updateSourceFieldAtRow(tableRow);
+							updateSourceFieldAtRow(modelRow);
 						// Resolve the input so we have a valid source_imp to pass to the plugin
 
 						// Check if any inputs are marked as requiring locking for current plugin to work on them
@@ -1285,16 +1285,16 @@ public class A0PipeLine_Manager implements PlugIn {
 									IPluginIO input = inputSet.getValue();
 									synchronized (input.getIsUpdating()) {
 										while (input.getIsUpdating().get()) {
-											Utils.log("Row " + tableRow + " waiting for input " + input.getName()
+											Utils.log("Row " + modelRow + " waiting for input " + input.getName()
 													+ " to be unlocked", LogLevel.DEBUG);
 											try {
 												input.getIsUpdating().wait();
 											} catch (InterruptedException e) {
-												Utils.log("Interrupted while row " + tableRow + " waiting for input "
+												Utils.log("Interrupted while row " + modelRow + " waiting for input "
 														+ input.getName() + " to be unlocked", LogLevel.INFO);
 												throw e;
 											}
-											Utils.log("Row " + tableRow + " DONE waiting for input " + input.getName()
+											Utils.log("Row " + modelRow + " DONE waiting for input " + input.getName()
 													+ " to be unlocked", LogLevel.DEBUG);
 										}
 									}
@@ -1324,7 +1324,7 @@ public class A0PipeLine_Manager implements PlugIn {
 											}
 										}
 										if (!converted)
-											throw new RuntimeException("Row " + tableRow + ": incompatible pixel type "
+											throw new RuntimeException("Row " + modelRow + ": incompatible pixel type "
 													+ imageInput.getPixelType() + " in input " + imageInput.getName()
 													+ "; empty intersection between convertible set "
 													+ Utils.printPixelTypes(canConvert)
@@ -1337,7 +1337,7 @@ public class A0PipeLine_Manager implements PlugIn {
 						if (plugin.getInputs() != null)
 							Utils.log("Working on images " + plugin.getInputs().toString(), LogLevel.DEBUG);
 
-						updateDestinationFieldAtRow(tableRow, 1);
+						updateDestinationFieldAtRow(modelRow, 1);
 
 						((ProgressRenderer) pluginTableRow[PERCENT_DONE]).setPlugin(plugin);
 
@@ -1367,7 +1367,7 @@ public class A0PipeLine_Manager implements PlugIn {
 								// Check that the plugin can handle those clicked points
 								if (!(plugin instanceof MouseEventPlugin)) {
 									throw new RuntimeException("Plugin " + plugin
-											+ " doesn't know how to respond to mouse clicks at row " + tableRow);
+											+ " doesn't know how to respond to mouse clicks at row " + modelRow);
 								}
 								((MouseEventPlugin) plugin).mouseClicked(clickedPoints, someInputHasChanged, null);
 							} else {
@@ -1395,7 +1395,7 @@ public class A0PipeLine_Manager implements PlugIn {
 
 						List<?> imagesToShow = (List<?>) pluginTableRow[AUXILIARY_OUTPUT_IMPS];
 
-						if ((imagesToShow != null) && ((Boolean) table1.getValueAt(tableRow, SHOW_IMAGE))) {
+						if ((imagesToShow != null) && ((Boolean) table1.getModel().getValueAt(modelRow, SHOW_IMAGE))) {
 							for (Object anImagesToShow : imagesToShow) {
 								try {
 									((PluginIOView) anImagesToShow).show();
@@ -1436,7 +1436,7 @@ public class A0PipeLine_Manager implements PlugIn {
 								inputDescription.addContent(source);
 							}
 
-						Element p = new Element("Step" + tableRow);
+						Element p = new Element("Step" + modelRow);
 						p.addContent(new Element("PluginDescription").setText(plugin.operationName()));
 						p.addContent(inputDescription);
 						p.addContent(new Element("PluginVersion").setText(plugin.version()));
@@ -1465,15 +1465,15 @@ public class A0PipeLine_Manager implements PlugIn {
 							}
 						}
 
-						int previousActiveRow = getPreviousActiveRow(tableRow);
+						int previousActiveRow = getPreviousActiveRow(modelRow);
 						Document doc = null;
-						if (tableRow == 0)
+						if (modelRow == 0)
 							doc = new Document(); // If this is the first row, don't read metadata from the destination
 													// imp so that the processing steps don't get mixed up with those
 													// from the file the input comes from
 
 						else if (previousActiveRow > -1) {
-							doc = (Document) ((Object[]) data[tableRow - 1])[OUTPUT_XML];
+							doc = (Document) ((Object[]) data[modelRow - 1])[OUTPUT_XML];
 						} else
 							doc = plugin.getInput().getMetadata();
 
@@ -1482,7 +1482,7 @@ public class A0PipeLine_Manager implements PlugIn {
 						if (clickedPoints == null) {
 							// Only add this step to the metadata if it doesn't result from a GUI click
 							// The RegisterClick step already stores the list of clicks
-							Element processing = addProcessingStepToXML((Document) doc.clone(), p, tableRow);
+							Element processing = addProcessingStepToXML((Document) doc.clone(), p, modelRow);
 							pluginTableRow[OUTPUT_XML] = new Document().addContent(processing.detach());// processing;
 						}
 
@@ -1503,15 +1503,17 @@ public class A0PipeLine_Manager implements PlugIn {
 					} catch (Throwable t) {
 						System.err.println("Problem logging exception");
 					}
-					scrollTableToRow(tableRow - 1);
-					tableFrame.toFront();
+					if (tableFrame != null) {
+						scrollTableToRow(modelRow - 1);
+						tableFrame.toFront();
+					}
 					Utils.printStack(e, LogLevel.ERROR);
 					if (e instanceof PluginRuntimeException && ((PluginRuntimeException) e).getDisplayUserDialog()
 							&& !Utils.causedByInterruption(e)) {
 						Utils.displayMessage(pluginName + e.getMessage(), false, LogLevel.ERROR);
 					}
 				} finally {
-					progressSetIndeterminateThreadSafe((ProgressRenderer) pluginTableRow[PERCENT_DONE], false, tableRow);
+					progressSetIndeterminateThreadSafe((ProgressRenderer) pluginTableRow[PERCENT_DONE], false, modelRow);
 					if (!((Boolean) pluginTableRow[COMPUTING_ERROR]) && !(plugin instanceof BatchOpenV2)) {
 						progressSetValueThreadSafe((ProgressRenderer) pluginTableRow[PERCENT_DONE], 100);
 					}
@@ -1522,8 +1524,8 @@ public class A0PipeLine_Manager implements PlugIn {
 						pluginTableRow[IS_UPDATING].notifyAll();
 					}
 
-					((MyTableModel) table1.getModel()).fireTableCellUpdated(tableRow, IS_UPDATING);
-					((MyTableModel) table1.getModel()).fireTableCellUpdated(tableRow, WORKER_THREAD);
+					((MyTableModel) table1.getModel()).fireTableCellUpdated(modelRow, IS_UPDATING);
+					((MyTableModel) table1.getModel()).fireTableCellUpdated(modelRow, WORKER_THREAD);
 				}
 
 			}
@@ -1538,8 +1540,8 @@ public class A0PipeLine_Manager implements PlugIn {
 
 			if ((((MyTableModel) table1.getModel()).updatePipeline || batchRun) && (!(plugin instanceof Pause && !Utils.headless && !batchRun))
 					&& (!wasInterrupted) && !(((Boolean) pluginTableRow[COMPUTING_ERROR]) && stopOnError)
-					&& tableRow + 1 < data.length)
-				processStep(tableRow + 1, triggerRow, null, true, changedParameter, stayInCoreLoop, batchRun);
+					&& modelRow + 1 < data.length)
+				processStep(modelRow + 1, triggerRow, null, true, changedParameter, stayInCoreLoop, batchRun);
 
 			if (wasInterrupted)
 				throw new InterruptedException();
@@ -1567,26 +1569,26 @@ public class A0PipeLine_Manager implements PlugIn {
 		 * destination images. Called when a user has selected a new file from a popup menu to use as an input or an
 		 * output to a plugin.
 		 * 
-		 * @param row
+		 * @param modelRow
 		 *            Row index in the table
-		 * @param column
+		 * @param modelColumn
 		 *            Column index; should be INPUT_NAME_FIELD for an update of the source channel choices, or
 		 *            OUTPUT_NAME_FIELD for an update of the destination channel choices (the latter is currently not
 		 *            implemented)
 		 * @param recomputeSourceField
 		 *            True if the reference to the image whose channel choices we're updating should be refreshed
 		 */
-		private void updateChannelChoices(int row, int column, boolean recomputeSourceField) {
-			if (column == INPUT_NAME_FIELD) {
+		private void updateChannelChoices(int modelRow, int modelColumn, boolean recomputeSourceField) {
+			if (modelColumn == INPUT_NAME_FIELD) {
 				try {
 					if (recomputeSourceField) {
 						try {
-							updateSourceFieldAtRow(row);
+							updateSourceFieldAtRow(modelRow);
 						} catch (Exception e) {
 							Utils.printStack(e);
 						}
 					}
-					Object[] theRow = ((MyTableModel) table1.getModel()).data[row];
+					Object[] theRow = ((MyTableModel) table1.getModel()).data[modelRow];
 					if (theRow[PLUGIN_INSTANCE] == null)
 						return;
 					IPluginIO source = ((PipelinePlugin) theRow[PLUGIN_INSTANCE]).getInput();
@@ -1608,23 +1610,23 @@ public class A0PipeLine_Manager implements PlugIn {
 					Utils.log("Could not update info about source", LogLevel.ERROR);
 					Utils.printStack(e);
 				}
-			} else if (column == OUTPUT_NAME_FIELD) {
+			} else if (modelColumn == OUTPUT_NAME_FIELD) {
 
 			}
 
-			((MyTableModel) table1.getModel()).fireTableRowsUpdated(row, row);
+			((MyTableModel) table1.getModel()).fireTableRowsUpdated(modelRow, modelRow);
 		}
 
 		/**
 		 * Display a popup menu as a response to a user right-click in the input or output fields of a plugin
 		 * 
-		 * @param row
-		 * @param column
+		 * @param modelRow
+		 * @param modelColumn
 		 * @param comp
 		 * @param xPosition
 		 * @param yPosition
 		 */
-		private void displayImageListMenu(final int row, final int column, final Component comp, int xPosition,
+		private void displayImageListMenu(final int modelRow, final int modelColumn, final Component comp, int xPosition,
 				int yPosition) {
 			final Object[] data = ((MyTableModel) table1.getModel()).data;
 
@@ -1635,15 +1637,15 @@ public class A0PipeLine_Manager implements PlugIn {
 			ImagePlus[] ImagePlusList = new ImagePlus[ImageIDList.length];
 			ImageListMenu = new JPopupMenu("Image popup");
 			ActionListener actionListener = actionEvent -> {
-				((TextParameter) ((Object[]) data[row])[column]).setValue(actionEvent.getActionCommand());
-				table1.tableChanged(new TableModelEvent(table1.getModel(), row, column));
-				((TextParameter) ((Object[]) data[row])[column]).fireValueChanged(false, true, true);
+				((TextParameter) ((Object[]) data[modelRow])[modelColumn]).setValue(actionEvent.getActionCommand());
+				table1.tableChanged(new TableModelEvent(table1.getModel(), modelRow, modelRow));
+				((TextParameter) ((Object[]) data[modelRow])[modelColumn]).fireValueChanged(false, true, true);
 				// table1.setRowHeight(1);
 				// scrollTableToRow(row);
 				// table1.invalidate();
-					Utils.log("Updating input for row " + row, LogLevel.VERBOSE_VERBOSE_DEBUG);
-					updateChannelChoices(row, column, true);
-					PipelinePlugin plugin = (PipelinePlugin) ((Object[]) data[row])[PLUGIN_INSTANCE];
+					Utils.log("Updating input for row " + modelRow, LogLevel.VERBOSE_VERBOSE_DEBUG);
+					updateChannelChoices(modelRow, modelColumn, true);
+					PipelinePlugin plugin = (PipelinePlugin) ((Object[]) data[modelRow])[PLUGIN_INSTANCE];
 					if (plugin != null) {
 						plugin.clearInputs();
 						plugin.clearOutputs();
@@ -1659,17 +1661,17 @@ public class A0PipeLine_Manager implements PlugIn {
 					@SuppressWarnings("null")
 					final String path = FileNameUtils.compactPath(file.getAbsolutePath());
 					Runnable r = () -> {
-						((TextParameter) ((Object[]) data[row])[column]).setValue(path);
-						table1.tableChanged(new TableModelEvent(table1.getModel(), row, column));
-						((TextParameter) ((Object[]) data[row])[column]).fireValueChanged(false, true, true);
-						Utils.log("Updating input for row " + row, LogLevel.VERBOSE_VERBOSE_DEBUG);
-						PipelinePlugin plugin = (PipelinePlugin) ((Object[]) data[row])[PLUGIN_INSTANCE];
+						((TextParameter) ((Object[]) data[modelRow])[modelColumn]).setValue(path);
+						table1.tableChanged(new TableModelEvent(table1.getModel(), modelRow, modelRow));
+						((TextParameter) ((Object[]) data[modelRow])[modelColumn]).fireValueChanged(false, true, true);
+						Utils.log("Updating input for row " + modelRow, LogLevel.VERBOSE_VERBOSE_DEBUG);
+						PipelinePlugin plugin = (PipelinePlugin) ((Object[]) data[modelRow])[PLUGIN_INSTANCE];
 						if (plugin != null) {
 							plugin.clearInputs();
 							plugin.clearOutputs();
 						}
 
-						updateChannelChoices(row, column, true);
+						updateChannelChoices(modelRow, modelColumn, true);
 					};
 					BasePipelinePlugin.threadPool.submit(r);
 				});
@@ -1716,22 +1718,23 @@ public class A0PipeLine_Manager implements PlugIn {
 		/**
 		 * Display a popup menu as a response to a user right-click in plugin name field
 		 * 
-		 * @param row
-		 * @param column
+		 * @param modelRow
+		 * @param modelCol
 		 * @param comp
 		 * @param xPosition
 		 * @param yPosition
 		 */
-		private void displayPluginListMenu(final int row, final int column, final Component comp, int xPosition,
+		private void displayPluginListMenu(final int modelRow, final int modelCol, final Component comp, int xPosition,
 				int yPosition) {
 
+			int viewRow = table1.convertRowIndexToView(modelRow);
 			ActionListener actionListener = actionEvent -> {
 				String pluginName = actionEvent.getActionCommand();
-				table1.setValueAt(pluginName, row, column);
+				table1.getModel().setValueAt(pluginName, modelRow, modelCol);
 				table1.setRowHeight(1);
-				udpateRowPlugin(row, column);
-				table1.setRowSelectionInterval(row, row);
-				scrollTableToRow(row);
+				udpateRowPlugin(modelRow, modelCol);
+				table1.setRowSelectionInterval(viewRow, viewRow);
+				scrollTableToRow(viewRow);
 			};
 
 			// Get list of package names
@@ -1778,8 +1781,7 @@ public class A0PipeLine_Manager implements PlugIn {
 		/**
 		 * Display a directory menu as a response to a user right-click in parameter field
 		 */
-		private void displayFileDirectoryDialog(FileNameParameter file, DirectoryParameter directory, int row,
-				int column) {
+		private void displayFileDirectoryDialog(FileNameParameter file, DirectoryParameter directory) {
 			FileDialog dialog = new FileDialog(new Frame(), "Choose file", FileDialog.LOAD);
 			dialog.setVisible(true);
 
@@ -1811,11 +1813,11 @@ public class A0PipeLine_Manager implements PlugIn {
 			}
 
 			@Override
-			public void passClickToRow(final int row, final PluginIO clickedPoints,
+			public void passClickToRow(final int modelRow, final PluginIO clickedPoints,
 					final boolean allowInterruptionOfUpdateAlreadyUnderway, boolean blockUntilCompleted) {
 				if (blockUntilCompleted)
 					try {
-						processStep(row, row, clickedPoints, allowInterruptionOfUpdateAlreadyUnderway, null, false, false);
+						processStep(modelRow, modelRow, clickedPoints, allowInterruptionOfUpdateAlreadyUnderway, null, false, false);
 					} catch (InterruptedException e) {
 						Utils.printStack(e);
 					}
@@ -1823,7 +1825,7 @@ public class A0PipeLine_Manager implements PlugIn {
 					Runnable r =
 							() -> {
 								try {
-									processStep(row, row, clickedPoints, allowInterruptionOfUpdateAlreadyUnderway,
+									processStep(modelRow, modelRow, clickedPoints, allowInterruptionOfUpdateAlreadyUnderway,
 											null, false, false);
 								} catch (InterruptedException e) {
 									Utils.printStack(e);
@@ -1954,37 +1956,35 @@ public class A0PipeLine_Manager implements PlugIn {
 		 * Called when the plugin name has been changed at row index x. Terminates current updates, tells the current
 		 * plugin to clean up, and creates a new instance of the plugin name found at column index y.
 		 * 
-		 * @param x
-		 * @param y
+		 * @param modelRow
+		 * @param modelCol
 		 */
-		private synchronized final void udpateRowPlugin(int x, int y) {
+		private synchronized final void udpateRowPlugin(int modelRow, int modelCol) {
 
-			Object[] data = ((MyTableModel) table1.getModel()).data;
-			Object[] theRow = (Object[]) data[x];
-			PipelinePlugin p = (PipelinePlugin) theRow[PLUGIN_INSTANCE];
-			String pluginName = (String) table1.getValueAt(x, y);
+			PipelinePlugin p = (PipelinePlugin) table1.getModel().getValueAt(modelRow, PLUGIN_INSTANCE);
+			String pluginName = (String) table1.getModel().getValueAt(modelRow, modelCol);
 			int pluginID = Utils.indexOf(pluginNames, pluginName);
 			if (pluginObjects[pluginID] == null) {
 				Utils.log("Null plugin class " + pluginID, LogLevel.ERROR);
 			}
 
-			Thread t = (Thread) theRow[QUEUED_WORKER_THREAD];
+			Thread t = (Thread) table1.getModel().getValueAt(modelRow, QUEUED_WORKER_THREAD);
 			if (t != null)
 				t.interrupt();
-			t = (Thread) theRow[WORKER_THREAD];
+			t = (Thread) table1.getModel().getValueAt(modelRow, WORKER_THREAD);
 			if (t != null)
 				t.interrupt();
 
 			if (p != null) {
 				try {
-					cleanupPluginAtRow(x);
+					cleanupPluginAtRow(modelRow);
 				} catch (Exception e) {
 					Utils.printStack(e);
 				}
 			}
 
-			theRow[AUXILIARY_INPUTS] = null;
-			theRow[AUXILIARY_OUTPUTS] = null;
+			table1.getModel().setValueAt(null, modelRow, AUXILIARY_INPUTS);
+			table1.getModel().setValueAt(null, modelRow, AUXILIARY_OUTPUTS);
 
 			if (pluginObjects[pluginID] instanceof AuxiliaryInputOutputPlugin) {
 				AuxiliaryInputOutputPlugin newPlugin = (AuxiliaryInputOutputPlugin) pluginObjects[pluginID];
@@ -1992,19 +1992,22 @@ public class A0PipeLine_Manager implements PlugIn {
 				for (int i = 0; i < newPlugin.getInputLabels().length; i++) {
 					inputValues[i] = "";
 				}
-				theRow[AUXILIARY_INPUTS] =
+				table1.getModel().setValueAt(
 						new TwoColumnTableParameter(
 								"Auxiliary inputs",
 								"Auxiliary inputs; fill in corresponding rows; relative reference by default, $ for absolute reference",
-								newPlugin.getInputLabels(), inputValues, null);
-				theRow[AUXILIARY_OUTPUTS] =
+								newPlugin.getInputLabels(), inputValues, null),
+						modelRow, AUXILIARY_INPUTS);
+				table1.getModel().setValueAt(
 						new TableParameter(
 								"Auxiliary inputs",
 								"Auxiliary inputs; fill in corresponding rows; relative reference by default, $ for absolute reference",
-								newPlugin.getOutputLabels(), null);
+								newPlugin.getOutputLabels(), null),
+						modelRow, AUXILIARY_OUTPUTS);
 			}
-			theRow[PLUGIN_OUTPUTS] = null;
-			theRow[PLUGIN_INPUTS] = null;
+			
+			table1.getModel().setValueAt(null, modelRow, PLUGIN_OUTPUTS);
+			table1.getModel().setValueAt(null, modelRow, PLUGIN_INPUTS);
 
 			// TODO Figure out which imps should be closed
 			// (some Imps might also display channels from other PluginIOs)
@@ -2017,7 +2020,7 @@ public class A0PipeLine_Manager implements PlugIn {
 			}
 			pi.setpipeLineListener(new PluginCallBack());
 
-			pi.setRow(x);
+			pi.setRow(modelRow);
 			Utils.log("PluginID: " + pluginID + "; plugin name: " + pluginName + "; list at index: "
 					+ pluginNames[pluginID], LogLevel.DEBUG);
 			Utils.log("Flags: " + pi.getFlags(), LogLevel.DEBUG);
@@ -2031,23 +2034,24 @@ public class A0PipeLine_Manager implements PlugIn {
 					throw new RuntimeException(e);
 				}
 				((PipelinePlugin) sh).setpipeLineListener(new PluginCallBack());
-				((PipelinePlugin) sh).setRow(x);
+				((PipelinePlugin) sh).setRow(modelRow);
 				sh.setPlugin(pi);// pi is the plugin that will be called on every slice
-				theRow[PLUGIN_INSTANCE] = sh;
+				table1.getModel().setValueAt(sh, modelRow, PLUGIN_INSTANCE);
 			} else
-				theRow[PLUGIN_INSTANCE] = pi;
+				table1.getModel().setValueAt(pi, modelRow, PLUGIN_INSTANCE);
 
-			if (theRow[PLUGIN_INSTANCE] == null)
+			if (table1.getModel().getValueAt(modelRow, PLUGIN_INSTANCE) == null)
 				throw new IllegalStateException(
 						"Null plugin instance after plugin supposedly created; this should not happen");
 
 			if (pluginName.equals("CActiveContourV2")) {
-				theRow[KEEP_C_PLUGIN_ALIVE] = true;
+				table1.getModel().setValueAt(true, modelRow, KEEP_C_PLUGIN_ALIVE);
 			}
 
-			theRow[PLUGIN_PARAM_1_FIELD] = ((PipelinePlugin) theRow[PLUGIN_INSTANCE]).getParameters()[0];
-			theRow[PLUGIN_PARAM_2_FIELD] = ((PipelinePlugin) theRow[PLUGIN_INSTANCE]).getParameters()[1];
-			((PipelinePlugin) theRow[PLUGIN_INSTANCE]).setRow(x);
+			table1.getModel().setValueAt(((PipelinePlugin) table1.getModel().getValueAt(modelRow, PLUGIN_INSTANCE)).getParameters()[0], modelRow, PLUGIN_PARAM_1_FIELD);
+			table1.getModel().setValueAt(((PipelinePlugin) table1.getModel().getValueAt(modelRow, PLUGIN_INSTANCE)).getParameters()[1], modelRow, PLUGIN_PARAM_2_FIELD);
+
+			(((PipelinePlugin) table1.getModel().getValueAt(modelRow, PLUGIN_INSTANCE))).setRow(modelRow);
 		}
 
 		/**
@@ -2081,24 +2085,24 @@ public class A0PipeLine_Manager implements PlugIn {
 		 * cancels all updates of downstream steps already under way, if the pipeline is set to be globally reset when a
 		 * parameter is changed.
 		 * 
-		 * @param row
+		 * @param modelRow
 		 * @param stayInCoreLoop
 		 * @param changedParameter
 		 */
-		private void checkUpdateAtRow(int row, AbstractParameter changedParameter, boolean stayInCoreLoop) {
-			if (row > -1) {
+		private void checkUpdateAtRow(int modelRow, AbstractParameter changedParameter, boolean stayInCoreLoop) {
+			if (modelRow > -1) {
 				if (((MyTableModel) table1.getModel()).updateCurrentStep) {
 
 					if (((MyTableModel) table1.getModel()).globalCancelUponChange) {
 						// Stop threads of rows AFTER the current one
-						Utils.log("update at row " + row + "; looking for rows further down to interrupt",
+						Utils.log("update at row " + modelRow + "; looking for rows further down to interrupt",
 								LogLevel.DEBUG);
-						stopAll(row + 1);
+						stopAll(modelRow + 1);
 					}
 
-					Object[] theRow = ((MyTableModel) table1.getModel()).data[row];
+					Object[] theRow = ((MyTableModel) table1.getModel()).data[modelRow];
 					if (theRow[PLUGIN_INSTANCE] != null) {
-						new RunPipelineTask(row, changedParameter, stayInCoreLoop).start();
+						new RunPipelineTask(modelRow, changedParameter, stayInCoreLoop).start();
 					}
 
 				}
@@ -2143,12 +2147,13 @@ public class A0PipeLine_Manager implements PlugIn {
 				//Adapted from http://stackoverflow.com/questions/27102546/show-tooltips-in-jtable-only-when-column-is-cut-off
 				public String getToolTipText(MouseEvent e) {
 					Point p = e.getPoint();
-					int col = columnAtPoint(p);
+					int col = table1.columnAtPoint(p);
+					int modelCol = table1.convertColumnIndexToModel(col);
 					int row = rowAtPoint(p);
 					if (row == -1 || col == -1) {
 						return super.getToolTipText(e);
 					}
-					if (col == PLUGIN_NAME_FIELD) {
+					if (modelCol == PLUGIN_NAME_FIELD) {
 						String pluginName = (String) table1.getValueAt(row, col);
 						if (pluginName == null)
 							return super.getToolTipText(e);
@@ -2219,7 +2224,7 @@ public class A0PipeLine_Manager implements PlugIn {
 
 			col2.setCellRenderer(multiRenderer);
 			col2.setCellEditor(multiRenderer2);
-			col2.setPreferredWidth(400);
+			col2.setPreferredWidth(150);
 			col1.setCellRenderer(multiRenderer3);
 			col1.setCellEditor(multiRenderer4);
 			col1.setPreferredWidth(400);
@@ -2238,6 +2243,7 @@ public class A0PipeLine_Manager implements PlugIn {
 			table1.getColumnModel().getColumn(OUTPUT_NAME_FIELD).setCellRenderer(new TextBox());
 
 			table1.getColumnModel().getColumn(AUXILIARY_INPUTS).setCellRenderer(new TwoColumnJTable());
+			table1.getColumnModel().getColumn(AUXILIARY_INPUTS).setPreferredWidth(150);
 			table1.getColumnModel().getColumn(AUXILIARY_OUTPUTS).setCellRenderer(new OneColumnJTable());
 			table1.getColumnModel().getColumn(AUXILIARY_INPUTS).setCellEditor(new TwoColumnJTable());
 			table1.getColumnModel().getColumn(AUXILIARY_OUTPUTS).setCellEditor(new OneColumnJTable());
@@ -2273,39 +2279,39 @@ public class A0PipeLine_Manager implements PlugIn {
 					// Duplicated below
 					// TODO This needs to be cleaned up and given a decent structure
 
-					int currentColumn = table1.columnAtPoint(e.getPoint());
-					if ((currentColumn == PLUGIN_PARAM_1_FIELD) || (currentColumn == PLUGIN_PARAM_2_FIELD))
+					int imageListMenuYCellIndex = table1.columnAtPoint(e.getPoint());
+					imageListMenuYCellIndexModel = table1.convertColumnIndexToModel(imageListMenuYCellIndex);
+					if ((imageListMenuYCellIndexModel == PLUGIN_PARAM_1_FIELD) || (imageListMenuYCellIndexModel == PLUGIN_PARAM_2_FIELD))
 						return;
 
 					imageListMenuXCellIndex = table1.rowAtPoint(e.getPoint());
-					imageListMenuYCellIndex = table1.columnAtPoint(e.getPoint());
+					int imageListMenuXCellIndexModel = table1.convertRowIndexToModel(imageListMenuXCellIndex);
 
 					if (imageListMenuXCellIndex >= 0) {
-						if ((imageListMenuYCellIndex == INPUT_NAME_FIELD)
+						if ((imageListMenuYCellIndexModel == INPUT_NAME_FIELD)
 								&& ((e.getModifiers() & InputEvent.BUTTON3_MASK) != 0)) {
 							Utils.log("Creating popup for row " + imageListMenuXCellIndex, LogLevel.VERBOSE_DEBUG);
-							displayImageListMenu(imageListMenuXCellIndex, imageListMenuYCellIndex, e.getComponent(), e
+							displayImageListMenu(imageListMenuXCellIndexModel, imageListMenuYCellIndexModel, e.getComponent(), e
 									.getX(), e.getY());
-						} else if ((imageListMenuYCellIndex == OUTPUT_NAME_FIELD)
+						} else if ((imageListMenuYCellIndexModel == OUTPUT_NAME_FIELD)
 								&& ((e.getModifiers() & InputEvent.BUTTON3_MASK) != 0)) {
-							displayImageListMenu(imageListMenuXCellIndex, imageListMenuYCellIndex, e.getComponent(), e
+							displayImageListMenu(imageListMenuXCellIndexModel, imageListMenuYCellIndexModel, e.getComponent(), e
 									.getX(), e.getY());
-						} else if (imageListMenuYCellIndex == PLUGIN_NAME_FIELD) {
-							displayPluginListMenu(imageListMenuXCellIndex, imageListMenuYCellIndex, e.getComponent(), e
+						} else if (imageListMenuYCellIndexModel == PLUGIN_NAME_FIELD) {
+							displayPluginListMenu(imageListMenuXCellIndexModel, imageListMenuYCellIndexModel, e.getComponent(), e
 									.getX(), e.getY());
 
-						} else if ((imageListMenuYCellIndex == PLUGIN_PARAM_1_FIELD)
-								|| (imageListMenuYCellIndex == PLUGIN_PARAM_2_FIELD)) {
+						} else if ((imageListMenuYCellIndexModel == PLUGIN_PARAM_1_FIELD)
+								|| (imageListMenuYCellIndexModel == PLUGIN_PARAM_2_FIELD)) {
 							if (((e.getModifiers() & InputEvent.BUTTON3_MASK) != 0)) {
 								Object param =
-										table1.getModel().getValueAt(imageListMenuXCellIndex, imageListMenuYCellIndex);
+										table1.getModel().getValueAt(imageListMenuXCellIndexModel, imageListMenuYCellIndexModel);
 								if (param instanceof SplitParameter) {
 									AbstractParameter[] parameters = ((SplitParameter) param).getParameterValue();
 									if ((parameters[0] instanceof FileNameParameter)
 											&& (parameters[1] instanceof DirectoryParameter))
 										displayFileDirectoryDialog((FileNameParameter) parameters[0],
-												(DirectoryParameter) parameters[1], imageListMenuXCellIndex,
-												imageListMenuYCellIndex);
+												(DirectoryParameter) parameters[1]);
 								}
 							}
 						}
@@ -2336,7 +2342,7 @@ public class A0PipeLine_Manager implements PlugIn {
 				// This handles the rearrangement of rows by dragging the mouse
 				// TODO this code is a bit of a mess; it would be nicer to use a drag and drop system
 				{
-					int currentColumn = table1.columnAtPoint(m.getPoint());
+					int currentColumn = table1.convertColumnIndexToModel(table1.columnAtPoint(m.getPoint()));
 					if ((currentColumn == PLUGIN_PARAM_1_FIELD) || (currentColumn == PLUGIN_PARAM_2_FIELD))
 						return;
 					int currentRow = 0;
@@ -2398,7 +2404,6 @@ public class A0PipeLine_Manager implements PlugIn {
 				}
 
 			});
-
 			table1.getColumnModel().getColumn(0).setPreferredWidth(30);
 			table1.getColumnModel().getColumn(0).setMaxWidth(30);
 
@@ -2410,11 +2415,8 @@ public class A0PipeLine_Manager implements PlugIn {
 			table1.getColumnModel().getColumn(USE_STEP).setMaxWidth(25);
 			table1.getColumnModel().getColumn(RESET_RANGE).setPreferredWidth(30);
 			table1.getColumnModel().getColumn(RESET_RANGE).setMaxWidth(30);
-			table1.getColumnModel().getColumn(OUTPUT_LOCKS).setPreferredWidth(30);
 
-			table1.getColumnModel().getColumn(IS_UPDATING).setPreferredWidth(25);
 			table1.getColumnModel().getColumn(IS_UPDATING).setMaxWidth(25);
-			table1.getColumnModel().getColumn(UPDATE_QUEUED).setPreferredWidth(25);
 			table1.getColumnModel().getColumn(UPDATE_QUEUED).setMaxWidth(25);
 			table1.getColumnModel().getColumn(PERCENT_DONE).setPreferredWidth(30);
 			table1.getColumnModel().getColumn(PERCENT_DONE).setMaxWidth(30);
@@ -2425,6 +2427,9 @@ public class A0PipeLine_Manager implements PlugIn {
 				if (table1.getColumnModel().getColumn(i) != null)
 					table1.getColumnModel().getColumn(i).setMaxWidth(10);
 			}
+			
+			table1.moveColumn(AUXILIARY_INPUTS, SHOW_IMAGE);
+			
 			DataFlavor tempFlavor = null;
 			try {
 				tempFlavor =
@@ -2444,20 +2449,29 @@ public class A0PipeLine_Manager implements PlugIn {
 					@Override
 					public boolean canImport(TransferHandler.TransferSupport info) {
 						JTable.DropLocation dl = (JTable.DropLocation) info.getDropLocation();
-						int row = dl.getRow();
-						int column = dl.getColumn();
-						if (info.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
-							return isFilePathParameter(row, column) || (column == INPUT_NAME_FIELD)
-									|| containsDirectoryParameter(row, column)
-									|| containsDropAcceptingParameter(row, column, info);
-						} else if (info.isDataFlavorSupported(pipelineFlavor)) {
-							return isPipelineParameter(row, column);
+						int row = table1.convertRowIndexToModel(dl.getRow());
+						int column = table1.convertColumnIndexToModel(dl.getColumn());
+						try {
+							if (info.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+								boolean result = isFilePathParameter(row, column) || (column == INPUT_NAME_FIELD)
+										|| containsDirectoryParameter(row, column)
+										|| containsDropAcceptingParameter(row, column, info);
+								Utils.log("Can import javaFileListFlavor: " + result, LogLevel.DEBUG);
+								return result;
+							} else if (info.isDataFlavorSupported(pipelineFlavor)) {
+								boolean result = isPipelineParameter(row, column);
+								Utils.log("Can import pipelineFlavor: " + result, LogLevel.DEBUG);
+								return result;
+							}
+							Utils.log("Cannot import: " + Arrays.toString(info.getDataFlavors()), LogLevel.DEBUG);
+							return false;
+						} catch (Exception e) {
+							Utils.log("Drag and drop error", LogLevel.ERROR);
+							Utils.printStack(e);
+							return false;
 						}
-						info.getDataFlavors();
-						return false;
 					}
 
-					// DnDUtils dndUtils=new DnDUtils();
 					@SuppressWarnings({ "unchecked", "null" })
 					@Override
 					public boolean importData(TransferSupport support) {
@@ -2470,8 +2484,8 @@ public class A0PipeLine_Manager implements PlugIn {
 
 						JTable.DropLocation dl = (JTable.DropLocation) support.getDropLocation();
 
-						int row = dl.getRow();
-						int column = dl.getColumn();
+						int modelRow = table1.convertRowIndexToModel(dl.getRow());
+						int modelColumn = table1.convertColumnIndexToModel(dl.getColumn());
 
 						if (support.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
 							List<File> list;
@@ -2502,21 +2516,21 @@ public class A0PipeLine_Manager implements PlugIn {
 
 							if (list.size() == 0)
 								return false;
-							if (isFilePathParameter(row, column))
-								return ((MyTableModel) table1.getModel()).setFileParameter(row, column, list.get(0));
-							else if (column == INPUT_NAME_FIELD) {
-								((TextParameter) table1.getValueAt(row, column)).setValue(FileNameUtils
+							if (isFilePathParameter(modelRow, modelColumn))
+								return ((MyTableModel) table1.getModel()).setFileParameter(modelRow, modelColumn, list.get(0));
+							else if (modelColumn == INPUT_NAME_FIELD) {
+								((TextParameter) table1.getModel().getValueAt(modelRow, modelColumn)).setValue(FileNameUtils
 										.compactPath(list.get(0).getAbsoluteFile().toString()));
 								return true;
-							} else if (containsDirectoryParameter(row, column)) {
-								return ((MyTableModel) table1.getModel()).setDirectoryParameter(row, column,
+							} else if (containsDirectoryParameter(modelRow, modelColumn)) {
+								return ((MyTableModel) table1.getModel()).setDirectoryParameter(modelRow, modelColumn,
 										FileNameUtils.compactPath(list.get(0).isDirectory() ? list.get(0)
 												.getAbsolutePath() : list.get(0).getParent()));
 							} else {
-								return importFile(row, column, list.get(0).getAbsoluteFile().toString());
+								return importFile(modelRow, modelColumn, list.get(0).getAbsoluteFile().toString());
 							}
-						} else if (isPipelineParameter(row, column)) {
-							PipelineParameter p = ((PipelineParameter) table1.getValueAt(row, column));
+						} else if (isPipelineParameter(modelRow, modelColumn)) {
+							PipelineParameter p = ((PipelineParameter) table1.getModel().getValueAt(modelRow, modelColumn));
 
 							TableSelectionDemo pipeline = null;
 							try {
@@ -2531,7 +2545,7 @@ public class A0PipeLine_Manager implements PlugIn {
 							p.setValue(pipeline.pipelineName);
 							return true;
 						} else
-							throw new RuntimeException("Unrecognized column " + column);
+							throw new RuntimeException("Unrecognized column " + modelColumn);
 					}
 				});
 
@@ -3136,9 +3150,9 @@ public class A0PipeLine_Manager implements PlugIn {
 			loadPlugins();
 		}
 
-		private boolean isFilePathParameter(int row, int column) {
-			if ((column == PLUGIN_PARAM_1_FIELD) || (column == PLUGIN_PARAM_2_FIELD)) {
-				Object param = table1.getModel().getValueAt(row, column);
+		private boolean isFilePathParameter(int modelRow, int modelColumn) {
+			if ((modelColumn == PLUGIN_PARAM_1_FIELD) || (modelColumn == PLUGIN_PARAM_2_FIELD)) {
+				Object param = table1.getModel().getValueAt(modelRow, modelColumn);
 				if (param instanceof SplitParameter) {
 					AbstractParameter[] parameters = ((SplitParameter) param).getParameterValue();
 					if ((parameters[0] instanceof FileNameParameter) && (parameters[1] instanceof DirectoryParameter))
@@ -3148,9 +3162,9 @@ public class A0PipeLine_Manager implements PlugIn {
 			return false;
 		}
 
-		private boolean containsDirectoryParameter(int row, int column) {
-			if ((column == PLUGIN_PARAM_1_FIELD) || (column == PLUGIN_PARAM_2_FIELD)) {
-				Object param = table1.getModel().getValueAt(row, column);
+		private boolean containsDirectoryParameter(int modelRow, int modelColumn) {
+			if ((modelColumn == PLUGIN_PARAM_1_FIELD) || (modelColumn == PLUGIN_PARAM_2_FIELD)) {
+				Object param = table1.getModel().getValueAt(modelRow, modelColumn);
 				if (param instanceof SplitParameter) {
 					AbstractParameter[] parameters = ((SplitParameter) param).getParameterValue();
 					for (AbstractParameter p : parameters) {
@@ -3162,9 +3176,9 @@ public class A0PipeLine_Manager implements PlugIn {
 			return false;
 		}
 
-		private boolean containsDropAcceptingParameter(int row, int column, TransferHandler.TransferSupport info) {
-			if ((column == PLUGIN_PARAM_1_FIELD) || (column == PLUGIN_PARAM_2_FIELD)) {
-				Object param = table1.getModel().getValueAt(row, column);
+		private boolean containsDropAcceptingParameter(int modelRow, int modelColumn, TransferHandler.TransferSupport info) {
+			if ((modelColumn == PLUGIN_PARAM_1_FIELD) || (modelColumn == PLUGIN_PARAM_2_FIELD)) {
+				Object param = table1.getModel().getValueAt(modelRow, modelColumn);
 				if (param instanceof DropAcceptingParameter) {
 					return ((DropAcceptingParameter) param).canImport(info);
 				}
@@ -3172,9 +3186,9 @@ public class A0PipeLine_Manager implements PlugIn {
 			return false;
 		}
 
-		private boolean importFile(int row, int column, String path) {
-			if ((column == PLUGIN_PARAM_1_FIELD) || (column == PLUGIN_PARAM_2_FIELD)) {
-				Object param = table1.getModel().getValueAt(row, column);
+		private boolean importFile(int modelRow, int modelColumn, String path) {
+			if ((modelColumn == PLUGIN_PARAM_1_FIELD) || (modelColumn == PLUGIN_PARAM_2_FIELD)) {
+				Object param = table1.getModel().getValueAt(modelRow, modelColumn);
 				if (param instanceof DropAcceptingParameter) {
 					return ((DropAcceptingParameter) param).importPreprocessedData(path);
 				}
@@ -3182,9 +3196,9 @@ public class A0PipeLine_Manager implements PlugIn {
 			return false;
 		}
 
-		private boolean isPipelineParameter(int row, int column) {
-			if ((column == PLUGIN_PARAM_1_FIELD) || (column == PLUGIN_PARAM_2_FIELD)) {
-				Object param = table1.getModel().getValueAt(row, column);
+		private boolean isPipelineParameter(int modelRow, int modelColumn) {
+			if ((modelColumn == PLUGIN_PARAM_1_FIELD) || (modelColumn == PLUGIN_PARAM_2_FIELD)) {
+				Object param = table1.getModel().getValueAt(modelRow, modelColumn);
 				return (param instanceof PipelineParameter);
 			}
 			return false;
@@ -4418,13 +4432,13 @@ public class A0PipeLine_Manager implements PlugIn {
 		}
 
 		private class RunPipelineTask implements Runnable {
-			private int row;
+			private int modelRow;
 			private AbstractParameter changedParameter;
 			private boolean stayInCoreLoop;
 
-			public RunPipelineTask(int row1, AbstractParameter changedParameter, boolean stayInCoreLoop) {
-				super();// "Update triggered at row "+row1
-				this.row = row1;
+			public RunPipelineTask(int modelRow, AbstractParameter changedParameter, boolean stayInCoreLoop) {
+				super();
+				this.modelRow = modelRow;
 				this.changedParameter = changedParameter;
 				this.stayInCoreLoop = stayInCoreLoop;
 			}
@@ -4432,7 +4446,7 @@ public class A0PipeLine_Manager implements PlugIn {
 			@Override
 			public void run() {
 				try {
-					processStep(row, row, null, true, changedParameter, stayInCoreLoop, false);
+					processStep(modelRow, modelRow, null, true, changedParameter, stayInCoreLoop, false);
 				} catch (Exception e) {
 					Utils.printStack(e, LogLevel.DEBUG);
 				} finally {
@@ -4451,7 +4465,7 @@ public class A0PipeLine_Manager implements PlugIn {
 			Utils.log("Rows to update: " + Utils.printIntArray(rowsToUpdate), LogLevel.DEBUG);
 			for (int i = 0; i < rowsToUpdate.length; i++) {
 				Utils.log("updating row " + i + ", which is " + rowsToUpdate[i], LogLevel.DEBUG);
-				new RunPipelineTask(rowsToUpdate[i], null, false).start();
+				new RunPipelineTask(table1.convertRowIndexToModel(rowsToUpdate[i]), null, false).start();
 			}
 
 		}
@@ -4462,7 +4476,7 @@ public class A0PipeLine_Manager implements PlugIn {
 				Rectangle rect =
 						table1.getCellRect(insertionRow < table1.getRowCount() - 1 ? insertionRow + 1 : insertionRow,
 								1, true);
-				table.scrollRectToVisible(rect);
+				table1.scrollRectToVisible(rect);
 
 				JViewport viewport = (JViewport) table1.getParent();
 				Point pt = viewport.getViewPosition();
@@ -4701,9 +4715,9 @@ public class A0PipeLine_Manager implements PlugIn {
 		public class MyTableModel extends AbstractTableModel {
 
 			@SuppressWarnings("null")
-			private boolean setFileParameter(int row, int column, File f) {
-				if ((column == PLUGIN_PARAM_1_FIELD) || (column == PLUGIN_PARAM_2_FIELD)) {
-					Object param = table1.getModel().getValueAt(row, column);
+			private boolean setFileParameter(int modelRow, int modelColumn, File f) {
+				if ((modelColumn == PLUGIN_PARAM_1_FIELD) || (modelColumn == PLUGIN_PARAM_2_FIELD)) {
+					Object param = table1.getModel().getValueAt(modelRow, modelColumn);
 					if (param instanceof SplitParameter) {
 						AbstractParameter[] parameters = ((SplitParameter) param).getParameterValue();
 						if ((parameters[0] instanceof FileNameParameter)
@@ -4720,7 +4734,7 @@ public class A0PipeLine_Manager implements PlugIn {
 							}
 							for (AbstractParameter p : parameters)
 								p.fireValueChanged(false, true, true);
-							((MyTableModel) table1.getModel()).fireTableCellUpdated(row, column);
+							((MyTableModel) table1.getModel()).fireTableCellUpdated(modelRow, modelColumn);
 							return true;
 						}
 					}
@@ -4728,16 +4742,16 @@ public class A0PipeLine_Manager implements PlugIn {
 				return false;
 			}
 
-			private boolean setDirectoryParameter(int row, int column, String dirPath) {
-				if ((column == PLUGIN_PARAM_1_FIELD) || (column == PLUGIN_PARAM_2_FIELD)) {
-					Object param = table1.getModel().getValueAt(row, column);
+			private boolean setDirectoryParameter(int modelRow, int modelColumn, String dirPath) {
+				if ((modelColumn == PLUGIN_PARAM_1_FIELD) || (modelColumn == PLUGIN_PARAM_2_FIELD)) {
+					Object param = table1.getModel().getValueAt(modelRow, modelColumn);
 					if (param instanceof SplitParameter) {
 						AbstractParameter[] parameters = ((SplitParameter) param).getParameterValue();
 						for (AbstractParameter p : parameters) {
 							if (p instanceof DirectoryParameter) {
 								p.setValue(dirPath);
 								p.fireValueChanged(false, true, true);
-								((MyTableModel) table1.getModel()).fireTableCellUpdated(row, column);
+								((MyTableModel) table1.getModel()).fireTableCellUpdated(modelRow, modelColumn);
 								return true;
 							}
 						}
@@ -4750,15 +4764,9 @@ public class A0PipeLine_Manager implements PlugIn {
 			private static final long serialVersionUID = 1L;
 
 			private String[] columnNames = { "#", "Input", "Channels", "Show",
-					"C+",// Keep C program alive
-					"On", "Autorange", "Filter", "Parameter 1", "Parameter 2", "Output", "Output channels", "Updating",
-					"Update queued", "%done", "Aux input", "Aux output", null, // WORKER_THREAD; don't attempt to
-					// display it to have an empty column
-					// name
-					null, // QUEUED_WORKER_THREAD; don't attempt to display it to have an empty column name
-					null, // plugin instance; don't attempt to display it to have an empty column name
-					null // z projection; don't attempt to display it to have an empty column name
-					};
+					"C+", "On", "Autorange", "Plugin", "Parameter 1", "Parameter 2",
+					"Output", "Output channels",
+					"Updating", "Update queued", "%done", "Aux input", "Aux output"};
 
 			private MultiListParameter channelsParameter = new MultiListParameter("channels",
 					"Choose while channels to process", new @NonNull String @NonNull[] { "Ch0", "Ch1" },
@@ -4800,36 +4808,37 @@ public class A0PipeLine_Manager implements PlugIn {
 
 				Point p = e.getPoint();
 				p.x += table1.getColumnModel().getColumn(0).getWidth();
-				int currentColumn = table1.columnAtPoint(p);
+				int currentColumn = table1.convertColumnIndexToModel(table1.columnAtPoint(p));
 				if ((currentColumn == PLUGIN_PARAM_1_FIELD) || (currentColumn == PLUGIN_PARAM_2_FIELD))
 					return;
 
 				imageListMenuXCellIndex = ourRow;
-				imageListMenuYCellIndex = ourColumn;// table.columnAtPoint(p);
+				int imageListMenuXCellIndexModel = table1.convertRowIndexToModel(imageListMenuXCellIndex);
+				imageListMenuYCellIndexModel = table1.convertColumnIndexToModel(ourColumn);
+				
 				if (imageListMenuXCellIndex >= 0) {
-					if ((imageListMenuYCellIndex == INPUT_NAME_FIELD)
+					if ((imageListMenuYCellIndexModel == INPUT_NAME_FIELD)
 							&& ((e.getModifiers() & InputEvent.BUTTON3_MASK) != 0)) {
-						displayImageListMenu(imageListMenuXCellIndex, imageListMenuYCellIndex, e.getComponent(), e
+						displayImageListMenu(imageListMenuXCellIndexModel, imageListMenuYCellIndexModel, e.getComponent(), e
 								.getX(), e.getY());
-					} else if ((imageListMenuYCellIndex == OUTPUT_NAME_FIELD)
+					} else if ((imageListMenuYCellIndexModel == OUTPUT_NAME_FIELD)
 							&& ((e.getModifiers() & InputEvent.BUTTON3_MASK) != 0)) {
-						displayImageListMenu(imageListMenuXCellIndex, imageListMenuYCellIndex, e.getComponent(), e
+						displayImageListMenu(imageListMenuXCellIndexModel, imageListMenuYCellIndexModel, e.getComponent(), e
 								.getX(), e.getY());
-					} else if (imageListMenuYCellIndex == PLUGIN_NAME_FIELD) {
-						displayPluginListMenu(imageListMenuXCellIndex, imageListMenuYCellIndex, e.getComponent(), e
+					} else if (imageListMenuYCellIndexModel == PLUGIN_NAME_FIELD) {
+						displayPluginListMenu(imageListMenuXCellIndexModel, imageListMenuYCellIndexModel, e.getComponent(), e
 								.getX(), e.getY());
-					} else if ((imageListMenuYCellIndex == PLUGIN_PARAM_1_FIELD)
-							|| (imageListMenuYCellIndex == PLUGIN_PARAM_2_FIELD)) {
+					} else if ((imageListMenuYCellIndexModel == PLUGIN_PARAM_1_FIELD)
+							|| (imageListMenuYCellIndexModel == PLUGIN_PARAM_2_FIELD)) {
 						if (((e.getModifiers() & InputEvent.BUTTON3_MASK) != 0)) {
 							Object param =
-									table1.getModel().getValueAt(imageListMenuXCellIndex, imageListMenuYCellIndex);
+									table1.getModel().getValueAt(imageListMenuXCellIndexModel, imageListMenuYCellIndexModel);
 							if (param instanceof SplitParameter) {
 								AbstractParameter[] parameters = ((SplitParameter) param).getParameterValue();
 								if ((parameters[0] instanceof FileNameParameter)
 										&& (parameters[1] instanceof DirectoryParameter))
 									displayFileDirectoryDialog((FileNameParameter) parameters[0],
-											(DirectoryParameter) parameters[1], imageListMenuXCellIndex,
-											imageListMenuYCellIndex);
+											(DirectoryParameter) parameters[1]);
 							}
 						}
 					}

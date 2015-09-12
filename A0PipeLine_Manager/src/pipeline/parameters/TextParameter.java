@@ -10,6 +10,7 @@ import javax.swing.TransferHandler.TransferSupport;
 
 import pipeline.misc_util.Utils;
 import pipeline.misc_util.Utils.LogLevel;
+import pipeline.misc_util.drag_and_drop.DropProcessorPassThrough;
 
 public class TextParameter extends AbstractParameter implements DropAcceptingParameter {
 	private static final long serialVersionUID = 8066408784611910240L;
@@ -94,6 +95,7 @@ public class TextParameter extends AbstractParameter implements DropAcceptingPar
 		if (dropProcessor == null)
 			dropProcessor = defaultProcessor;
 		String processed = (String) dropProcessor.process(o);
+		Utils.log("Parameter " + userDisplayName + " setting value to " + processed + ", processed from " + o.toString(), LogLevel.DEBUG);
 		if (processed == null)
 			return false;
 		value = processed;
@@ -107,6 +109,6 @@ public class TextParameter extends AbstractParameter implements DropAcceptingPar
 
 	protected DropProcessor dropProcessor = defaultProcessor;
 
-	protected static DropProcessor defaultProcessor = o -> o;
+	protected static DropProcessor defaultProcessor = new DropProcessorPassThrough();
 
 }
