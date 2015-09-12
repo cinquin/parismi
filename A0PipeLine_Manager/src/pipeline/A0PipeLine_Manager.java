@@ -3883,6 +3883,7 @@ public class A0PipeLine_Manager implements PlugIn {
 				}
 
 			}
+			KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner();
 			System.gc();
 
 			((MyTableModel) table1.getModel()).fireTableDataChanged();
