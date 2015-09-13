@@ -9,12 +9,15 @@ package pipeline.GUI_utils.image_with_toolbar;
 import ij.ImagePlus;
 import ij.gui.ImageCanvas;
 import ij.gui.StackWindow;
+import pipeline.misc_util.Utils;
+import pipeline.plugins.gui_control.FireLookupTable;
 
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.IndexColorModel;
 
 /**
  * Replaces ImageJ-type windows used to display stacks, to allow displaying of a toolbar at the bottom.
@@ -97,15 +100,19 @@ public class StackWindowWithToolbar extends StackWindow implements MouseListener
 	public boolean isFocusTraversable() {
 		return false;
 	}
+	
+	/**
+	 * Used to determine which keyboard shortcuts to pass to ImageJ 
+	 * @param c
+	 * @return
+	 */
+	private static boolean passKey(char c) {
+		return (c == '=') || (c == '-') || (c == 'C');
+	}
 
 	@Override
-	// So that ImageJ keyboard shortcuts are not swallowed up by the toolbar
-	// For now this only passes zooming shortcuts (and maybe not all of the time)
-	// There should be a better solution
-			public
-			void keyPressed(KeyEvent e) {
-		// Utils.log("Key pressed "+e.getKeyChar(),LogLevel.INFO);
-		if ((e.getKeyChar() == ('=')) || (e.getKeyChar() == ('-')))
+	public void keyPressed(KeyEvent e) {
+		if (passKey(e.getKeyChar()))
 			getCanvas().dispatchEvent(e);
 		else if (getCanvas() instanceof ImageCanvasWithAnnotations) {
 			((ImageCanvasWithAnnotations) getCanvas()).keyPressed(e);
@@ -113,12 +120,8 @@ public class StackWindowWithToolbar extends StackWindow implements MouseListener
 	}
 
 	@Override
-	// So that ImageJ keyboard shortcuts are not swallowed up by the toolbar
-	// For now this only passes zooming shortcuts (and maybe not all of the time)
-	// There should be a better solution
-			public
-			void keyReleased(KeyEvent e) {
-		if ((e.getKeyChar() == ('=')) || (e.getKeyChar() == ('-')))
+	public void keyReleased(KeyEvent e) {
+		if (passKey(e.getKeyChar()))
 			getCanvas().dispatchEvent(e);
 		else if (getCanvas() instanceof ImageCanvasWithAnnotations) {
 			((ImageCanvasWithAnnotations) getCanvas()).keyReleased(e);
@@ -127,11 +130,20 @@ public class StackWindowWithToolbar extends StackWindow implements MouseListener
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// Utils.log("Key typed "+e.getKeyChar(),LogLevel.INFO);
 		char keyTyped = e.getKeyChar();
 
-		if ((keyTyped == ('=')) || (keyTyped == ('-')))
+		if (passKey(keyTyped))
 			getCanvas().dispatchEvent(e);
+		else if (keyTyped == 'f') {
+			imp.getProcessor().setColorModel(
+					new IndexColorModel(8, FireLookupTable.reds.length,
+							FireLookupTable.reds, FireLookupTable.greens, FireLookupTable.blues));
+			if (imp.getNSlices() > 1) {
+				Utils.updateRangeInStack(imp);
+			} else {
+				Utils.updateRangeInRegularImp(imp);
+			}
+		}
 		else if (getCanvas() instanceof ImageCanvasWithAnnotations) {
 			((ImageCanvasWithAnnotations) getCanvas()).keyTyped(e);
 		}

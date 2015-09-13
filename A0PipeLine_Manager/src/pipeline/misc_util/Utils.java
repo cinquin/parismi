@@ -261,13 +261,21 @@ public class Utils {
 	public static String chopOffString(String s, int maxLength) {
 		if (s == null)
 			return "";
-		return s.substring(0, min(maxLength, s.length()));
+		if (s.length() <= maxLength) {
+			return s;
+		} else {
+			return s.substring(0, min(maxLength, s.length())) + "...";
+		}
 	}
 
 	public static String chopOffStringBeginning(String s, int maxLength) {
 		if (s == null)
 			return "";
-		return s.substring(max(s.length() - maxLength, 0));
+		if (s.length() <= maxLength) {
+			return s;
+		} else {
+			return "..." + s.substring(max(s.length() - maxLength, 0));
+		}
 	}
 
 	public static int min(int a, int b) {

@@ -52,11 +52,11 @@ public class FireLookupTable extends FourDPlugin {
 	private static int[] b = { 0, 61, 96, 130, 165, 192, 220, 227, 210, 181, 151, 122, 93, 64, 35, 5, 0, 0, 0, 0, 0, 0,
 			0, 0, 0, 0, 0, 35, 98, 160, 223, 255 };
 
-	private byte[] reds = new byte[256];
-	private byte[] greens = new byte[256];
-	private byte[] blues = new byte[256];
+	public static byte[] reds = new byte[256];
+	public static byte[] greens = new byte[256];
+	public static byte[] blues = new byte[256];
 
-	{
+	static {
 		for (int i = 0; i < reds.length; i++) {
 			int scaledIndex = (int) (i / (reds.length - 1f) * (r.length - 1f));
 			reds[i] = (byte) r[scaledIndex];
