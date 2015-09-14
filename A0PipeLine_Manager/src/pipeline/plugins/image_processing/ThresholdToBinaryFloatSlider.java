@@ -70,7 +70,7 @@ public class ThresholdToBinaryFloatSlider extends TwoDPlugin {
 			float[] objAray = { lowValue, highValue, lowLimit, highLimit };
 			intrangeparam.setValue(objAray);
 			intrangeparam.fireValueChanged(false, true, true);
-			Utils.log("Reset range to " + lowLimit + "--" + highLimit, LogLevel.VERBOSE_DEBUG);
+			Utils.log("Reset range to " + lowLimit + "--" + highLimit, LogLevel.DEBUG);
 
 		}
 

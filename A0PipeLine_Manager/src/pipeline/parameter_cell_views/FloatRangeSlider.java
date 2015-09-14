@@ -618,7 +618,7 @@ public class FloatRangeSlider extends AbstractParameterCellView implements Mouse
 																				// RuntimeException("Cannot translate to chart coordinates");
 		int mouseX = e.getX();
 		int mouseY = e.getY();
-		Utils.log("x = " + mouseX + ", y = " + mouseY, LogLevel.VERBOSE_DEBUG);
+		Utils.log("x = " + mouseX + ", y = " + mouseY, LogLevel.DEBUG);
 		Point2D p = chartPanel.translateScreenToJava2D(new Point(mouseX, mouseY));
 		XYPlot plot = (XYPlot) chart.getPlot();
 		Rectangle2D plotArea = this.chartPanel.getChartRenderingInfo().getPlotInfo().getDataArea();

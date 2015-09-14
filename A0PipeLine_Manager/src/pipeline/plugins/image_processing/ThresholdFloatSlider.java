@@ -114,7 +114,7 @@ public class ThresholdFloatSlider extends TwoDPlugin {
 		minThreshold = ((float[]) intRangeParam.getValue())[0];
 		maxThreshold = ((float[]) intRangeParam.getValue())[1];
 		String s = "updated min and max to " + minThreshold + " " + maxThreshold;
-		Utils.log(s, LogLevel.VERBOSE_DEBUG);
+		Utils.log(s, LogLevel.DEBUG);
 	}
 
 	@Override

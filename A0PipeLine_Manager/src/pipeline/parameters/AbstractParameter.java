@@ -168,7 +168,7 @@ public abstract class AbstractParameter implements Serializable {
 		checkListsInitialized();
 		synchronized (pluginParameterListeners) {
 			while (pluginParameterListeners.remove(listener)) {
-				Utils.log("Removing plugin listener " + listener, LogLevel.VERBOSE_VERBOSE_DEBUG);
+				Utils.log("Removing plugin listener " + listener, LogLevel.DEBUG);
 			}
 		}
 		synchronized (GUIParameterListeners) {

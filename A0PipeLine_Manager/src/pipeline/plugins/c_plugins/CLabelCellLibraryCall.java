@@ -121,7 +121,7 @@ public class CLabelCellLibraryCall extends ExternalCallToLibrary implements Mous
 	@Override
 	public int mouseClicked(PluginIO clickedPoints, boolean inputHasChanged, MouseEvent generatingEvent)
 			throws InterruptedException {
-		Utils.log("mouseclicked link is " + link + " and plugin " + this, LogLevel.VERBOSE_DEBUG);
+		Utils.log("mouseclicked link is " + link + " and plugin " + this, LogLevel.DEBUG);
 		if (!(clickedPoints instanceof PluginIOCells)) {
 			throw new RuntimeException("Expected a list of clicked points at input to MouseClicked but got "
 					+ clickedPoints);

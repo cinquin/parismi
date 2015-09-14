@@ -143,7 +143,7 @@ public class PluginShell extends FourDPlugin implements IPluginShell, MouseEvent
 		for (Entry<String, InputOutputDescription> keyValue : outputDescriptions.entrySet()) {
 			InputOutputDescription desc = keyValue.getValue();
 			String keyName = keyValue.getKey();
-			Utils.log("Shell creating destination " + desc.name, LogLevel.VERBOSE_VERBOSE_VERBOSE_DEBUG);
+			Utils.log("Shell creating destination " + desc.name, LogLevel.DEBUG);
 
 			if (desc.pluginWillAllocateOutputItself) {
 				if (!(managedPlugin.createOutput(desc, imagesToShow)))
@@ -386,7 +386,7 @@ public class PluginShell extends FourDPlugin implements IPluginShell, MouseEvent
 
 		final int nChannels = inputChannels.length == 0 ? 1 : inputChannels.length;
 
-		Utils.log("run loop forShell3D", LogLevel.VERBOSE_DEBUG);
+		Utils.log("run loop forShell3D", LogLevel.DEBUG);
 
 		// For now parallelize the slices within each channel
 		// It might be worth also implementing parallelization by channel (for example when there are few or even just 1

@@ -82,7 +82,7 @@ public class ThresholdCells extends FourDPlugin implements AuxiliaryInputOutputP
 			float[] objAray = { lowValue, highValue, lowLimit, highLimit };
 			rangeParameter.setValue(objAray);
 			rangeParameter.fireValueChanged(false, true, true);
-			Utils.log("Reset range to " + lowLimit + "--" + highLimit, LogLevel.VERBOSE_DEBUG);
+			Utils.log("Reset range to " + lowLimit + "--" + highLimit, LogLevel.DEBUG);
 
 		}
 

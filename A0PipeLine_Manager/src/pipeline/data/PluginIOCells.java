@@ -308,7 +308,7 @@ public class PluginIOCells extends PluginIOListOfQ<ClickedPoint> implements Clon
 				protobufPoint.setContourAddRemoveMerge(2);// we want to delete the seed
 			} else if ((modifiers & MERGE_MODIFIER) > 0) {
 				protobufPoint.setContourAddRemoveMerge(3);// we want to merge the seed
-				Utils.log("Merge", LogLevel.VERBOSE_VERBOSE_DEBUG);
+				Utils.log("Merge", LogLevel.DEBUG);
 				protobufPoint.setContourMergeGroup(clickedPoint.clickGroup);
 				protobufPoint.setSeedManual(1);
 			} else if ((modifiers & LABEL_MODIFIER) > 0) {
@@ -319,7 +319,7 @@ public class PluginIOCells extends PluginIOListOfQ<ClickedPoint> implements Clon
 				protobufPoint.setContourAddRemoveMerge(1);// we want to add the seed
 
 			if (clickedPoint.userCells.size() > 3) {
-				Utils.log("More than 3 cells", LogLevel.VERBOSE_DEBUG);
+				Utils.log("More than 3 cells", LogLevel.DEBUG);
 			}
 
 			List<SpreadsheetCell> cells = clickedPoint.userCells;
@@ -344,7 +344,7 @@ public class PluginIOCells extends PluginIOListOfQ<ClickedPoint> implements Clon
 				nAddedUserCells++;
 			}
 			if (clickedPoint.userCells.size() > 3) {
-				Utils.log("More than 3 cells", LogLevel.VERBOSE_DEBUG);
+				Utils.log("More than 3 cells", LogLevel.DEBUG);
 			}
 
 			// The following is to avoid null pointer errors if fields have not been filled in
@@ -520,7 +520,7 @@ public class PluginIOCells extends PluginIOListOfQ<ClickedPoint> implements Clon
 					pointArray[loopIndex] = p;
 
 					if (seg.getContourAddRemoveMerge() > 1) {
-						Utils.log("Add/merge >1", LogLevel.VERBOSE_DEBUG);
+						Utils.log("Add/merge >1", LogLevel.DEBUG);
 					}
 					p.setSeedId(seg.getIdx());
 

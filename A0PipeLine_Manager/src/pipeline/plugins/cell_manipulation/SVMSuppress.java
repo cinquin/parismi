@@ -139,11 +139,11 @@ public class SVMSuppress extends FourDPlugin implements AuxiliaryInputOutputPlug
 								.getPoints().get(0).listNamesOfQuantifiedProperties.size())
 					throw new IllegalArgumentException("Structure mismatch between detected cells 1 and 2");
 			}
-			Utils.log("Time creating KDTree: " + (System.currentTimeMillis() - time0), LogLevel.VERBOSE_DEBUG);
+			Utils.log("Time creating KDTree: " + (System.currentTimeMillis() - time0), LogLevel.DEBUG);
 			time0 = System.currentTimeMillis();
 
 			Collections.sort(pointsAboveThreshold);
-			Utils.log("Time sorting: " + (System.currentTimeMillis() - time0), LogLevel.VERBOSE_DEBUG);
+			Utils.log("Time sorting: " + (System.currentTimeMillis() - time0), LogLevel.DEBUG);
 			time0 = System.currentTimeMillis();
 
 			Calibration calib = detectedCells.getCalibration();
@@ -205,7 +205,7 @@ public class SVMSuppress extends FourDPlugin implements AuxiliaryInputOutputPlug
 			}
 
 			Utils.log("Time iterating to suppress points: " + (System.currentTimeMillis() - time0),
-					LogLevel.VERBOSE_DEBUG);
+					LogLevel.DEBUG);
 			time0 = System.currentTimeMillis();
 
 			PluginIOCells outputCells = (PluginIOCells) pluginOutputs.get("Seeds");
@@ -233,7 +233,7 @@ public class SVMSuppress extends FourDPlugin implements AuxiliaryInputOutputPlug
 			// Double check distances for debugging purposes
 			Utils.log("Low value squared is " + minDistanceSq, LogLevel.DEBUG);
 
-			Utils.log("Time cloning result points: " + (System.currentTimeMillis() - time0), LogLevel.VERBOSE_DEBUG);
+			Utils.log("Time cloning result points: " + (System.currentTimeMillis() - time0), LogLevel.DEBUG);
 			time0 = System.currentTimeMillis();
 
 			outputCells.fireValueChanged(false, false);

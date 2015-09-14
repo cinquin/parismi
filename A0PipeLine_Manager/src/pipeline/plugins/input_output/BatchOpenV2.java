@@ -259,15 +259,15 @@ public class BatchOpenV2 extends FourDPlugin implements AuxiliaryInputOutputPlug
 
 		@SuppressWarnings("null")
 		String dirPath = new File(FileNameUtils.expandPath(FileNameUtils.removeIncrementationMarks(directory))).getAbsolutePath();
-		Utils.log("directory: " + directory, LogLevel.VERBOSE_DEBUG);
-                Utils.log("dirPath: " + dirPath, LogLevel.VERBOSE_DEBUG);
-                Utils.log("path: " + path, LogLevel.VERBOSE_DEBUG);
+		Utils.log("directory: " + directory, LogLevel.DEBUG);
+                Utils.log("dirPath: " + dirPath, LogLevel.DEBUG);
+                Utils.log("path: " + path, LogLevel.DEBUG);
 		path = path.substring(dirPath.length() + 1);
-                Utils.log("path: " + path, LogLevel.VERBOSE_DEBUG);
+                Utils.log("path: " + path, LogLevel.DEBUG);
 
 		while (path.startsWith("/"))
 			path = path.substring(1);
-                Utils.log("path: " + path, LogLevel.VERBOSE_DEBUG);
+                Utils.log("path: " + path, LogLevel.DEBUG);
 		int periodPosition = path.lastIndexOf('.');
 		if (periodPosition > -1) {
 			path = path.substring(0, periodPosition);

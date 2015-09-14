@@ -191,11 +191,11 @@ public class JNACallToNativeLibrary extends LinkToExternalProgram {
 		callback.getMoreWork = new GetMoreWork() {
 			@Override
 			public final String[] invoke() {
-				Utils.log("Entering getMoreWork", LogLevel.VERBOSE_DEBUG);
+				Utils.log("Entering getMoreWork", LogLevel.DEBUG);
 				try {
 					interruptPlugin = false;
 					if (!keepAlive) {
-						Utils.log("--- Returning null from getMoreWork because keepAlive=false", LogLevel.VERBOSE_DEBUG);
+						Utils.log("--- Returning null from getMoreWork because keepAlive=false", LogLevel.DEBUG);
 						isAlive = false;
 						return null;
 					} else {
@@ -206,12 +206,12 @@ public class JNACallToNativeLibrary extends LinkToExternalProgram {
 								isComputingSemaphore.notifyAll();
 
 								try {
-									Utils.log("--- Sleeping in getMoreWork", LogLevel.VERBOSE_DEBUG);
+									Utils.log("--- Sleeping in getMoreWork", LogLevel.DEBUG);
 									isComputingSemaphore.wait();
-									Utils.log("--- Work queue waking up", LogLevel.VERBOSE_VERBOSE_DEBUG);
+									Utils.log("--- Work queue waking up", LogLevel.DEBUG);
 								} catch (InterruptedException e) {
 									Utils.log("--- Returning null from getMoreWork because interrupted",
-											LogLevel.VERBOSE_DEBUG);
+											LogLevel.DEBUG);
 									interrupt();
 									isAlive = false;
 									return null;
@@ -219,7 +219,7 @@ public class JNACallToNativeLibrary extends LinkToExternalProgram {
 							}
 							if (terminateFlag) {
 								Utils.log("--- Returning null from getMoreWork because terminateFlag=true in " + this,
-										LogLevel.VERBOSE_DEBUG);
+										LogLevel.DEBUG);
 								terminateFlag = false;
 								isComputing = false;
 								isComputingSemaphore.notifyAll();
@@ -227,7 +227,7 @@ public class JNACallToNativeLibrary extends LinkToExternalProgram {
 							}
 							interruptPlugin = false;
 							// isComputing=true;
-							Utils.log("--- Retrieving work queue in getMoreWork", LogLevel.VERBOSE_DEBUG);
+							Utils.log("--- Retrieving work queue in getMoreWork", LogLevel.DEBUG);
 							workQueue.add(new String(new byte[] { 0 }));// terminating null string for the plugin
 							// to know when to stop reading arguments
 							// pad with a few nulls in case the plugin tries to access arguments that haven't been
@@ -240,7 +240,7 @@ public class JNACallToNativeLibrary extends LinkToExternalProgram {
 							String[] workArguments = workQueue.toArray(new String[0]);
 							workQueue.clear();
 							Utils.log("--- Returning work arguments in getMoreWork "
-									+ Utils.printStringArray(workArguments), LogLevel.VERBOSE_DEBUG);
+									+ Utils.printStringArray(workArguments), LogLevel.DEBUG);
 							return workArguments;// not sure if it's necessary to convert to array
 
 						}
@@ -547,7 +547,7 @@ public class JNACallToNativeLibrary extends LinkToExternalProgram {
 		callback.setProtobufMetadata = (metadata, dataSize, inputOrOutputName) -> {
 			try {
 				byte[] dataAsBytes = metadata.getByteArray(0, dataSize);
-				Utils.log("read " + dataSize + " bytes", LogLevel.VERBOSE_DEBUG);
+				Utils.log("read " + dataSize + " bytes", LogLevel.DEBUG);
 
 				// Encode with Base64 so the binary protobuf data can be stored with the rest of the
 				// pipeline metadata as XML
@@ -610,7 +610,7 @@ public class JNACallToNativeLibrary extends LinkToExternalProgram {
 		dim.width = stack.getWidth();
 		dim.height = stack.getHeight();
 		Utils.log("Returning image info to C plugin: width=" + dim.width + ", height=" + dim.height,
-				LogLevel.VERBOSE_VERBOSE_VERBOSE_DEBUG);
+				LogLevel.DEBUG);
 		dim.depth = stack.getDepth();
 		dim.time = 1;
 		dim.channels = stack.getnChannels();
@@ -941,7 +941,7 @@ public class JNACallToNativeLibrary extends LinkToExternalProgram {
 							libraryInstance.run(byteBuffer, dim, callback, nullTerminatedArguments
 									.toArray(new String[0]));
 					returnValue += result;
-					Utils.log("-------- External library call returned", LogLevel.VERBOSE_DEBUG);
+					Utils.log("-------- External library call returned", LogLevel.DEBUG);
 				} catch (Exception e) {
 					Utils.printStack(e);
 					returnValue = 1;
@@ -967,7 +967,7 @@ public class JNACallToNativeLibrary extends LinkToExternalProgram {
 	 * Returns as soon as the plugin signals that it is done with its current computation by calling getMoreWork()
 	 */
 	private void waitUntilComputationDone() {
-		Utils.log("Waiting for computation to be done", LogLevel.VERBOSE_DEBUG);
+		Utils.log("Waiting for computation to be done", LogLevel.DEBUG);
 		synchronized (isComputingSemaphore) {
 			while ((isComputing) && (isAlive)) {
 				try {
@@ -977,11 +977,11 @@ public class JNACallToNativeLibrary extends LinkToExternalProgram {
 				}
 			}
 		}
-		Utils.log("Computation done", LogLevel.VERBOSE_DEBUG);
+		Utils.log("Computation done", LogLevel.DEBUG);
 	}
 
 	private void waitUntilDead() {
-		Utils.log("Waiting for plugin link to be dead", LogLevel.VERBOSE_DEBUG);
+		Utils.log("Waiting for plugin link to be dead", LogLevel.DEBUG);
 		synchronized (isComputingSemaphore) {
 			while (callThread != null && callThread.isAlive()) {
 				try {
@@ -994,7 +994,7 @@ public class JNACallToNativeLibrary extends LinkToExternalProgram {
 				}
 			}
 		}
-		Utils.log("Plugin link now dead", LogLevel.VERBOSE_DEBUG);
+		Utils.log("Plugin link now dead", LogLevel.DEBUG);
 	}
 
 	@Override
@@ -1015,11 +1015,11 @@ public class JNACallToNativeLibrary extends LinkToExternalProgram {
 
 		callback.logThreshold = Utils.logLevelThreshold;
 
-		Utils.log("Waiting for computing semaphore " + Utils.printStringArray(arguments), LogLevel.VERBOSE_DEBUG);
+		Utils.log("Waiting for computing semaphore " + Utils.printStringArray(arguments), LogLevel.DEBUG);
 
 		synchronized (isComputingSemaphore) {
 			Utils.log("Done waiting for computing semaphore " + Utils.printStringArray(arguments),
-					LogLevel.VERBOSE_DEBUG);
+					LogLevel.DEBUG);
 			for (String argument : arguments) {
 				workQueue.add(argument);
 			}
@@ -1027,7 +1027,7 @@ public class JNACallToNativeLibrary extends LinkToExternalProgram {
 			if ((callThread == null) || !callThread.isAlive()) {
 				throw new IllegalStateException("Worker thread not alive");
 			}
-			Utils.log("Notifying worker thread " + Utils.printStringArray(arguments), LogLevel.VERBOSE_DEBUG);
+			Utils.log("Notifying worker thread " + Utils.printStringArray(arguments), LogLevel.DEBUG);
 			isComputingSemaphore.notifyAll();
 		}
 
@@ -1038,14 +1038,14 @@ public class JNACallToNativeLibrary extends LinkToExternalProgram {
 		}
 
 		if (!keepAlive) {
-			Utils.log("Terminating worker thread for external library call", LogLevel.VERBOSE_DEBUG);
+			Utils.log("Terminating worker thread for external library call", LogLevel.DEBUG);
 			terminateFlag = true;
 			synchronized (isComputingSemaphore) {
 				isComputingSemaphore.notifyAll();
 			}
-			Utils.log("Terminated external library", LogLevel.VERBOSE_DEBUG);
+			Utils.log("Terminated external library", LogLevel.DEBUG);
 		} else {
-			Utils.log("Not terminating worker thread for external library call", LogLevel.VERBOSE_DEBUG);
+			Utils.log("Not terminating worker thread for external library call", LogLevel.DEBUG);
 		}
 
 		// Reset returnValue to 0 for next call; not safe to do at start of this method because

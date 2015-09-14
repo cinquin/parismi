@@ -164,7 +164,7 @@ public class CDetectMovement extends ExternalCallToLibrary implements SpecialDim
 	}
 
 	public CDetectMovement() {
-		Utils.log("new grab video", LogLevel.VERBOSE_VERBOSE_DEBUG);
+		Utils.log("new grab video", LogLevel.DEBUG);
 		initializeParams();
 	}
 

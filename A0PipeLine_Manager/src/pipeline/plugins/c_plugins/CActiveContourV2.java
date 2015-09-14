@@ -158,7 +158,7 @@ public class CActiveContourV2 extends ExternalCallToLibScalingParams implements 
 	public int mouseClicked(PluginIO clickedPoints, boolean inputHasChanged, MouseEvent generatingEvent)
 			throws InterruptedException {
 		Utils.log("mouseclicked link is " + link + " and plugin " + this + " at time " + System.currentTimeMillis(),
-				LogLevel.VERBOSE_DEBUG);
+				LogLevel.DEBUG);
 		if (!(clickedPoints instanceof PluginIOCells)) {
 			throw new RuntimeException("Expected a list of clicked points at input to MouseClicked but got "
 					+ clickedPoints);
@@ -173,9 +173,9 @@ public class CActiveContourV2 extends ExternalCallToLibScalingParams implements 
 
 		}
 
-		Utils.log("Calling get more work at time " + System.currentTimeMillis(), LogLevel.VERBOSE_DEBUG);
+		Utils.log("Calling get more work at time " + System.currentTimeMillis(), LogLevel.DEBUG);
 		sendSeedsToGetMoreWork();
-		Utils.log("Active contour library call returned at time " + System.currentTimeMillis(), LogLevel.VERBOSE_DEBUG);
+		Utils.log("Active contour library call returned at time " + System.currentTimeMillis(), LogLevel.DEBUG);
 		ImagePlus imp = ((IPluginIOImage) getOutput()).getImp().imp;
 
 		if (imp != null) {
@@ -185,9 +185,9 @@ public class CActiveContourV2 extends ExternalCallToLibScalingParams implements 
 			imp.setPosition(imp.getChannel(), currentSlice + 1, imp.getFrame());
 			imp.setPosition(imp.getChannel(), currentSlice, imp.getFrame());
 		} else
-			Utils.log("Null imp in active contours", LogLevel.VERBOSE_DEBUG);
+			Utils.log("Null imp in active contours", LogLevel.DEBUG);
 
-		Utils.log("Active contour output image updated at time " + System.currentTimeMillis(), LogLevel.VERBOSE_DEBUG);
+		Utils.log("Active contour output image updated at time " + System.currentTimeMillis(), LogLevel.DEBUG);
 		return 0;
 	}
 
@@ -217,7 +217,7 @@ public class CActiveContourV2 extends ExternalCallToLibScalingParams implements 
 			final PreviewType previewType, boolean inputHasChanged) throws InterruptedException {
 		progressReporter = p;
 
-		Utils.log("runchannel call link is " + link + " and plugin " + this, LogLevel.VERBOSE_DEBUG);
+		Utils.log("runchannel call link is " + link + " and plugin " + this, LogLevel.DEBUG);
 
 		// If there is protobuf data associated with our output, clear it and the contents of the image so that we don't
 		// end up with a duplicate set of segmentations
@@ -228,7 +228,7 @@ public class CActiveContourV2 extends ExternalCallToLibScalingParams implements 
 
 		super.runChannel(input, output, p, previewType, inputHasChanged);
 		pluginInputs.clear();
-		Utils.log("runchannel return link is " + link, LogLevel.VERBOSE_DEBUG);
+		Utils.log("runchannel return link is " + link, LogLevel.DEBUG);
 	}
 
 	@Override

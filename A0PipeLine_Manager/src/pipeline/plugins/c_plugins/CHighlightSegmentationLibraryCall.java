@@ -197,7 +197,7 @@ public class CHighlightSegmentationLibraryCall extends ExternalCallToLibrary imp
 	@Override
 	public void pluginIOValueChanged(boolean stillChanging, IPluginIO pluginIOWhoseValueChanged) {
 		// Do nothing: let the pipeline call runChannel when it thinks it's time
-		Utils.log("value changed", LogLevel.VERBOSE_VERBOSE_DEBUG);
+		Utils.log("value changed", LogLevel.DEBUG);
 	}
 
 	@Override

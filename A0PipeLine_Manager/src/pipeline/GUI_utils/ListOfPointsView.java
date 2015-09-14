@@ -175,7 +175,7 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 	}
 
 	private void updateImage() {
-		Utils.log("xx Updating image with " + getSelectedCells().size(), LogLevel.VERBOSE_DEBUG);
+		Utils.log("xx Updating image with " + getSelectedCells().size(), LogLevel.DEBUG);
 		points.firePluginIOViewEvent(this, false);
 	}
 

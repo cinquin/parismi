@@ -201,18 +201,18 @@ class BigTiffDecoder {
 				throw new FormatException("Negative offset");
 			entrySize = 12;
 		} else {
-			Utils.log("Found bigTIFF", LogLevel.VERBOSE_DEBUG);
+			Utils.log("Found bigTIFF", LogLevel.DEBUG);
 			int offsetSize = getShort();
 			if (offsetSize != 8)
 				throw new FormatException("Unsupported offset size in BigTIFF file: " + offsetSize);
-			Utils.log("bytesize of offsets " + offsetSize, LogLevel.VERBOSE_DEBUG);
+			Utils.log("bytesize of offsets " + offsetSize, LogLevel.DEBUG);
 			int zero = getShort();
 			if (zero != 0)
 				throw new FormatException("Found BigTIFF file but not the expected 0 constant at offset 6: " + zero);
 			offset = getLong();
 			if (offset < 0)
 				throw new FormatException("Negative offset");
-			Utils.log("First offset in bigtiff is " + offset, LogLevel.VERBOSE_DEBUG);
+			Utils.log("First offset in bigtiff is " + offset, LogLevel.DEBUG);
 			entrySize = 20;
 		}
 		return offset;
@@ -282,7 +282,7 @@ class BigTiffDecoder {
 	private void saveImageDescription(byte[] description, BareBonesFileInfoLongOffsets fi) {
 		String id = new String(description);
 		if (debugMode)
-			Utils.log("Image description: " + id, LogLevel.VERBOSE_DEBUG);
+			Utils.log("Image description: " + id, LogLevel.DEBUG);
 		if (!id.startsWith("ImageJ"))
 			saveMetadata(getName(IMAGE_DESCRIPTION), id);
 		if (id.length() < 7)
@@ -439,7 +439,7 @@ class BigTiffDecoder {
 
 		if (debugMode)
 			// Utils.log("--- Debug info so far "+dInfo+"\n ------------",LogLevel.VERBOSE_DEBUG);
-			Utils.log("    " + tagAsString + "\n", LogLevel.VERBOSE_DEBUG);
+			Utils.log("    " + tagAsString + "\n", LogLevel.DEBUG);
 		// ij.IJ.log(tag + ", \"" + name + "\", value=" + value + cs + "\n");
 	}
 
@@ -596,7 +596,7 @@ class BigTiffDecoder {
 			// if (debugMode && ifdCount<30) dumpTag(tag, count, value, fi);
 			if (debugMode)
 				Utils.log(i + "/" + nEntries + " " + getName(tag) + ", count=" + count + ", value=" + value,
-						LogLevel.VERBOSE_DEBUG);
+						LogLevel.DEBUG);
 			// if (tag==0) return null;
 			switch (tag) {
 				case IMAGE_WIDTH:
@@ -626,7 +626,7 @@ class BigTiffDecoder {
 
 					if (seenLargeOffset && lsm && (fi.stripOffsets[0] < lastReadPixelOffset - 1000000000)) {
 						Utils.log("Offsets went back: from " + lastReadPixelOffset + " to " + fi.stripOffsets[0],
-								LogLevel.VERBOSE_VERBOSE_DEBUG);
+								LogLevel.DEBUG);
 						// assuming offsets are stored in order, we've just passed a 2**32 threshold
 						lsmPixelOffsetBase += 4294967296L;// 2**32
 					}
@@ -791,7 +791,7 @@ class BigTiffDecoder {
 					if (ifdCount == 1) {
 						byte[] s = getString(count, lvalue);
 						if (debugMode)
-							Utils.log("Image description is\n" + (s != null ? new String(s) : "EMPTY"), LogLevel.VERBOSE_DEBUG);
+							Utils.log("Image description is\n" + (s != null ? new String(s) : "EMPTY"), LogLevel.DEBUG);
 						if (s != null)
 							saveImageDescription(s, fi);
 					}
@@ -818,7 +818,7 @@ class BigTiffDecoder {
 					break;
 				case TIF_CZ_LSMINFO:
 					lsm = true;
-					Utils.log("Detected LSM file", LogLevel.VERBOSE_VERBOSE_DEBUG);
+					Utils.log("Detected LSM file", LogLevel.DEBUG);
 					long saveLoc2 = in.getFilePointer();
 					in.seek(lvalue);
 					int magicNumber = getInt();
@@ -1014,13 +1014,13 @@ class BigTiffDecoder {
 			return;
 		}
 		if (debugMode)
-			Utils.log("*****Found the magic number for metadata", LogLevel.VERBOSE_DEBUG);
+			Utils.log("*****Found the magic number for metadata", LogLevel.DEBUG);
 		int nTypes = (hdrSize - 4) / 8;
 		int[] types = new int[nTypes];
 		int[] counts = new int[nTypes];
 
 		if (debugMode)
-			Utils.log(dInfo += "Metadata:", LogLevel.VERBOSE_VERBOSE_VERBOSE_DEBUG);
+			Utils.log(dInfo += "Metadata:", LogLevel.DEBUG);
 		int extraMetaDataEntries = 0;
 		for (int i = 0; i < nTypes; i++) {
 			types[i] = getInt();
@@ -1042,7 +1042,7 @@ class BigTiffDecoder {
 				if (types[i] == OVERLAY)
 					id = " (overlay)";
 				Utils.log("Type " + i + "=" + Integer.toHexString(types[i]) + " " + counts[i] + id + "\n",
-						LogLevel.VERBOSE_DEBUG);
+						LogLevel.DEBUG);
 			}
 		}
 		fi.metaDataTypes = new int[extraMetaDataEntries];
@@ -1077,7 +1077,7 @@ class BigTiffDecoder {
 			start += counts[i];
 		}
 		if (debugMode)
-			Utils.log("*****Done with metadata", LogLevel.VERBOSE_DEBUG);
+			Utils.log("*****Done with metadata", LogLevel.DEBUG);
 		in.seek(saveLoc);
 	}
 
@@ -1196,7 +1196,7 @@ class BigTiffDecoder {
 			in.seek(ifdOffset);
 			BareBonesFileInfoLongOffsets fi = OpenIFD();
 			if (fi != null) {
-				Utils.log("Retrieved a fi with offsets " + fi.offset, LogLevel.VERBOSE_VERBOSE_VERBOSE_DEBUG);
+				Utils.log("Retrieved a fi with offsets " + fi.offset, LogLevel.DEBUG);
 				info.addElement(fi);
 				if (bigTIFF)
 					ifdOffset = getLong();
@@ -1207,11 +1207,11 @@ class BigTiffDecoder {
 			if (debugMode && ifdCount < 30)
 				// dInfo += "  nextIFD=" + ifdOffset + "\n";
 				if (debugMode)
-					Utils.log("  nextIFD=" + ifdOffset + "\n", LogLevel.VERBOSE_VERBOSE_VERBOSE_DEBUG);
+					Utils.log("  nextIFD=" + ifdOffset + "\n", LogLevel.DEBUG);
 			if (fi != null) {
 				if (fi.nImages > 1) { // ignore extra IFDs in ImageJ and NIH Image stacks
 					ifdOffset = 0L;
-					Utils.log("Ignoring extra IFDs", LogLevel.VERBOSE_VERBOSE_VERBOSE_DEBUG);
+					Utils.log("Ignoring extra IFDs", LogLevel.DEBUG);
 				}
 			}
 		}

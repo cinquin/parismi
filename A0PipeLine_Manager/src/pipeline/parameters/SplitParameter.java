@@ -115,7 +115,7 @@ public class SplitParameter extends AbstractParameter implements FileNameIncreme
 	@Override
 	public void addPluginListener(final ParameterListener listener) {
 		if (listener == null) {
-			Utils.log("Null listener in SplitListener", LogLevel.VERBOSE_DEBUG);
+			Utils.log("Null listener in SplitListener", LogLevel.DEBUG);
 			return;
 		}
 		ParameterListener localListener = new ParameterListener() {

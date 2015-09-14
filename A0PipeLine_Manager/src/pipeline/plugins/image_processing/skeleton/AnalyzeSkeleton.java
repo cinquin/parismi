@@ -327,9 +327,9 @@ public class AnalyzeSkeleton extends ThreeDPlugin implements AuxiliaryInputOutpu
 						: 1;
 
 		if (debug) {
-			Utils.log("x_offset = " + this.x_offset, LogLevel.VERBOSE_DEBUG);
-			Utils.log("y_offset = " + this.y_offset, LogLevel.VERBOSE_DEBUG);
-			Utils.log("z_offset = " + this.z_offset, LogLevel.VERBOSE_DEBUG);
+			Utils.log("x_offset = " + this.x_offset, LogLevel.DEBUG);
+			Utils.log("y_offset = " + this.y_offset, LogLevel.DEBUG);
+			Utils.log("z_offset = " + this.z_offset, LogLevel.DEBUG);
 		}
 
 	}// end method calculateNeighborhoodOffsets
@@ -386,7 +386,7 @@ public class AnalyzeSkeleton extends ThreeDPlugin implements AuxiliaryInputOutpu
 			divideVoxelsByTrees(treeIS);
 		else {
 			if (debug)
-				Utils.log("list of end points size = " + this.listOfEndPoints.size(), LogLevel.VERBOSE_DEBUG);
+				Utils.log("list of end points size = " + this.listOfEndPoints.size(), LogLevel.DEBUG);
 			this.endPointsTree[0] = this.listOfEndPoints;
 			this.numberOfEndPoints[0] = this.listOfEndPoints.size();
 			this.junctionVoxelTree[0] = this.listOfJunctionVoxels;
@@ -429,11 +429,11 @@ public class AnalyzeSkeleton extends ThreeDPlugin implements AuxiliaryInputOutpu
 				ArrayList<Edge> backEdges = this.skeletonGraph[iTree].depthFirstSearch();
 
 				if (debug) {
-					Utils.log(" --------------------------- ", LogLevel.VERBOSE_DEBUG);
+					Utils.log(" --------------------------- ", LogLevel.DEBUG);
 					final String[] s = new String[] { "UNDEFINED", "TREE", "BACK" };
 					for (final Edge e : this.skeletonGraph[iTree].getEdges()) {
 						Utils.log(" edge " + e.getV1().getPoints().get(0) + " - " + e.getV2().getPoints().get(0)
-								+ " : " + s[e.getType() + 1], LogLevel.VERBOSE_DEBUG);
+								+ " : " + s[e.getType() + 1], LogLevel.DEBUG);
 					}
 				}
 
@@ -546,7 +546,7 @@ public class AnalyzeSkeleton extends ThreeDPlugin implements AuxiliaryInputOutpu
 
 		// Cut loop in the lowest intensity pixel value position
 		if (debug)
-			Utils.log("Cut loop at coordinates: " + lowestIntensityVoxel, LogLevel.VERBOSE_DEBUG);
+			Utils.log("Cut loop at coordinates: " + lowestIntensityVoxel, LogLevel.DEBUG);
 		setPixel(inputImage2, lowestIntensityVoxel, (byte) 0);
 	}// end method removeLowestIntensityVoxel
 
@@ -603,9 +603,9 @@ public class AnalyzeSkeleton extends ThreeDPlugin implements AuxiliaryInputOutpu
 				edgeIntensity /= n_vox;
 			if (debug) {
 				Utils.log("Loop edge between " + e.getV1().getPoints().get(0) + " and " + e.getV2().getPoints().get(0)
-						+ ":", LogLevel.VERBOSE_DEBUG);
+						+ ":", LogLevel.DEBUG);
 				Utils.log("avg edge intensity = " + edgeIntensity + " darkest slab point = " + darkestPoint.toString(),
-						LogLevel.VERBOSE_DEBUG);
+						LogLevel.DEBUG);
 			}
 			// Keep track of the lowest intensity edge
 			if (edgeIntensity < lowestIntensityValue) {
@@ -626,7 +626,7 @@ public class AnalyzeSkeleton extends ThreeDPlugin implements AuxiliaryInputOutpu
 		}
 
 		if (debug)
-			Utils.log("Cut loop at coordinates: " + removeCoords, LogLevel.VERBOSE_DEBUG);
+			Utils.log("Cut loop at coordinates: " + removeCoords, LogLevel.DEBUG);
 		setPixel(inputImage2, removeCoords, (byte) 0);
 
 	}// end method cutLowestIntensityBranch
@@ -953,9 +953,9 @@ public class AnalyzeSkeleton extends ThreeDPlugin implements AuxiliaryInputOutpu
 		if (debug) {
 			// Junction vertices in the tree
 			Utils.log("this.junctionVertex[" + (iTree) + "].length = " + this.junctionVertex[iTree].length,
-					LogLevel.VERBOSE_DEBUG);
+					LogLevel.DEBUG);
 			for (int i = 0; i < this.junctionVertex[iTree].length; i++) {
-				Utils.log(" vertices points: " + this.junctionVertex[iTree][i], LogLevel.VERBOSE_DEBUG);
+				Utils.log(" vertices points: " + this.junctionVertex[iTree][i], LogLevel.DEBUG);
 			}
 		}
 
@@ -968,7 +968,7 @@ public class AnalyzeSkeleton extends ThreeDPlugin implements AuxiliaryInputOutpu
 			this.skeletonGraph[iTree].addVertex(this.junctionVertex[iTree][i]);
 
 		if (debug)
-			Utils.log(" Analyzing tree number " + currentTree, LogLevel.VERBOSE_DEBUG);
+			Utils.log(" Analyzing tree number " + currentTree, LogLevel.DEBUG);
 		// length of branches
 		double branchLength = 0;
 
@@ -980,7 +980,7 @@ public class AnalyzeSkeleton extends ThreeDPlugin implements AuxiliaryInputOutpu
 			final SkeletonPoint endPointCoord = this.endPointsTree[iTree].get(i);
 
 			if (debug)
-				Utils.log("\n*** visit from end point: " + endPointCoord + " *** ", LogLevel.VERBOSE_DEBUG);
+				Utils.log("\n*** visit from end point: " + endPointCoord + " *** ", LogLevel.DEBUG);
 
 			// Skip when visited
 			if (isVisited(endPointCoord)) {
@@ -989,7 +989,7 @@ public class AnalyzeSkeleton extends ThreeDPlugin implements AuxiliaryInputOutpu
 				// endPointCoord.z + ")");
 				if (debug)
 					Utils.log("visited = (" + endPointCoord.x + ", " + endPointCoord.y + ", " + endPointCoord.z + ")",
-							LogLevel.VERBOSE_DEBUG);
+							LogLevel.DEBUG);
 				continue;
 			}
 
@@ -1009,14 +1009,14 @@ public class AnalyzeSkeleton extends ThreeDPlugin implements AuxiliaryInputOutpu
 			// If length is 0, it means the tree is formed by only one voxel.
 			if (length == 0) {
 				if (debug)
-					Utils.log("set initial point to final point", LogLevel.VERBOSE_DEBUG);
+					Utils.log("set initial point to final point", LogLevel.DEBUG);
 				continue;
 			}
 
 			// Add branch to skeletonGraph
 			if (debug)
 				Utils.log("adding branch from " + v1.getPoints().get(0) + " to "
-						+ this.auxFinalVertex.getPoints().get(0), LogLevel.VERBOSE_DEBUG);
+						+ this.auxFinalVertex.getPoints().get(0), LogLevel.DEBUG);
 			this.skeletonGraph[iTree].addVertex(this.auxFinalVertex);
 			this.skeletonGraph[iTree].addEdge(new Edge(v1, this.auxFinalVertex, this.slabList, length));
 
@@ -1024,7 +1024,7 @@ public class AnalyzeSkeleton extends ThreeDPlugin implements AuxiliaryInputOutpu
 			this.numberOfBranches[iTree]++;
 
 			if (debug)
-				Utils.log("increased number of branches, length = " + length, LogLevel.VERBOSE_DEBUG);
+				Utils.log("increased number of branches, length = " + length, LogLevel.DEBUG);
 
 			branchLength += length;
 
@@ -1039,7 +1039,7 @@ public class AnalyzeSkeleton extends ThreeDPlugin implements AuxiliaryInputOutpu
 			this.skeletonGraph[iTree].setRoot(this.junctionVertex[iTree][0]);
 
 		if (debug)
-			Utils.log(" --------------------------- ", LogLevel.VERBOSE_DEBUG);
+			Utils.log(" --------------------------- ", LogLevel.DEBUG);
 
 		// Now visit branches starting at junctions
 		// 08/26/2009 Changed the loop to visit first the junction voxel that are
@@ -1049,7 +1049,7 @@ public class AnalyzeSkeleton extends ThreeDPlugin implements AuxiliaryInputOutpu
 				final SkeletonPoint junctionCoord = this.junctionVertex[iTree][i].getPoints().get(j);
 
 				if (debug)
-					Utils.log("\n*** visit from junction " + junctionCoord + " *** ", LogLevel.VERBOSE_DEBUG);
+					Utils.log("\n*** visit from junction " + junctionCoord + " *** ", LogLevel.DEBUG);
 
 				// Mark junction as visited
 				setVisited(junctionCoord, true);
@@ -1107,7 +1107,7 @@ public class AnalyzeSkeleton extends ThreeDPlugin implements AuxiliaryInputOutpu
 
 							if (debug)
 								Utils.log("increased number of branches, length = " + length + " (last point = "
-										+ this.auxPoint + ")", LogLevel.VERBOSE_DEBUG);
+										+ this.auxPoint + ")", LogLevel.DEBUG);
 							// update maximum branch length
 							if (length > this.maximumBranchLength[iTree]) {
 								this.maximumBranchLength[iTree] = length;
@@ -1118,7 +1118,7 @@ public class AnalyzeSkeleton extends ThreeDPlugin implements AuxiliaryInputOutpu
 							// Add branch to skeletonGraph
 							if (debug)
 								Utils.log("adding branch from " + initialVertex.getPoints().get(0) + " to "
-										+ this.auxFinalVertex.getPoints().get(0), LogLevel.VERBOSE_DEBUG);
+										+ this.auxFinalVertex.getPoints().get(0), LogLevel.DEBUG);
 							this.skeletonGraph[iTree].addEdge(new Edge(initialVertex, this.auxFinalVertex,
 									this.slabList, length));
 						}
@@ -1131,12 +1131,12 @@ public class AnalyzeSkeleton extends ThreeDPlugin implements AuxiliaryInputOutpu
 		}
 
 		if (debug)
-			Utils.log(" --------------------------- ", LogLevel.VERBOSE_DEBUG);
+			Utils.log(" --------------------------- ", LogLevel.DEBUG);
 
 		// Finally visit branches starting at slabs (special case for circular trees)
 		if (this.startingSlabTree[iTree].size() == 1) {
 			if (debug)
-				Utils.log("visit from slabs", LogLevel.VERBOSE_DEBUG);
+				Utils.log("visit from slabs", LogLevel.DEBUG);
 
 			final SkeletonPoint startCoord = this.startingSlabTree[iTree].get(0);
 
@@ -1169,7 +1169,7 @@ public class AnalyzeSkeleton extends ThreeDPlugin implements AuxiliaryInputOutpu
 		}
 
 		if (debug)
-			Utils.log(" --------------------------- ", LogLevel.VERBOSE_DEBUG);
+			Utils.log(" --------------------------- ", LogLevel.DEBUG);
 
 		if (this.numberOfBranches[iTree] == 0)
 			return;
@@ -1178,23 +1178,23 @@ public class AnalyzeSkeleton extends ThreeDPlugin implements AuxiliaryInputOutpu
 
 		if (debug) {
 			Utils.log("Num of vertices = " + this.skeletonGraph[iTree].getVertices().size() + " num of edges = "
-					+ this.skeletonGraph[iTree].getEdges().size(), LogLevel.VERBOSE_DEBUG);
+					+ this.skeletonGraph[iTree].getEdges().size(), LogLevel.DEBUG);
 			for (int i = 0; i < this.skeletonGraph[iTree].getVertices().size(); i++) {
 				Vertex v = this.skeletonGraph[iTree].getVertices().get(i);
-				Utils.log(" vertex " + v.getPoints().get(0) + " has neighbors: ", LogLevel.VERBOSE_DEBUG);
+				Utils.log(" vertex " + v.getPoints().get(0) + " has neighbors: ", LogLevel.DEBUG);
 				for (int j = 0; j < v.getBranches().size(); j++) {
 					final Vertex v1 = v.getBranches().get(j).getV1();
 					final Vertex oppositeVertex = v1.equals(v) ? v.getBranches().get(j).getV2() : v1;
-					Utils.log(j + ": " + oppositeVertex.getPoints().get(0), LogLevel.VERBOSE_DEBUG);
+					Utils.log(j + ": " + oppositeVertex.getPoints().get(0), LogLevel.DEBUG);
 				}
 
 			}
 
-			Utils.log(" --------------------------- ", LogLevel.VERBOSE_DEBUG);
+			Utils.log(" --------------------------- ", LogLevel.DEBUG);
 			for (int i = 0; i < this.junctionVertex[iTree].length; i++) {
-				Utils.log("Junction #" + i + " is formed by: ", LogLevel.VERBOSE_DEBUG);
+				Utils.log("Junction #" + i + " is formed by: ", LogLevel.DEBUG);
 				for (int j = 0; j < this.junctionVertex[iTree][i].getPoints().size(); j++)
-					Utils.log(j + ": " + this.junctionVertex[iTree][i].getPoints().get(j), LogLevel.VERBOSE_DEBUG);
+					Utils.log(j + ": " + this.junctionVertex[iTree][i].getPoints().get(j), LogLevel.DEBUG);
 			}
 		}
 
@@ -1210,7 +1210,7 @@ public class AnalyzeSkeleton extends ThreeDPlugin implements AuxiliaryInputOutpu
 	 */
 	private IPluginIOStack markTrees(IPluginIOStack taggedImage) {
 		if (debug)
-			Utils.log("=== Mark Trees ===", LogLevel.VERBOSE_DEBUG);
+			Utils.log("=== Mark Trees ===", LogLevel.DEBUG);
 
 		IPluginIOStack outputImage = (PluginIOStack) taggedImage.duplicateStructure(null, -1, -1, false);
 		outputImage.computePixelArray();
@@ -1246,7 +1246,7 @@ public class AnalyzeSkeleton extends ThreeDPlugin implements AuxiliaryInputOutpu
 			}
 
 			if (debug)
-				Utils.log("-- Visit tree from end-point: " + endPointCoord, LogLevel.VERBOSE_DEBUG);
+				Utils.log("-- Visit tree from end-point: " + endPointCoord, LogLevel.DEBUG);
 			// Visit the entire tree.
 
 			visitTree(endPointCoord, outputImage, color);
@@ -1273,7 +1273,7 @@ public class AnalyzeSkeleton extends ThreeDPlugin implements AuxiliaryInputOutpu
 			}
 
 			if (debug)
-				Utils.log("-- Visit tree from junction: " + junctionCoord, LogLevel.VERBOSE_DEBUG);
+				Utils.log("-- Visit tree from junction: " + junctionCoord, LogLevel.DEBUG);
 
 			// else, visit branch until next junction or end point.
 			int length = visitTree(junctionCoord, outputImage, color);
@@ -1305,7 +1305,7 @@ public class AnalyzeSkeleton extends ThreeDPlugin implements AuxiliaryInputOutpu
 				}
 
 				if (debug)
-					Utils.log("-- Visit tree from slab:", LogLevel.VERBOSE_DEBUG);
+					Utils.log("-- Visit tree from slab:", LogLevel.DEBUG);
 
 				// else, visit branch until next junction or end point.
 				int length = visitTree(p, outputImage, color);
@@ -1320,7 +1320,7 @@ public class AnalyzeSkeleton extends ThreeDPlugin implements AuxiliaryInputOutpu
 			}
 		}
 
-		Utils.log("Number of trees =" + this.numOfTrees + " number of colors=" + color, LogLevel.VERBOSE_DEBUG);
+		Utils.log("Number of trees =" + this.numOfTrees + " number of colors=" + color, LogLevel.DEBUG);
 
 		// Show tree image.
 		/*
@@ -1366,11 +1366,11 @@ public class AnalyzeSkeleton extends ThreeDPlugin implements AuxiliaryInputOutpu
 		int numOfVoxels = 0;
 
 		if (debug)
-			Utils.log("                      visiting " + startingPoint + " color = " + color, LogLevel.VERBOSE_DEBUG);
+			Utils.log("                      visiting " + startingPoint + " color = " + color, LogLevel.DEBUG);
 
 		if (isVisited(startingPoint)) {
 
-			Utils.log("Starting point already visited", LogLevel.VERBOSE_DEBUG);
+			Utils.log("Starting point already visited", LogLevel.DEBUG);
 			return 0;
 
 		}
@@ -1392,7 +1392,7 @@ public class AnalyzeSkeleton extends ThreeDPlugin implements AuxiliaryInputOutpu
 				if (!isVisited(nextPoint)) {
 					numOfVoxels++;
 					if (debug)
-						Utils.log("visiting " + nextPoint + " color = " + color, LogLevel.VERBOSE_DEBUG);
+						Utils.log("visiting " + nextPoint + " color = " + color, LogLevel.DEBUG);
 
 					// Set color and visit flat
 					// Utils.log("Set color of "+nextPoint+" to "+color,LogLevel.VERBOSE_DEBUG);
@@ -1410,7 +1410,7 @@ public class AnalyzeSkeleton extends ThreeDPlugin implements AuxiliaryInputOutpu
 			{
 				nextPoint = toRevisit.get(0);
 				if (debug)
-					Utils.log("visiting " + nextPoint + " color = " + color, LogLevel.VERBOSE_DEBUG);
+					Utils.log("visiting " + nextPoint + " color = " + color, LogLevel.DEBUG);
 
 				// Calculate next point to visit
 				nextPoint = getNextUnvisitedVoxel(nextPoint);
@@ -1566,12 +1566,12 @@ public class AnalyzeSkeleton extends ThreeDPlugin implements AuxiliaryInputOutpu
 		for (j = 0; j < vertex.length; j++)
 			if (vertex[j].isVertexPoint(p)) {
 				if (debug)
-					Utils.log(" " + p + " belongs to junction " + vertex[j].getPoints().get(0), LogLevel.VERBOSE_DEBUG);
+					Utils.log(" " + p + " belongs to junction " + vertex[j].getPoints().get(0), LogLevel.DEBUG);
 				return vertex[j];
 			}
 		if (debug)
 			Utils.log("point " + p + " was not found in vertex list! (vertex.length= " + vertex.length + ")",
-					LogLevel.VERBOSE_DEBUG);
+					LogLevel.DEBUG);
 		return null;
 	}
 
@@ -1620,7 +1620,7 @@ public class AnalyzeSkeleton extends ThreeDPlugin implements AuxiliaryInputOutpu
 		for (int iTree = 0; iTree < this.numOfTrees; iTree++) {
 			if (debug)
 				Utils.log("this.listOfSingleJunctions[" + iTree + "].size() = "
-						+ this.listOfSingleJunctions[iTree].size(), LogLevel.VERBOSE_DEBUG);
+						+ this.listOfSingleJunctions[iTree].size(), LogLevel.DEBUG);
 
 			this.numberOfJunctions[iTree] = this.listOfSingleJunctions[iTree].size();
 
@@ -2032,7 +2032,7 @@ public class AnalyzeSkeleton extends ThreeDPlugin implements AuxiliaryInputOutpu
 									if (numOfNeighbors < 2) {
 										setPixel(output, x, y, z, AnalyzeSkeleton.END_POINT);
 										SkeletonPoint endPoint = new SkeletonPoint(x, y, z);
-										Utils.log("End point at " + endPoint, LogLevel.VERBOSE_DEBUG);
+										Utils.log("End point at " + endPoint, LogLevel.DEBUG);
 										listOfEndPointsArray[threadid].add(endPoint);
 									} else if (numOfNeighbors > 2) {
 										setPixel(output, x, y, z, AnalyzeSkeleton.JUNCTION);

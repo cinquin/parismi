@@ -212,7 +212,7 @@ public class CThresholdSeedsLibraryCall extends ExternalCallToLibrary {
 
 	@Override
 	public boolean createOutput(InputOutputDescription desc, List<PluginIOView> views) {
-		Utils.log("In threhsold seed create destination", LogLevel.VERBOSE_DEBUG);
+		Utils.log("In threhsold seed create destination", LogLevel.DEBUG);
 		if (("histLCG".equals(desc.name)) || ("histDAPI".equals(desc.name)) || ("histr".equals(desc.name))) {
 			Utils.log("Creating histograms", LogLevel.DEBUG);
 			initializeOutputs();

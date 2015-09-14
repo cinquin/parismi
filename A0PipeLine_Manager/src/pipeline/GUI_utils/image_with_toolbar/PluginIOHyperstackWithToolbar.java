@@ -276,7 +276,7 @@ public class PluginIOHyperstackWithToolbar extends PluginIOHyperstackViewWithIma
 		if ((toolbar.getCurrentModifier() < 0)
 				&& ((e.getModifiers() & ActionEvent.SHIFT_MASK) != ActionEvent.SHIFT_MASK)
 				&& ((e.getModifiers() & ActionEvent.ALT_MASK) != ActionEvent.ALT_MASK)) {
-			Utils.log("Ignoring click because negative current modifier", LogLevel.VERBOSE_DEBUG);
+			Utils.log("Ignoring click because negative current modifier", LogLevel.DEBUG);
 			return;// If modifier is negative we are meant to ignore the clicks
 		}
 

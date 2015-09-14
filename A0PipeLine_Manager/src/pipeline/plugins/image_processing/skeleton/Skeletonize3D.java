@@ -299,7 +299,7 @@ public class Skeletonize3D extends ThreeDPlugin {
 			iter++;
 		}
 
-		Utils.log("Did " + iter + " iterations", LogLevel.VERBOSE_DEBUG);
+		Utils.log("Did " + iter + " iterations", LogLevel.DEBUG);
 
 		// IJ.write("Compute Thin Image End");
 		return 0;

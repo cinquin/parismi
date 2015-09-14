@@ -265,7 +265,7 @@ public class SplineDisplay extends EquationDisplay {
 			if (selected == null) {
 				return;
 			}
-			Utils.log("selected not null", LogLevel.VERBOSE_VERBOSE_DEBUG);
+			Utils.log("selected not null", LogLevel.DEBUG);
 
 			Point dragEnd = e.getPoint();
 

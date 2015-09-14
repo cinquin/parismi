@@ -116,10 +116,10 @@ public class CropToNonZeroRegion extends FourDPlugin implements SpecialDimPlugin
 
 	private void computeOutputDimensions() {
 		if (dimensionsComputed) {
-			Utils.log("Skipping output dimension computing", LogLevel.VERBOSE_DEBUG);
+			Utils.log("Skipping output dimension computing", LogLevel.DEBUG);
 			return;
 		} else {
-			Utils.log("Computing ouput dimensions", LogLevel.VERBOSE_DEBUG);
+			Utils.log("Computing ouput dimensions", LogLevel.DEBUG);
 		}
 		final AtomicInteger globalMinX = new AtomicInteger(Integer.MAX_VALUE);
 		final AtomicInteger globalMinY = new AtomicInteger(Integer.MAX_VALUE);
@@ -133,7 +133,7 @@ public class CropToNonZeroRegion extends FourDPlugin implements SpecialDimPlugin
 
 		for (IPluginIO io : pluginInputs.values()) {
 			if (io instanceof IPluginIOHyperstack) {
-				Utils.log("Found a hyperstack", LogLevel.VERBOSE_VERBOSE_DEBUG);
+				Utils.log("Found a hyperstack", LogLevel.DEBUG);
 				final IPluginIOHyperstack hst = (IPluginIOHyperstack) io;
 				final int width = hst.getWidth();
 				final int height = hst.getHeight();
@@ -150,7 +150,7 @@ public class CropToNonZeroRegion extends FourDPlugin implements SpecialDimPlugin
 						int minZ = Integer.MAX_VALUE;
 						int maxZ = 0;
 
-						Utils.log("Found a channel", LogLevel.VERBOSE_VERBOSE_DEBUG);
+						Utils.log("Found a channel", LogLevel.DEBUG);
 						for (int z = 0; z < hst.getDepth(); z++) {
 							if (channel.getPixels(z) == null) {
 								Utils.log("null input slice", LogLevel.WARNING);
@@ -261,7 +261,7 @@ public class CropToNonZeroRegion extends FourDPlugin implements SpecialDimPlugin
 
 		dimensionsComputed = true;
 		
-		Utils.log("Done computing dimensions", LogLevel.VERBOSE_DEBUG);
+		Utils.log("Done computing dimensions", LogLevel.DEBUG);
 	}
 
 	@Override
@@ -387,7 +387,7 @@ public class CropToNonZeroRegion extends FourDPlugin implements SpecialDimPlugin
 	@Override
 	public List<PluginIOView> createOutput(String outputName, PluginIOHyperstackViewWithImagePlus impForDisplay,
 			Map<String, IPluginIO> linkedOutputs) throws InterruptedException {
-		Utils.log("Output depth " + getOutputDepth(getInput()), LogLevel.VERBOSE_DEBUG);
+		Utils.log("Output depth " + getOutputDepth(getInput()), LogLevel.DEBUG);
 		PluginIOHyperstack createdOutput =
 				new PluginIOHyperstack("Cropped", getOutputWidth(getInput()), getOutputHeight(getInput()),
 						getOutputDepth(getInput()), ((IPluginIOImage) getInput()).getDimensions().nChannels,

@@ -745,7 +745,7 @@ public class A0PipeLine_Manager implements PlugIn {
 									File.createTempFile(new File(cleanedUpName.substring(0, dot)).getName(),
 											'.' + extension);
 							Utils.log("Uncompressing file to " + tempUncompressedFile.getAbsolutePath(),
-									LogLevel.VERBOSE_VERBOSE_DEBUG);
+									LogLevel.DEBUG);
 
 							try (FileOutputStream fos = new FileOutputStream(tempUncompressedFile); OutputStream os =
 									new BufferedOutputStream(fos)) {
@@ -1406,7 +1406,7 @@ public class A0PipeLine_Manager implements PlugIn {
 								} catch (Exception e) {
 									Utils.printStack(e);
 								}
-								Utils.log("Showed output", LogLevel.VERBOSE_VERBOSE_VERBOSE_DEBUG);
+								Utils.log("Showed output", LogLevel.DEBUG);
 							}
 						}
 
@@ -1647,7 +1647,7 @@ public class A0PipeLine_Manager implements PlugIn {
 				// table1.setRowHeight(1);
 				// scrollTableToRow(row);
 				// table1.invalidate();
-					Utils.log("Updating input for row " + modelRow, LogLevel.VERBOSE_VERBOSE_DEBUG);
+					Utils.log("Updating input for row " + modelRow, LogLevel.DEBUG);
 					updateChannelChoices(modelRow, modelColumn, true);
 					PipelinePlugin plugin = (PipelinePlugin) ((Object[]) data[modelRow])[PLUGIN_INSTANCE];
 					if (plugin != null) {
@@ -1668,7 +1668,7 @@ public class A0PipeLine_Manager implements PlugIn {
 						((TextParameter) ((Object[]) data[modelRow])[modelColumn]).setValue(path);
 						table1.tableChanged(new TableModelEvent(table1.getModel(), modelRow, modelRow));
 						((TextParameter) ((Object[]) data[modelRow])[modelColumn]).fireValueChanged(false, true, true);
-						Utils.log("Updating input for row " + modelRow, LogLevel.VERBOSE_VERBOSE_DEBUG);
+						Utils.log("Updating input for row " + modelRow, LogLevel.DEBUG);
 						PipelinePlugin plugin = (PipelinePlugin) ((Object[]) data[modelRow])[PLUGIN_INSTANCE];
 						if (plugin != null) {
 							plugin.clearInputs();
@@ -2294,7 +2294,7 @@ public class A0PipeLine_Manager implements PlugIn {
 					if (imageListMenuXCellIndex >= 0) {
 						if ((imageListMenuYCellIndexModel == INPUT_NAME_FIELD)
 								&& ((e.getModifiers() & InputEvent.BUTTON3_MASK) != 0)) {
-							Utils.log("Creating popup for row " + imageListMenuXCellIndex, LogLevel.VERBOSE_DEBUG);
+							Utils.log("Creating popup for row " + imageListMenuXCellIndex, LogLevel.DEBUG);
 							displayImageListMenu(imageListMenuXCellIndexModel, imageListMenuYCellIndexModel, e.getComponent(), e
 									.getX(), e.getY());
 						} else if ((imageListMenuYCellIndexModel == OUTPUT_NAME_FIELD)
@@ -2703,7 +2703,7 @@ public class A0PipeLine_Manager implements PlugIn {
 			updateCurrentStepButton = addCheckBox("Update current step upon param change");
 			updateCurrentStepButton.setSelected(true);
 			globalOptionPanel.add(updateCurrentStepButton);
-			updatePipelineButton = addCheckBox("Update pipeline upon param change");
+			updatePipelineButton = addCheckBox("Propagate updates");
 			updatePipelineButton.setSelected(true);
 			globalOptionPanel.add(updatePipelineButton);
 
@@ -3015,7 +3015,7 @@ public class A0PipeLine_Manager implements PlugIn {
 
 			controlGroupButton = new ButtonGroup();
 
-			JButton setAllDirectoriesButton = new JButton("Set all directories");
+			JButton setAllDirectoriesButton = new JButton("Set all directories...");
 			setAllDirectoriesButton.setActionCommand("Set all directories");
 			setAllDirectoriesButton.addActionListener(this);
 			controls2.add(setAllDirectoriesButton);
@@ -3041,7 +3041,7 @@ public class A0PipeLine_Manager implements PlugIn {
 						List<File> list = null;
 						if (t.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
 							try {
-								Utils.log("Accept", LogLevel.VERBOSE_DEBUG);
+								Utils.log("Accept", LogLevel.DEBUG);
 								dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
 								list = (List<File>) t.getTransferData(DataFlavor.javaFileListFlavor);
 							} catch (UnsupportedFlavorException | IOException e) {
@@ -3355,11 +3355,11 @@ public class A0PipeLine_Manager implements PlugIn {
 					|| Modifier.isAbstract(clazz.getModifiers()))
 				return false;
 
-			Utils.log("Found plugin " + clazz.getName(), LogLevel.VERBOSE_DEBUG);
+			Utils.log("Found plugin " + clazz.getName(), LogLevel.DEBUG);
 			PluginInfo pluginInfo = clazz.getAnnotation(PluginInfo.class);
 			if (pluginInfo != null) {
 				Utils.log("Plugin " + clazz.getName() + " display =" + pluginInfo.displayToUser(),
-						LogLevel.VERBOSE_DEBUG);
+						LogLevel.DEBUG);
 			}
 			return true;
 		}
@@ -3797,7 +3797,7 @@ public class A0PipeLine_Manager implements PlugIn {
 			}
 
 			if (data[row][LINK_TO_EXTERNAL_PROGRAM] != null) {
-				Utils.log("Terminating link to external program for plugin " + plugin, LogLevel.VERBOSE_DEBUG);
+				Utils.log("Terminating link to external program for plugin " + plugin, LogLevel.DEBUG);
 
 				/*
 				 * try { ((LinkToExternalProgram) data[row][LINK_TO_EXTERNAL_PROGRAM]).terminate(false); } catch
@@ -4523,7 +4523,7 @@ public class A0PipeLine_Manager implements PlugIn {
 				case "Update step":
 					updateSelectedRows();
 					break;
-				case "Update pipeline upon param change":
+				case "Propagate updates":
 					((MyTableModel) table1.getModel()).updatePipeline = updatePipelineButton.isSelected();
 					break;
 				case "Use virtual stacks to open files":

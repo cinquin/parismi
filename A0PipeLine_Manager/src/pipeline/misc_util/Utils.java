@@ -79,12 +79,10 @@ public class Utils {
 
 	public static int logLevelThreshold = 7;
 
-	public static final String[] LogLevelNames = new String[] { "CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG",
-			"VERBOSE_DEBUG", "VERBOSE_VERBOSE_DEBUG", "VERBOSE_VERBOSE_VERBOSE_DEBUG" };
+	public static final String[] LogLevelNames = new String[] { "CRITICAL", "ERROR", "WARNING", "INFO", "DEBUG" };
 
 	public static final class LogLevel {
-		public static final int CRITICAL = 0, ERROR = 1, WARNING = 2, INFO = 3, DEBUG = 4, VERBOSE_DEBUG = 5,
-				VERBOSE_VERBOSE_DEBUG = 6, VERBOSE_VERBOSE_VERBOSE_DEBUG = 7;
+		public static final int CRITICAL = 0, ERROR = 1, WARNING = 2, INFO = 3, DEBUG = 4;
 	}
 
 	private static FileWriter writer;

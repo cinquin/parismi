@@ -111,7 +111,7 @@ public class Threshold extends TwoDPlugin {
 		minThreshold = ((int[]) intrangeparam.getValue())[0];
 		maxThreshold = ((int[]) intrangeparam.getValue())[1];
 		String s = "updated min and max to " + minThreshold + " " + maxThreshold;
-		Utils.log(s, LogLevel.VERBOSE_DEBUG);
+		Utils.log(s, LogLevel.DEBUG);
 	}
 
 	@Override

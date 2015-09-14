@@ -109,7 +109,7 @@ public class ImageCanvasWithAnnotations extends ImageCanvas implements MouseMoti
 		} else
 			super.mouseReleased(e);
 		Utils.log("Mouse released; modifiers " + e.getModifiers() + "; extended modifiers " + e.getModifiersEx(),
-				LogLevel.VERBOSE_DEBUG);
+				LogLevel.DEBUG);
 		draggedCell = null;
 	}
 

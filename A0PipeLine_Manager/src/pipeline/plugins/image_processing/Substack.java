@@ -97,10 +97,10 @@ public class Substack extends FourDPlugin implements SpecialDimPlugin {
 
 	private void computeOutputDimensions() {
 		if (dimensionsComputed) {
-			Utils.log("Skipping output dimension computing", LogLevel.VERBOSE_DEBUG);
+			Utils.log("Skipping output dimension computing", LogLevel.DEBUG);
 			return;
 		} else {
-			Utils.log("Computing ouput dimensions", LogLevel.VERBOSE_DEBUG);
+			Utils.log("Computing ouput dimensions", LogLevel.DEBUG);
 		}
 
 		inputWidth = getImageInput().getDimensions().width;
@@ -141,7 +141,7 @@ public class Substack extends FourDPlugin implements SpecialDimPlugin {
 	@Override
 	public List<PluginIOView> createOutput(String outputName, PluginIOHyperstackViewWithImagePlus impForDisplay,
 			Map<String, IPluginIO> linkedOutputs) {
-		Utils.log("Output depth " + getOutputDepth(getInput()), LogLevel.VERBOSE_DEBUG);
+		Utils.log("Output depth " + getOutputDepth(getInput()), LogLevel.DEBUG);
 
 		IPluginIOHyperstack input = (IPluginIOHyperstack) getImageInput();
 		if (!(input instanceof IPluginIOStack)) // choose just one channel

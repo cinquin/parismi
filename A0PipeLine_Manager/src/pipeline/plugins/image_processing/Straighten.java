@@ -76,9 +76,9 @@ public class Straighten extends ThreeDPlugin implements SpecialDimPlugin {
 			polygon = roi.getFloatPolygon();
 
 			Utils.log("Cloned dimensions " + polygon.npoints + " " + Math.round(roi.getStrokeWidth()),
-					LogLevel.VERBOSE_DEBUG);
+					LogLevel.DEBUG);
 			Utils.log("Original dimensions " + roi.getFloatPolygon().npoints + " " + Math.round(roi.getStrokeWidth()),
-					LogLevel.VERBOSE_DEBUG);
+					LogLevel.DEBUG);
 			if ((!(roi instanceof PolygonRoi)) || (roi instanceof PointRoi))
 				roi = null;
 

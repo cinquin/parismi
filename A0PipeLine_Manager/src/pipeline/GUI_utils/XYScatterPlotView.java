@@ -393,7 +393,7 @@ public class XYScatterPlotView<CollectionType extends AbstractSeriesDataset & Fr
 				currentSeries.setFlipAxes(contentPanel.flipAxes.isSelected());
 				contentPanel.recreateChart();
 			}
-			Utils.log("ACTION", LogLevel.VERBOSE_DEBUG);
+			Utils.log("ACTION", LogLevel.DEBUG);
 		}
 	}
 

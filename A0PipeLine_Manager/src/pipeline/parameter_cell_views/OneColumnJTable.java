@@ -132,12 +132,12 @@ public class OneColumnJTable extends AbstractParameterCellView implements TableM
 				data[row][col] = value;
 			String[] currentStrings = currentParameter.getElements();
 			if (value == null)
-				Utils.log("null value", LogLevel.VERBOSE_VERBOSE_VERBOSE_DEBUG);
+				Utils.log("null value", LogLevel.DEBUG);
 
 			int realRow = transpose ? col : row;
 			if (!currentStrings[realRow].equals(value)) {
 				currentParameter.hasBeenEdited = true;
-				Utils.log("setting value " + value, LogLevel.VERBOSE_VERBOSE_VERBOSE_DEBUG);
+				Utils.log("setting value " + value, LogLevel.DEBUG);
 				currentStrings[realRow] = (String) value;
 				currentParameter.setValue(currentStrings);
 				currentParameter.fireValueChanged(false, false, true);
@@ -269,7 +269,7 @@ public class OneColumnJTable extends AbstractParameterCellView implements TableM
 		if (currentParameter != null && selection.length > 0) {
 			for (int element : selection) {
 				if (element >= data.length) {
-					Utils.log("Invalid selection index " + element, LogLevel.VERBOSE_VERBOSE_DEBUG);
+					Utils.log("Invalid selection index " + element, LogLevel.DEBUG);
 				} else {
 					if (currentParameter.displayHorizontally) {
 						localJTable.getColumnModel().getSelectionModel().addSelectionInterval(element, element);
@@ -324,7 +324,7 @@ public class OneColumnJTable extends AbstractParameterCellView implements TableM
 	@Override
 	public void parameterValueChanged(boolean stillChanging, AbstractParameter parameterWhoseValueChanged,
 			boolean keepQuiet) {
-		Utils.log("Parameter value changed in 1 column JTable", LogLevel.VERBOSE_VERBOSE_VERBOSE_DEBUG);
+		Utils.log("Parameter value changed in 1 column JTable", LogLevel.DEBUG);
 		updateDisplay();
 	}
 

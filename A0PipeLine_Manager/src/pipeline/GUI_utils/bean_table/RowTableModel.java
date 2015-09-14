@@ -568,7 +568,7 @@ public abstract class RowTableModel<T> extends AbstractTableModel {
 
 			isPreviousLowerCase = !isCurrentUpperCase;
 		}
-		Utils.log("Converted " + columnName + " to " + buffer.toString(), LogLevel.VERBOSE_DEBUG);
+		Utils.log("Converted " + columnName + " to " + buffer.toString(), LogLevel.DEBUG);
 		return buffer.toString();
 	}
 }

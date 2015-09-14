@@ -347,7 +347,7 @@ public class ShortestSkeletonPath extends FourDPlugin implements AuxiliaryInputO
 		Edge previousShortestEdge = null;
 
 		while (b != a) {
-			Utils.log("Shortest path identification: " + a + ", " + b, LogLevel.VERBOSE_VERBOSE_VERBOSE_DEBUG);
+			Utils.log("Shortest path identification: " + a + ", " + b, LogLevel.DEBUG);
 			if (Thread.interrupted())
 				throw new RuntimeException("Interrupted");
 			Vertex predecessor = vertexList.get(predecessorMatrix[a][b]);
@@ -364,7 +364,7 @@ public class ShortestSkeletonPath extends FourDPlugin implements AuxiliaryInputO
 							edge -> (edge.getV1() == predecessor && edge.getV2() == endvertex)
 									|| (edge.getV1() == endvertex && edge.getV2() == predecessor)).collect(
 							Collectors.toList()));
-			Utils.log("Second test", LogLevel.VERBOSE_VERBOSE_VERBOSE_DEBUG);
+			Utils.log("Second test", LogLevel.DEBUG);
 
 			// the second test
 			// this test looks which edge has the shortest length in sp_edgeslist
@@ -403,7 +403,7 @@ public class ShortestSkeletonPath extends FourDPlugin implements AuxiliaryInputO
 		SkeletonPoint edgePoint1 = null, edgePoint2 = null;
 		List<SkeletonPoint> edgePoints = new ArrayList<>();
 		int nEdges = 0;
-		Utils.log("Showing all points in image", LogLevel.VERBOSE_VERBOSE_DEBUG);
+		Utils.log("Showing all points in image", LogLevel.DEBUG);
 		for (SkeletonPoint p : allPoints) {
 			if (AnalyzeSkeleton.getNumberOfNeighbors(outputImage, p.x, p.y, p.z) == 1) {
 				if (nEdges == 2) {
@@ -448,7 +448,7 @@ public class ShortestSkeletonPath extends FourDPlugin implements AuxiliaryInputO
 		outputImage.setPixelValue(edgePoint.x, edgePoint.y, edgePoint.z, VISITED_SHORTEST_PATH);
 		int counter = 1;
 
-		Utils.log("Writing geodesic distances", LogLevel.VERBOSE_VERBOSE_DEBUG);
+		Utils.log("Writing geodesic distances", LogLevel.DEBUG);
 		while (!done) {
 			if (previousPoint != null) {
 				geodesicDistance += previousPoint.distanceTo(edgePoint);
@@ -515,7 +515,7 @@ public class ShortestSkeletonPath extends FourDPlugin implements AuxiliaryInputO
 
 		List<FWEdge> edges = new ArrayList<>(200);
 
-		Utils.log("Creating edges in findShortestPath", LogLevel.VERBOSE_VERBOSE_VERBOSE_DEBUG);
+		Utils.log("Creating edges in findShortestPath", LogLevel.DEBUG);
 
 		// Create edges
 		for (Entry<Point3D, SkeletonPoint> p : points.entrySet()) {
@@ -571,15 +571,15 @@ public class ShortestSkeletonPath extends FourDPlugin implements AuxiliaryInputO
 
 		FloydWarshall fw = new FloydWarshall();
 
-		Utils.log("Calculating shortest path", LogLevel.VERBOSE_VERBOSE_VERBOSE_DEBUG);
+		Utils.log("Calculating shortest path", LogLevel.DEBUG);
 
 		fw.calcShortestPaths(pointArray, edges.toArray(new FWEdge[] {}));
 
-		Utils.log("Done with shortest path", LogLevel.VERBOSE_VERBOSE_VERBOSE_DEBUG);
+		Utils.log("Done with shortest path", LogLevel.DEBUG);
 		connectingPoints.addAll(fw.getShortestPath(slabs1.get(0), slabs2.get(0)).stream().filter(
 				pointIndex -> pointArray[pointIndex.getIndex()].owner == VERTEX_POINT).map(
 				pointIndex -> pointArray[pointIndex.getIndex()]).collect(Collectors.toList()));
-		Utils.log("Returning shortest path", LogLevel.VERBOSE_VERBOSE_VERBOSE_DEBUG);
+		Utils.log("Returning shortest path", LogLevel.DEBUG);
 		return connectingPoints;
 	}
 

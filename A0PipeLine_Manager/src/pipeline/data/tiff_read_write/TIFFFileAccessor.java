@@ -345,7 +345,7 @@ public class TIFFFileAccessor extends PluginIOHyperstack implements ImageAccesso
 			calibration.setYUnit("microns");
 			calibration.setZUnit("microns");
 		}
-		Utils.log("Pixel depth is " + fiArray[0].pixelDepth, LogLevel.VERBOSE_DEBUG);
+		Utils.log("Pixel depth is " + fiArray[0].pixelDepth, LogLevel.DEBUG);
 		// FIXME Read in pixel depth properly when we expand to non-float images
 		String pixelTypeString = fiArray[0].getType();
 		switch (pixelTypeString) {
@@ -384,7 +384,7 @@ public class TIFFFileAccessor extends PluginIOHyperstack implements ImageAccesso
 				fiArray[i] = (BareBonesFileInfoLongOffsets) fi1.clone();
 				fiArray[i].nImages = 1;
 				fiArray[i].offset = fi1.getOffset() + i * (size + fi1.gapBetweenImages);
-				Utils.log("Slice " + i + " offset is " + fiArray[i].offset, LogLevel.VERBOSE_VERBOSE_VERBOSE_DEBUG);
+				Utils.log("Slice " + i + " offset is " + fiArray[i].offset, LogLevel.DEBUG);
 			}
 		}
 
@@ -401,7 +401,7 @@ public class TIFFFileAccessor extends PluginIOHyperstack implements ImageAccesso
 		setDepth(fiArray.length / (getnChannels() * nTimePoints));
 		setnTimePoints(nTimePoints);
 		Utils.log("Identified " + getDepth() + " slices with " + getnChannels() + " channels" + getnTimePoints()
-				+ " time points", LogLevel.VERBOSE_VERBOSE_DEBUG);
+				+ " time points", LogLevel.DEBUG);
 		dirtySlices = new boolean[getDepth() * getnChannels() * getnTimePoints()];
 		lastCachedSliceAccessTime = new long[getDepth() * getnChannels() * getnTimePoints()];
 		sliceCanBeRead = new boolean[getDepth() * getnChannels() * getnTimePoints()];
@@ -424,7 +424,7 @@ public class TIFFFileAccessor extends PluginIOHyperstack implements ImageAccesso
 			cachedBytePixels = new byte[getDepth() * getnChannels() * getnTimePoints()][];
 		} else
 			throw new FormatException("Unsupported pixel type " + pType);
-		Utils.log("Time to end of open method: " + (System.currentTimeMillis() - time0), LogLevel.VERBOSE_DEBUG);
+		Utils.log("Time to end of open method: " + (System.currentTimeMillis() - time0), LogLevel.DEBUG);
 		if ("".equals(getName()))
 			setName(FileNameUtils.compactPath(f.getName()));
 

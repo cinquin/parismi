@@ -207,10 +207,10 @@ public class FileNameUtils {
 						path = expandedPath;
 					else {
 						BufferedReader stderr = new BufferedReader(new InputStreamReader(shellExec.getErrorStream()));
-						Utils.log("Error expand file path", LogLevel.VERBOSE_DEBUG);
+						Utils.log("Error expand file path", LogLevel.DEBUG);
 						String line;
 						while ((line = stderr.readLine()) != null) {
-							Utils.log(line, LogLevel.VERBOSE_DEBUG);
+							Utils.log(line, LogLevel.DEBUG);
 						}
 					}
 				}

@@ -402,14 +402,14 @@ public class PluginIOHyperstackViewWithImagePlus extends PluginIOView implements
 	 *            Stored in "Info" field of ImagePlus
 	 */
 	protected void createImagePlus(String name, ImageStack imageStack, Object metadata) {
-		Utils.log("Setting imp stack", LogLevel.VERBOSE_DEBUG);
+		Utils.log("Setting imp stack", LogLevel.DEBUG);
 		if (imp == null) {
 			imp = new ImagePlus(name, imageStack);
 			updateRefsToImp();
 		} else {
 			imp.setStack(imageStack);
 		}
-		Utils.log("Set imp stack", LogLevel.VERBOSE_DEBUG);
+		Utils.log("Set imp stack", LogLevel.DEBUG);
 		imp.setProperty("Info", metadata);
 	}
 
@@ -758,7 +758,7 @@ public class PluginIOHyperstackViewWithImagePlus extends PluginIOView implements
 		// Do not do anything; subclasses with toolbars (which provide information on how to deal with
 		// the clicks) will override this method.
 		mousePressedPoint = null;
-		Utils.log("Ignored click", LogLevel.VERBOSE_DEBUG);
+		Utils.log("Ignored click", LogLevel.DEBUG);
 	}
 
 	@Override

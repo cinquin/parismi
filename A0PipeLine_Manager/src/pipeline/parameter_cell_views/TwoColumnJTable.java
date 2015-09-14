@@ -143,7 +143,7 @@ public class TwoColumnJTable extends AbstractParameterCellView implements TableM
 				return;
 
 			if (col == 0) {
-				Utils.log("cannot set value of first column", LogLevel.VERBOSE_VERBOSE_VERBOSE_DEBUG);
+				Utils.log("cannot set value of first column", LogLevel.DEBUG);
 				return;
 			}
 
