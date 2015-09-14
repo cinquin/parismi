@@ -382,7 +382,7 @@ public class PrincipalCurveClass extends GraphAbstract implements Optimizable {
 				// the vertex
 				if (GetVertexAt(i).EmptySet()) {
 					System.out.println("deleted " + GetVertexAt(i));
-					Utils.log("deleted " + GetVertexAt(i), LogLevel.VERBOSE_DEBUG);// principalCurveParameters.diagnosisTextArea.append
+					Utils.log("deleted " + GetVertexAt(i), LogLevel.DEBUG);// principalCurveParameters.diagnosisTextArea.append
 					cont = true;
 					try {
 						DeleteLineVertexAt(i);

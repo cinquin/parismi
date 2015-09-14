@@ -16,7 +16,7 @@ public class FloydWarshall {
 	public void calcShortestPaths(IFWNode[] FWNodes, IFWEdge[] FWEdges) {
 		D = initializeWeight(FWNodes, FWEdges);
 		P = new IFWNode[FWNodes.length][FWNodes.length];
-		Utils.log("calcShortestPaths with " + FWNodes.length + " nodes", LogLevel.VERBOSE_VERBOSE_DEBUG);
+		Utils.log("calcShortestPaths with " + FWNodes.length + " nodes", LogLevel.DEBUG);
 		for (int k = 0; k < FWNodes.length; k++) {
 			for (int i = 0; i < FWNodes.length; i++) {
 				for (int j = 0; j < FWNodes.length; j++) {
@@ -27,7 +27,7 @@ public class FloydWarshall {
 				}
 			}
 		}
-		Utils.log("Returning shortest path computed with " + FWNodes.length + " nodes", LogLevel.VERBOSE_VERBOSE_DEBUG);
+		Utils.log("Returning shortest path computed with " + FWNodes.length + " nodes", LogLevel.DEBUG);
 
 	}
 
