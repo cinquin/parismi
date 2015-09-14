@@ -3130,8 +3130,10 @@ public class A0PipeLine_Manager implements PlugIn {
 			runButton.setActionCommand("Run");
 			runButton.addActionListener(this);
 			controlGroupButton.add(runButton);
-
+			
 			controls2.add(runButton);
+			
+			controls2.add(new JLabel("Parismi v.0.1.1"));
 
 			final JPanel memoryPanel = new JPanel();
 			JButton collectGarbageButton = new JButton("Collect garbage");
