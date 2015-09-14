@@ -12,7 +12,9 @@ import java.util.Map;
 import pipeline.data.IPluginIOStack;
 import pipeline.data.InputOutputDescription;
 import pipeline.data.PluginIOImage.PixelType;
+import pipeline.plugins.PluginInfo;
 
+@PluginInfo(displayToUser = false, obsolete = true, suggestedReplacement = "LazyCopy with 32-bit conversion setting")
 public class LazyCopyToFloat extends LazyCopy {
 	@Override
 	public Map<String, InputOutputDescription> getInputDescriptions() {

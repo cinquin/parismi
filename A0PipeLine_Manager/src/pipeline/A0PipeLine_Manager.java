@@ -472,7 +472,11 @@ public class A0PipeLine_Manager implements PlugIn {
 					plugin.clearOutputs();
 					// We clear pluginOutputs because if at least one destination was successfully created
 					// we won't attempt to create the other missing pluginOutputs on the next run
-					throw (new RuntimeException(e));
+					if (e instanceof RuntimeException) {
+						throw ((RuntimeException) e);
+					} else {
+						throw (new RuntimeException(e));
+					}
 				}
 
 				if (theRow[AUXILIARY_OUTPUT_IMPS] == null)

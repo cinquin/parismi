@@ -494,10 +494,11 @@ public class PluginIOHyperstackViewWithImagePlus extends PluginIOView implements
 
 			if ((displayedImages.size() > 0) && (displayedImages.get(0).getPixelType() != hyperstack.getPixelType())) {
 				throw new PluginRuntimeException("Cannot add hyperstack " + hyperstack.getName() + " of pixel type "
-						+ hyperstack.getPixelType() + "to a display that already has stack "
+						+ hyperstack.getPixelType() + " to a display that already has stack "
 						+ displayedImages.get(0).getName() + " of different pixel type "
 						+ displayedImages.get(0).getPixelType() + ". Convert images to same "
-						+ "pixel type and try again. Not displaying hyperstack " + hyperstack, true);
+						+ "pixel type, e.g. using LazyCopy plugin with conversion option, and try again. "
+						+ "Not displaying hyperstack " + hyperstack.getName(), true);
 			}
 
 			displayedImages.add(hyperstack);
