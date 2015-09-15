@@ -37,6 +37,7 @@ import pipeline.parameters.MultiListParameter;
 import pipeline.parameters.SplitParameter;
 import pipeline.parameters.TableParameter;
 import pipeline.parameters.TextParameter;
+import pipeline.parameters.TextParameterIncrementable;
 import pipeline.parameters.TwoColumnTableParameter;
 
 public class SplitParameterDisplay extends AbstractParameterCellView {
@@ -132,6 +133,9 @@ public class SplitParameterDisplay extends AbstractParameterCellView {
 				continue;
 
 			try {
+				if (valuei instanceof TextParameterIncrementable) {
+					Utils.log("Incrementable", LogLevel.DEBUG);
+				}
 				Class<?> editorClass = multiRenderer.getDelegateEditor(valuei.getClass()).getClass();
 				Object comp = getRenderer(editorClass, valuei.getClass());
 				newRenderers.add(comp);

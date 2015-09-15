@@ -385,7 +385,7 @@ public class ActiveContourToolbar extends Toolbar {
 
 		JButton saveAnnotationNames = new JButton("Save names");
 		saveAnnotationNames.addActionListener(e -> {
-			File file = FileNameUtils.chooseFile("Save annotation names to...", FileDialog.SAVE);
+			File file = FileNameUtils.chooseFile("Save annotation names to...", FileDialog.SAVE, null);
 			if (file == null)
 				return;
 
@@ -398,7 +398,7 @@ public class ActiveContourToolbar extends Toolbar {
 
 		JButton loadCells = new JButton("Load cells");
 		loadCells.addActionListener(e -> {
-			File file = FileNameUtils.chooseFile("Choose cells to load", FileDialog.LOAD);
+			File file = FileNameUtils.chooseFile("Choose cells to load", FileDialog.LOAD, null);
 			if (file == null)
 				return;
 			try {
@@ -412,7 +412,7 @@ public class ActiveContourToolbar extends Toolbar {
 
 		JButton saveCells = new JButton("Save cells");
 		saveCells.addActionListener(e -> {
-			File file = FileNameUtils.chooseFile("Save cells to...", FileDialog.SAVE);
+			File file = FileNameUtils.chooseFile("Save cells to...", FileDialog.SAVE, null);
 			if (file == null)
 				return;
 			try {

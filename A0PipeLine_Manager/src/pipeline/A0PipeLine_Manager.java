@@ -1656,10 +1656,14 @@ public class A0PipeLine_Manager implements PlugIn {
 					}
 				};
 
+			String path0 = ((TextParameter) ((Object[]) data[modelRow])[modelColumn]).getStringValue();
+			@SuppressWarnings("null")
+			String expandedPath = FileNameUtils.expandPath(path0);
 			JMenuItem selectFileItem = new JMenuItem("Select file...");
 			selectFileItem.addActionListener(actionEvent -> {
 				// The user wants to select a file to open from a menu
-					File file = FileNameUtils.chooseFile("Choose an image to open", FileDialog.LOAD);
+					File file = FileNameUtils.chooseFile("Choose an image to open", FileDialog.LOAD,
+							expandedPath);
 					if (file == null)
 						return;
 					@SuppressWarnings("null")
@@ -4045,7 +4049,7 @@ public class A0PipeLine_Manager implements PlugIn {
 			String fileToReadFrom = null;
 
 			if (modifier == 0) {
-				File f = FileNameUtils.chooseFile("Choose table...", FileDialog.LOAD);
+				File f = FileNameUtils.chooseFile("Choose table...", FileDialog.LOAD, null);
 				if (f == null)
 					return;
 				fileToReadFrom = f.getAbsolutePath();

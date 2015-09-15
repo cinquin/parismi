@@ -272,8 +272,11 @@ public class FileNameUtils {
 			return path;
 	}
 
-	public static @Nullable File chooseFile(String message, int dialogType) {
+	public static @Nullable File chooseFile(String message, int dialogType, @Nullable String defaultFile) {
 		FileDialog dialog = new FileDialog(new Frame(), message, dialogType);
+		if (defaultFile != null) {
+			dialog.setFile(defaultFile);
+		}
 		dialog.setVisible(true);
 		String filePath = dialog.getDirectory();
 		if (filePath == null)
