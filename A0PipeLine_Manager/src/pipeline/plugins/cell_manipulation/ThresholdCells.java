@@ -195,7 +195,14 @@ public class ThresholdCells extends FourDPlugin implements AuxiliaryInputOutputP
 
 		HistogramDataset dataset = new HistogramDataset();
 		dataset.setType(HistogramType.RELATIVE_FREQUENCY);
-		dataset.addSeries("Histogram", valuesForHistogram, 15);
+		try {
+			dataset.addSeries("Histogram", valuesForHistogram, 15);
+		} catch (IllegalArgumentException e) {
+			//This exception is thrown for an empty series
+			//Don't stop setting up just because the series to display is empty:
+			//it's enough for an exception to be thrown when plugin is run.
+			Utils.printStack(e, LogLevel.DEBUG);
+		}
 
 		((FloatRangeParameter) rangeParameter).histogram = dataset;
 	}
