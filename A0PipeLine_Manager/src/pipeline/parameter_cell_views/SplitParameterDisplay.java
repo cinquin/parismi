@@ -58,7 +58,7 @@ public class SplitParameterDisplay extends AbstractParameterCellView {
 			IllegalAccessException {
 		if (localRenderers != null)
 			for (Object o : localRenderers) {
-				if (rendererClass.isInstance(o)) {
+				if (rendererClass.equals(o.getClass())) {
 					localRenderers.remove(o);
 					return o;
 				}
