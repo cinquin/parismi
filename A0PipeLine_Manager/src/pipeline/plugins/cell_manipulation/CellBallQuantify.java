@@ -7,10 +7,15 @@
 package pipeline.plugins.cell_manipulation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import org.apache.commons.collections.primitives.ArrayFloatList;
+import org.apache.commons.collections.primitives.FloatCollection;
+import org.apache.commons.collections.primitives.FloatList;
 
 import pipeline.PreviewType;
 import pipeline.GUI_utils.ListOfPointsView;
@@ -23,6 +28,7 @@ import pipeline.data.IPluginIOStack;
 import pipeline.data.InputOutputDescription;
 import pipeline.data.PluginIOCells;
 import pipeline.data.PluginIOImage.PixelType;
+import pipeline.data.PluginIONumber;
 import pipeline.misc_util.IntrospectionParameters.ParameterInfo;
 import pipeline.misc_util.IntrospectionParameters.ParameterType;
 import pipeline.misc_util.PluginRuntimeException;
@@ -42,7 +48,6 @@ import processing_utilities.stepByStepProjection.SumProjector;
 /**
  * Quantify total intensity within a set of cells defined by their center and by a diameter.
  * FIXME For now, this plugin should NOT be run on more than 1 channel at a time.
- * FIXME Not dealing with z well (should take into account different z and xy resolutions when considering diameter).
  */
 public class CellBallQuantify extends ThreeDPlugin implements AuxiliaryInputOutputPlugin {
 
@@ -129,6 +134,9 @@ public class CellBallQuantify extends ThreeDPlugin implements AuxiliaryInputOutp
 
 	@ParameterInfo(userDisplayName = "Disk with same Z as seed", stringValue = "FALSE", noErrorIfMissingOnReload = true)
 	private boolean diskOnly = false;
+	
+	@ParameterInfo(userDisplayName = "Compute overall percentiles", stringValue = "TRUE", noErrorIfMissingOnReload = true)
+	private boolean computeOverallPercentiles = true;
 
 	@Override
 	public String operationName() {
@@ -147,7 +155,7 @@ public class CellBallQuantify extends ThreeDPlugin implements AuxiliaryInputOutp
 
 	@Override
 	public String[] getOutputLabels() {
-		return new String[] { "Seeds" };
+		return new String[] { "Seeds", "Fifth percentile", "Ninety-fifth percentile" };
 	}
 
 	AtomicInteger cellsWithoutPixels = new AtomicInteger();
@@ -182,6 +190,8 @@ public class CellBallQuantify extends ThreeDPlugin implements AuxiliaryInputOutp
 	 * Set to true by CellRecenterToLowSignal
 	 */
 	boolean applyRadiusToSegmentation = false;
+	
+	transient private FloatList allPixelValues = new ArrayFloatList(20_000);
 
 	IProjector getProjector(ClickedPoint p, IPluginIOList<ClickedPoint> allInputPoints, IPluginIOStack input) {
 
@@ -213,6 +223,14 @@ public class CellBallQuantify extends ThreeDPlugin implements AuxiliaryInputOutp
 		double zCalib = diameterInPixels || p.zCalibration == 0 ? 1 : p.zCalibration;
 
 		boolean noPixels = false;
+		
+		final FloatCollection pixelValues;
+		if (computeOverallPercentiles) {
+			pixelValues = new ArrayFloatList(500);
+		} else {
+			pixelValues = null;
+		}
+
 		if (!useSegmentation) {
 			int x0, x1, y0, y1, z0, z1;
 
@@ -224,7 +242,7 @@ public class CellBallQuantify extends ThreeDPlugin implements AuxiliaryInputOutp
 
 			x0 = (int) Math.min(xCenter, radius / zCalib);
 			x1 = (int) Math.min(width - 1 - xCenter, radius / zCalib);
-
+						
 			for (int k = -z0; k <= z1; k++) {
 				double kSq = k * k * zCalib * zCalib;
 				for (int j = -y0; j <= y1; j++) {
@@ -237,7 +255,9 @@ public class CellBallQuantify extends ThreeDPlugin implements AuxiliaryInputOutp
 						if (ignoreZero && f == 0)
 							continue;
 						projector.add(f);
-						// pixelValues.add(f);
+						if (pixelValues != null) {
+							pixelValues.add(f);
+						}
 					}
 				}
 			}
@@ -268,6 +288,15 @@ public class CellBallQuantify extends ThreeDPlugin implements AuxiliaryInputOutp
 				if (ignoreZero && f == 0)
 					continue;
 				projector.add(f);
+				if (pixelValues != null) {
+					pixelValues.add(f);
+				}
+			}
+		}
+		
+		if (computeOverallPercentiles) {
+			synchronized(allPixelValues) {
+				allPixelValues.addAll(pixelValues);
 			}
 		}
 
@@ -303,6 +332,8 @@ public class CellBallQuantify extends ThreeDPlugin implements AuxiliaryInputOutp
 			PreviewType previewType, boolean inputHasChanged) throws InterruptedException {
 
 		Utils.log("Running ball quantification", LogLevel.DEBUG);
+		
+		allPixelValues.clear();
 
 		final PluginIOCells inputCells = (PluginIOCells) pluginInputs.get("Seeds");
 		final PluginIOCells outputCells = (PluginIOCells) pluginOutputs.get("Seeds");
@@ -336,6 +367,19 @@ public class CellBallQuantify extends ThreeDPlugin implements AuxiliaryInputOutp
 		}
 
 		outputCells.fireValueChanged(false, false);
+		
+		if (computeOverallPercentiles) {
+			float[] allPixels = allPixelValues.toArray();
+			allPixelValues.clear();
+			int nPixels = allPixels.length;
+			Arrays.sort(allPixels);
+			PluginIONumber fifthP = new PluginIONumber("Fifth percentile");
+			PluginIONumber ninetyFifthP = new PluginIONumber("Ninety-fifth percentile");
+			fifthP.number = new Float(allPixels[(int) ((nPixels -1 ) * 0.05)]);
+			ninetyFifthP.number = new Float(allPixels[(int) ((nPixels -1 ) * 0.95)]);
+			getOutputs().put("Fifth percentile", fifthP);
+			getOutputs().put("Ninety-fifth percentile", ninetyFifthP);
+		}
 
 		if (cellsWithoutPixels.get() > 0) {
 			Utils.displayMessage(cellsWithoutPixels.get() + " cells had an empty segmentation; value set to 0", true,
