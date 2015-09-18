@@ -289,7 +289,7 @@ public class A0PipeLine_Manager implements PlugIn {
 	// http://java.sun.com/docs/books/tutorial/uiswing/examples/components/TableRenderDemoProject/src/components/TableRenderDemo.java
 	public class TableSelectionDemo extends JPanel implements ActionListener {
 
-		private String workingDirectory;
+		private String workingDirectory, lastTablePath;
 		private static final long serialVersionUID = 1L;
 		private JTable table1;
 		private JScrollPane sp;
@@ -2704,7 +2704,7 @@ public class A0PipeLine_Manager implements PlugIn {
 			vnc.setSelected(false);
 			globalOptionPanel.add(vnc);
 
-			updateCurrentStepButton = addCheckBox("Update current step upon param change");
+			updateCurrentStepButton = addCheckBox("Update step upon param change");
 			updateCurrentStepButton.setSelected(true);
 			globalOptionPanel.add(updateCurrentStepButton);
 			updatePipelineButton = addCheckBox("Propagate updates");
@@ -4013,12 +4013,12 @@ public class A0PipeLine_Manager implements PlugIn {
 				return;
 			}
 			FileDialog dialog = new FileDialog(new Frame(), "Save table to", FileDialog.SAVE);
-
+			dialog.setFile(lastTablePath);
 			dialog.setVisible(true);
 			String saveTo = dialog.getDirectory();
 			if (saveTo == null)
 				return;
-
+			lastTablePath = dialog.getFile();
 			saveTo += Utils.fileNameSeparator + dialog.getFile();
 
 			if (!dialog.getFile().contains(".xml"))
@@ -4049,10 +4049,11 @@ public class A0PipeLine_Manager implements PlugIn {
 			String fileToReadFrom = null;
 
 			if (modifier == 0) {
-				File f = FileNameUtils.chooseFile("Choose table...", FileDialog.LOAD, null);
+				File f = FileNameUtils.chooseFile("Choose table...", FileDialog.LOAD, lastTablePath);
 				if (f == null)
 					return;
 				fileToReadFrom = f.getAbsolutePath();
+				lastTablePath = fileToReadFrom;
 			} else {
 				final JOptionPane optionPane = new JOptionPane("Enter full path", JOptionPane.QUESTION_MESSAGE);
 				optionPane.addHierarchyListener(e -> {
@@ -4590,8 +4591,6 @@ public class A0PipeLine_Manager implements PlugIn {
 					setAllDirectories();
 					break;
 				case "Collect garbage":
-					Utils.log("Calling garbage callector", LogLevel.DEBUG);
-					// Runtime.getRuntime().freeMemory();
 					SwingMemory.swingGC(null);
 					Runtime.getRuntime().gc();
 					break;
