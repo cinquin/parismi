@@ -4534,7 +4534,7 @@ public class A0PipeLine_Manager implements PlugIn {
 				case "Use virtual stacks to open files":
 					((MyTableModel) table1.getModel()).openUsingVirtualStacks = updatePipelineButton.isSelected();
 					break;
-				case "Update current step upon param change":
+				case "Update step upon param change":
 					((MyTableModel) table1.getModel()).updateCurrentStep = updateCurrentStepButton.isSelected();
 					break;
 				case "Restart local update upon param change":
