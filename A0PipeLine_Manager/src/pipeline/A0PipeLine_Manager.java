@@ -3908,7 +3908,7 @@ public class A0PipeLine_Manager implements PlugIn {
 
 			}
 			KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner();
-			System.gc();
+			//System.gc();
 
 			((MyTableModel) table1.getModel()).fireTableDataChanged();
 
@@ -3932,7 +3932,7 @@ public class A0PipeLine_Manager implements PlugIn {
 					Utils.printStack(e);
 				}
 			}
-			System.gc();
+			//System.gc();
 			((MyTableModel) table1.getModel()).fireTableDataChanged();
 		}
 
