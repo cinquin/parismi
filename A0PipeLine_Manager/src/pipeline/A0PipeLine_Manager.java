@@ -4018,11 +4018,12 @@ public class A0PipeLine_Manager implements PlugIn {
 			String saveTo = dialog.getDirectory();
 			if (saveTo == null)
 				return;
-			lastTablePath = dialog.getFile();
 			saveTo += Utils.fileNameSeparator + dialog.getFile();
 
 			if (!dialog.getFile().contains(".xml"))
 				saveTo += ".xml";
+
+			lastTablePath = saveTo;
 
 			try (PrintWriter out = new PrintWriter(saveTo)) {
 				out.println(output);
