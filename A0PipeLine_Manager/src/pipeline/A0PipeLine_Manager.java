@@ -4073,6 +4073,7 @@ public class A0PipeLine_Manager implements PlugIn {
 								JOptionPane.QUESTION_MESSAGE);
 				if (fileToReadFrom == null)
 					return;
+				lastTablePath = fileToReadFrom;
 				fileToReadFrom = FileNameUtils.expandPath(fileToReadFrom);
 			}
 			if (!fileToReadFrom.endsWith(".xml")) {
