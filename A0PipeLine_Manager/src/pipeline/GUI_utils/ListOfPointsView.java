@@ -9,20 +9,27 @@ package pipeline.GUI_utils;
 import java.awt.AWTEvent;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FileDialog;
+import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.KeyboardFocusManager;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -33,6 +40,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListSelectionModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -41,13 +49,19 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JViewport;
 import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.WindowConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 import org.apache.commons.collections.primitives.ArrayFloatList;
 import org.apache.commons.collections.primitives.FloatIterator;
@@ -60,8 +74,10 @@ import org.boris.expr.engine.GridReference;
 import org.boris.expr.engine.Range;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.Highlighter;
 import org.jdesktop.swingx.decorator.HighlighterFactory;
+import org.jdesktop.swingx.table.TableColumnExt;
 
 import pipeline.GUI_utils.bean_table.BeanTableModel;
 import pipeline.GUI_utils.bean_table.BeanTableModel.ColumnInformation;
@@ -69,7 +85,6 @@ import pipeline.data.ClickedPoint;
 import pipeline.data.IPluginIO;
 import pipeline.data.IPluginIOList;
 import pipeline.data.IPluginIOListMember;
-import pipeline.data.PluginIOCalibrable;
 import pipeline.data.PluginIOListener;
 import pipeline.database.ListDataGroup;
 import pipeline.misc_util.Expr4jAdditions;
@@ -117,6 +132,7 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 					tableModel.removeTableModelListener(ListOfPointsView.this);
 					tableModel.addTableModelListener(ListOfPointsView.this);
 					if (table != null) {
+						table.silenceUpdates.incrementAndGet();
 						table.setModel(tableModel);
 						table.needToInitializeFilterModel = true;
 						table.initializeFilterModel();
@@ -126,17 +142,19 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 						Vector<String> rowVector0 = (Vector<String>) modelForColumnDescriptions.getDataVector().get(0);
 						for (int j = 0; j < tableModel.getColumnCount(); j++) {
 							// FIXME This ignores the names the user may have set
-					rowVector0.setElementAt(tableModel.getColumnName(j), j);
+							rowVector0.setElementAt(tableModel.getColumnName(j), j);
+						}
+						modelForColumnDescriptions.fireTableDataChanged();
+						table.silenceUpdates.decrementAndGet();
+						((AbstractTableModel) table.getModel()).fireTableStructureChanged();
+					}
 				}
-				modelForColumnDescriptions.fireTableDataChanged();
-			}
-		}
-	}		;
+			};
 			if (SwingUtilities.isEventDispatchThread())
 				r.run();
 			else
 				SwingUtilities.invokeAndWait(r);
-		} catch (Exception e) {
+		} catch (InvocationTargetException | InterruptedException e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -207,7 +225,9 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 
 	private void setSpreadsheetColumnEditorAndRenderer() {
 		MultiRenderer multiRenderer = new MultiRenderer();
+		multiRenderer.singleClickToEdit = false;
 		MultiRenderer multiRenderer2 = new MultiRenderer();
+		multiRenderer2.singleClickToEdit = false;
 
 		multiRenderer.registerRenderer(ListDataGroup.class, new ButtonForListDisplay());
 		multiRenderer.registerEditor(ListDataGroup.class, new ButtonForListDisplay());
@@ -215,13 +235,14 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 		multiRenderer2.registerRenderer(ListDataGroup.class, new ButtonForListDisplay());
 		multiRenderer2.registerEditor(ListDataGroup.class, new ButtonForListDisplay());
 
-		for (int j = 0; j < tableModel.getColumnCount(); j++) {
-			if (tableModel.getColumnName(j).contains("userCell")) {// columns.get(j).indexInList
-				table.getColumnModel().getColumn(j).setCellEditor(new SpreadsheetCellView());
-				table.getColumnModel().getColumn(j).setCellRenderer(new SpreadsheetCellView());
+		for (TableColumn column: table.getColumns(true)) {
+			TableColumnExt castColumn = (TableColumnExt) column;
+			if (castColumn.getTitle().contains("userCell")) {
+				castColumn.setCellEditor(new SpreadsheetCellView());
+				castColumn.setCellRenderer(new SpreadsheetCellView());
 			} else {
-				table.getColumnModel().getColumn(j).setCellEditor(multiRenderer);
-				table.getColumnModel().getColumn(j).setCellRenderer(multiRenderer2);
+				castColumn.setCellEditor(multiRenderer);
+				castColumn.setCellRenderer(multiRenderer2);
 			}
 		}
 	}
@@ -304,7 +325,7 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 	private JCheckBox realTimeUpdateCheckbox;
 	private JFrame frame;
 
-	private JTable tableForColumnDescriptions;
+	private JXTable tableForColumnDescriptions;
 	private DefaultTableModel modelForColumnDescriptions;
 
 	/**
@@ -324,6 +345,28 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 		}
 		SwingUtilities.invokeLater(modelForColumnDescriptions::fireTableDataChanged);
 	}
+	
+	//Copied from JTable code
+	private static JViewport getTableViewPort(JTable table) {
+		Container parent = SwingUtilities.getUnwrappedParent(table);
+		if (parent instanceof JViewport) {
+			JViewport port = (JViewport) parent;
+			Container gp = port.getParent();
+			if (gp instanceof JScrollPane) {
+				JScrollPane scrollPane = (JScrollPane) gp;
+				// Make certain we are the viewPort's view and not, for
+				// example, the rowHeaderView of the scrollPane -
+				// an implementor of fixed columns might do this.
+				JViewport viewPort = scrollPane.getViewport();
+				if (viewPort == null ||
+						SwingUtilities.getUnwrappedView(viewPort) != table) {
+					return null;
+				}
+				return viewPort;
+			}
+		}
+		return null;
+	}
 
 	private WindowListener listener;
 
@@ -335,8 +378,6 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 		if (table == null) {
 			spreadsheetEngine = new DependencyEngine(new BasicEngineProvider());
 			setupTableModel(points);
-			// if (tableModel.getRowCount()>0) tableModel.removeRowRange(0, tableModel.getRowCount()-1);
-			// tableModel.insertRows(0, pointList);
 			silenceUpdates.incrementAndGet();
 			table = new JXTablePerColumnFiltering(tableModel);
 
@@ -351,30 +392,98 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 			table.setColumnControlVisible(true);
 			table.setHighlighters(new Highlighter[] { HighlighterFactory.createAlternateStriping() });
 
+			table.addPropertyChangeListener("horizontalScrollEnabled", new PropertyChangeListener() {
+
+				JViewport viewPort, filteringViewPort, columnDescViewPort;
+				int lastX;
+				
+				ChangeListener scrollListener = new ChangeListener() {
+
+					@Override
+					public void stateChanged(ChangeEvent e) {
+						if (viewPort == null || filteringViewPort == null) {
+							return;
+						}
+						Point position = viewPort.getViewPosition();
+						if (position.x == lastX) {
+							return;
+						}
+						filteringViewPort.setViewPosition(position);
+						columnDescViewPort.setViewPosition(position);
+						lastX = position.x;
+					}
+					
+				};
+				
+				@Override
+				public void propertyChange(PropertyChangeEvent evt) {
+					if (viewPort != null) {
+						viewPort.removeChangeListener(scrollListener);
+					}
+					if (evt.getNewValue().equals(true)) {
+						viewPort = getTableViewPort(table);
+						if (viewPort == null) {
+							return;
+						}
+						table.filteringTable.setHorizontalScrollEnabled(true);
+						table.tableForColumnDescriptions.setHorizontalScrollEnabled(true);
+						table.updateFilteringTableSetup();
+						filteringViewPort = getTableViewPort(table.filteringTable);
+						columnDescViewPort = getTableViewPort(table.tableForColumnDescriptions);
+						viewPort.addChangeListener(scrollListener);
+						scrollListener.stateChanged(null);
+					} else {
+						table.filteringTable.setHorizontalScrollEnabled(false);
+						table.tableForColumnDescriptions.setHorizontalScrollEnabled(false);
+					}
+				}
+			});
+			
 			modelForColumnDescriptions = new dataModelAllEditable(1, tableModel.getColumnCount());
 			Vector<String> rowVector0 = (Vector<String>) modelForColumnDescriptions.getDataVector().get(0);
 			for (int j = 0; j < tableModel.getColumnCount(); j++) {
 				rowVector0.setElementAt(tableModel.getColumnName(j), j);
 			}
+			
+			boolean done;
+			do {
+				done = true;
+				for (TableColumn i: table.getColumns(true)) {
+					TableColumnExt iCast = (TableColumnExt) i;
+					if (iCast.getTitle().equals("Class") ||
+							iCast.getTitle().equals("c") || 
+							iCast.getTitle().equals("t") || 
+							iCast.getTitle().equals("clusterID") ||
+							iCast.getTitle().equals("userCell 2") ||
+							iCast.getTitle().equals("userCell 3")) {
+						if (iCast.isVisible()) {
+							iCast.setVisible(false);
+							done = false;
+							break;
+						}
+					}
+				}
+			} while (!done);
+			
 			SwingUtilities.invokeLater(modelForColumnDescriptions::fireTableDataChanged);
 
-			setSpreadsheetColumnEditorAndRenderer();
-
-			// table.setMaximumSize(new Dimension(800,100));
 			JScrollPane scrollPane = new JScrollPane(table);
 			scrollPane.setPreferredSize(new Dimension(2000, 2000));
 
 			updateColumnDescriptions();
 			silenceUpdates.decrementAndGet();
 
-			// tableModel.fireTableStructureChanged();
 			setSpreadsheetColumnEditorAndRenderer();
 
-			tableForColumnDescriptions = new JTable(modelForColumnDescriptions);
+			tableForColumnDescriptions = new JXTable(modelForColumnDescriptions);
+			table.tableForColumnDescriptions = tableForColumnDescriptions;
 
 			JScrollPane jScrollPaneForNames = new JScrollPane(tableForColumnDescriptions);
+			jScrollPaneForNames.setHorizontalScrollBarPolicy(
+					ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
 			JPanel controlPanel = new JPanel();
+			controlPanel.setLayout(new FlowLayout());
 
 			JButton createScatterPlotButton = new JButton("Scatter plot from selected columns");
 			controlPanel.add(createScatterPlotButton);
@@ -421,6 +530,7 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 			saveTableToFile.setActionCommand("Save table to file");
 			saveTableToFile.addActionListener(this);
 
+			/*
 			final JCheckBox useCalibration = new JCheckBox("Use calibration");
 			useCalibration.addActionListener(e -> {
 				if (points == null)
@@ -447,51 +557,23 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 				calibrable = (PluginIOCalibrable) points;
 			boolean calibrationPresent = calibrable != null && calibrable.getCalibration() != null;
 			useCalibration.setSelected(calibrationPresent);
-
 			if (calibrationPresent) {
 				updateCalibration((float) calibrable.getCalibration().pixelWidth,
 						(float) calibrable.getCalibration().pixelDepth);
 			}
-
 			controlPanel.add(useCalibration);
-
-			controlPanel.setMaximumSize(new Dimension(10000, 20));
-
+			*/
+			
 			frame = new JFrame(points.getName());
 			frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-			listener = new WindowListenerWeakRef(new WindowListener() {
-
-				@Override
-				public void windowOpened(WindowEvent e) {
-				}
-
-				@Override
-				public void windowIconified(WindowEvent e) {
-				}
-
-				@Override
-				public void windowDeiconified(WindowEvent e) {
-				}
-
-				@Override
-				public void windowDeactivated(WindowEvent e) {
-				}
-
-				@Override
-				public void windowClosing(WindowEvent e) {
-				}
-
+			listener = new WindowListenerWeakRef(new WindowAdapter() {
 				@Override
 				public void windowClosed(WindowEvent e) {
-					close();// so all references to data are nulled, to ensure garbage collection
+					close();// So all references to data are nulled, to ensure garbage collection
 				}
 
-				@Override
-				public void windowActivated(WindowEvent e) {
-				}
 			});
-
 			frame.addWindowListener(listener);
 
 			frame.setLayout(new GridBagLayout());
@@ -503,26 +585,32 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 			c.weighty = 0.75;
 			c.weightx = 1.0;
 			c.gridwidth = 1;
-			c.gridheight = 4;
+			c.gridheight = 1;
 
 			frame.add(scrollPane, c);
 
-			c.weighty = 0.15;
-			frame.add(table.filteringTable, c);
+			c.weighty = 0.0;
+			JScrollPane scrollPane2 = new JScrollPane(table.filteringTable);
+			scrollPane2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+			scrollPane2.setMinimumSize(new Dimension(1, 250));
+			frame.add(scrollPane2, c);
 
-			c.weighty = 0.05;
-			jScrollPaneForNames.setMaximumSize(new Dimension(800, 50));
+			c.weighty = 0.0;
+			jScrollPaneForNames.setMinimumSize(new Dimension(1, 40));
+			jScrollPaneForNames.setMaximumSize(new Dimension(9999999, 40));
 			frame.add(jScrollPaneForNames, c);
-			c.weighty = 0.05;
+
+			c.weighty = 0.0;
+			c.fill = GridBagConstraints.HORIZONTAL;
+			controlPanel.setMinimumSize(new Dimension(1, 80));
 			frame.add(controlPanel, c);
-			frame.pack();
+			
 			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 			int height = screenSize.height;
 			int width = screenSize.width;
 			frame.setSize((int) (0.67 * width), height / 2);
 			frame.setLocation((int) (0.33 * width), height / 2);
 			frame.setVisible(true);
-
 		}
 
 		if ((tableUpdateThread == null) || (!tableUpdateThread.isAlive())) {
@@ -539,11 +627,10 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 		}
 	}
 
-	private Thread tableUpdateThread = null;
+	private Thread tableUpdateThread;
 
-	// TODO This is a dirty hack that's specific to ClickedPoints
-	// Need to implement this properly, which will require some thinking about the best
-	// way to deal transparently with calibration
+	// This is currently not functional
+	@SuppressWarnings("unused")
 	private void updateCalibration(float xyCalibration, float zCalibration) {
 		points.stream().filter(p -> p instanceof ClickedPoint).forEach(p -> {
 			ClickedPoint cp = (ClickedPoint) p;
@@ -572,12 +659,14 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 				// display a histogram rather than a scatter plot
 				scv = new XYScatterPlotView(1);
 				scv.setWindowTitle("Histogram of " + name1);
+				
+				final int columnModelIndex = table.convertColumnIndexToModel(selectedColumns[0]);
 
 				int nFilteredRows = table.getNumberFilteredRows();
 				if (nFilteredRows == 0) {
 					// No row filtered, so create a plot that should be dynamically updated as
 					// the underlying PluginIO is updated by the pipeline plugins
-					ColumnInformation columnInfo = tableModel.columns.get(selectedColumns[0]);
+					ColumnInformation columnInfo = tableModel.columns.get(columnModelIndex);
 					if (columnInfo.getReturnType().equals(ArrayFloatList.class)) {
 						// Display histogram of values for the selected cell, NOT a histogram for
 						// a single value for all cells in table
@@ -593,11 +682,11 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 					} else {
 						if (columnInfo.indexInList > -1) {
 							scv.addSeries(name1, points.getJFreeChartXYSeries(columnInfo.fieldName, null,
-									columnInfo.indexInList, -1, tableModel.columns.get(selectedColumns[0]).getName(),
+									columnInfo.indexInList, -1, tableModel.columns.get(columnModelIndex).getName(),
 									null));
 						} else
 							scv.addSeries(name1, points.getJFreeChartXYSeries(name1, null, -1, -1, tableModel.columns
-									.get(selectedColumns[0]).getName(), null));
+									.get(columnModelIndex).getName(), null));
 					}
 				} else {
 					// Some rows are filtered, so we do not want to display everything
@@ -609,37 +698,38 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 							filteredPoints.add(tableModel.getRow(i));
 						}
 					}
-					ColumnInformation columnInfo = tableModel.columns.get(selectedColumns[0]);
+					ColumnInformation columnInfo = tableModel.columns.get(columnModelIndex);
 					@SuppressWarnings("unchecked")
 					IPluginIOList<T> subList = (IPluginIOList<T>) points.duplicateStructure();
 					subList.addAll(filteredPoints);
 					if (columnInfo.indexInList > -1) {
 						scv.addSeries(name1, subList.getJFreeChartXYSeries(columnInfo.fieldName, null,
-								columnInfo.indexInList, -1, tableModel.columns.get(selectedColumns[0]).getName(), null));
+								columnInfo.indexInList, -1, tableModel.columns.get(columnModelIndex).getName(), null));
 					} else
 						scv.addSeries(name1, subList.getJFreeChartXYSeries(name1, null, -1, -1, tableModel.columns.get(
-								selectedColumns[0]).getName(), null));
+								columnModelIndex).getName(), null));
 				}
-
 			} else { // display a scatter plot
+				final int xColumnModelIndex = table.convertColumnIndexToModel(selectedColumns[0]);
+				final int yColumnModelIndex = table.convertColumnIndexToModel(selectedColumns[1]);
 				String name2 = table.getColumnName(selectedColumns[1]);
 				// Utils.log("Creating pairwise plot for columns "+name1+" and "+name2,LogLevel.DEBUG);
 				// For now just deal with the first two columns
 				scv = new XYScatterPlotView(0);
 				scv.setWindowTitle("Scatterplot: " + name2 + " vs " + name1);
 				int nFilteredRows = table.getNumberFilteredRows();
-				ColumnInformation columnInfox = tableModel.columns.get(selectedColumns[0]);
-				ColumnInformation columnInfoy = tableModel.columns.get(selectedColumns[1]);
-				int xIndex = columnInfox.indexInList;
-				int yIndex = columnInfoy.indexInList;
-				String xName = xIndex > -1 ? columnInfox.fieldName : name1;
-				String yName = yIndex > -1 ? columnInfoy.fieldName : name2;
+				ColumnInformation xColumnInfo = tableModel.columns.get(xColumnModelIndex);
+				ColumnInformation yColumnInfo = tableModel.columns.get(yColumnModelIndex);
+				int xListIndex = xColumnInfo.indexInList;
+				int yListIndex = yColumnInfo.indexInList;
+				String xName = xListIndex > -1 ? xColumnInfo.fieldName : name1;
+				String yName = yListIndex > -1 ? yColumnInfo.fieldName : name2;
 				if (nFilteredRows == 0) {
 					// No row filtered, so create a plot that should be dynamically updated as
 					// the underlying PluginIO is updated by the pipeline plugins
-					scv.addSeries(name1 + " and " + name2, points.getJFreeChartXYSeries(xName, yName, xIndex, yIndex,
-							tableModel.columns.get(selectedColumns[0]).getName(), tableModel.columns.get(
-									selectedColumns[1]).getName()));
+					scv.addSeries(name1 + " and " + name2, points.getJFreeChartXYSeries(xName, yName, xListIndex, yListIndex,
+							tableModel.columns.get(xColumnModelIndex).getName(),
+							tableModel.columns.get(yColumnModelIndex).getName()));
 				} else {
 					// Some rows are filtered, so we do not want to display everything
 					// TODO Ideally we would want to dynamically refilter when master list is changed by pipeline plugin
@@ -653,9 +743,9 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 					@SuppressWarnings("unchecked")
 					IPluginIOList<T> subList = (IPluginIOList<T>) points.duplicateStructure();
 					subList.addAll(filteredPoints);
-					scv.addSeries(name1 + " and " + name2, subList.getJFreeChartXYSeries(xName, yName, xIndex, yIndex,
-							tableModel.columns.get(selectedColumns[0]).getName(), tableModel.columns.get(
-									selectedColumns[1]).getName()));
+					scv.addSeries(name1 + " and " + name2, subList.getJFreeChartXYSeries(xName, yName, xListIndex, yListIndex,
+							tableModel.columns.get(xColumnModelIndex).getName(),
+							tableModel.columns.get(yColumnModelIndex).getName()));
 				}
 			}
 			scv.show();
@@ -891,23 +981,27 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 				tableStructurePossiblyChanged = false;
 			}
 
-			if (copyOfDirty && !((closed) || (frame == null))) {
+			if (copyOfDirty && !(closed || frame == null)) {
 				Component previousGlassPane = frame.getGlassPane();
-				frame.setGlassPane(g);
-				g.setBounds(table.getBounds());
-				g.setVisible(true);// Glass frame interrupts slider dragging
-				// so not showing it for now
-				final Timer timer = new Timer(2000, null);
+				final Timer timer = new Timer(2_000, null);
+				timer.setInitialDelay(4_000);
 				final Action t = new AbstractAction() {
 					private static final long serialVersionUID = 1L;
 					private boolean high;
-
+					private boolean firstRun = true;
+					
 					@Override
 					public void actionPerformed(ActionEvent action) {
 						if (frame == null || !frame.isVisible()) {
 							// The user might have closed the window; just exit
 							timer.stop();
 							return;
+						}
+						if (firstRun) {
+							firstRun = false;
+							frame.setGlassPane(g);
+							g.setBounds(table.getBounds());
+							g.setVisible(true);
 						}
 						g.setAlpha(high ? 200 : 100);
 						// table.setBackground(high?darkGrey:lightGrey);
@@ -928,7 +1022,6 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 					localPointsCopy.addAllAndLink(pointsCopy);
 					if ((modelEvent != null) && (modelEvent.eventType == PipelineTableModelEvent.FILTER_ADJUSTING))
 						filterUpdating = true;
-					// Utils.log("Made a copy of "+localPointsCopy.size()+ " data points", LogLevel.VERBOSE_DEBUG);
 				}
 
 				silenceUpdates.incrementAndGet();
@@ -938,7 +1031,6 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 					if (assumeTableStructureChanged) {
 						setupTableModel(localPointsCopy);
 						updateColumnDescriptions();
-
 					}
 
 					updateExpr4jModel();
@@ -946,18 +1038,19 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 					// only for user-defined columns
 					updateComputedCells();
 					if (!assumeTableStructureChanged) {
-						// reset filter range because if any new user values are generated the rows
+						// Reset filter range because if any new user values are generated the rows
 						// might automatically be filtered out, which is very confusing for the user
 						if (!filterUpdating)
 							table.resetFilterRanges(false);
 					}
 
 					points.fireValueChanged(false, false);
-					timer.stop();
-					g.setVisible(false);
-					frame.setGlassPane(previousGlassPane);
 					final boolean copyOfAssumeTableStructureChanged = assumeTableStructureChanged;
 					SwingUtilities.invokeLater(() -> {
+						timer.stop();
+						g.setVisible(false);
+						frame.setGlassPane(previousGlassPane);
+
 						synchronized (modelSemaphore) {
 							silenceUpdates.incrementAndGet();
 							try {
@@ -965,14 +1058,28 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 								if (copyOfAssumeTableStructureChanged) {
 									// tableModel.fireTableStructureChanged();
 									// Not necessary because already indirectly triggered above
-						} else
-							tableModel.fireTableDataChanged();
-					} finally {
-						silenceUpdates.decrementAndGet();
-					}
-					frame.repaint();// For glass pane
-				}
-			})		;
+								} else {
+									final ListSelectionModel saveRowSelection, saveColumnSelection;
+									try {
+										saveRowSelection =  (ListSelectionModel)
+												((DefaultListSelectionModel) table.getSelectionModel()).clone();
+										saveColumnSelection =  (ListSelectionModel)
+												((DefaultListSelectionModel) table.getColumnModel().getSelectionModel()).clone();
+
+									} catch (Exception e) {
+										throw new RuntimeException(e);
+									}
+									tableModel.fireTableDataChanged();
+									Utils.log("Resetting selection", LogLevel.DEBUG);
+									table.setSelectionModel(saveRowSelection);
+									table.getColumnModel().setSelectionModel(saveColumnSelection);
+								}
+							} finally {
+								silenceUpdates.decrementAndGet();
+							}
+							frame.repaint();// For glass pane
+						}
+					});
 				} catch (Exception e) {
 					Utils.log("Exception: " + e, LogLevel.WARNING);
 					dirty.set(true);
@@ -989,7 +1096,6 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 	@SuppressWarnings("unchecked")
 	@Override
 	public void tableChanged(TableModelEvent e) {
-		// Utils.log("Source of change is "+ e.getSource(),LogLevel.VERBOSE_DEBUG);
 		if ((silenceUpdates.get() == 0) && (realTimeUpdates))
 			updateImage();
 		if (silenceUpdates.get() == 0) {
@@ -1005,7 +1111,8 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 			}
 			synchronized (dirty) {
 				dirty.set(true);
-				tableStructurePossiblyChanged = true;// = e.getType() == TableModelEvent.HEADER_ROW;
+				tableStructurePossiblyChanged = !(e instanceof PipelineTableModelEvent || 
+						e.getType() == TableModelEvent.UPDATE);
 				if (tableStructurePossiblyChanged)
 					Utils.log("Table structure change event", LogLevel.DEBUG);
 				dirty.notifyAll();

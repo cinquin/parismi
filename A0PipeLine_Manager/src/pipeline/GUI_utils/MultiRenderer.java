@@ -13,12 +13,15 @@
 package pipeline.GUI_utils;
 
 import java.awt.Component;
+import java.awt.event.MouseEvent;
 import java.util.EventObject;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.DefaultCellEditor;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.event.CellEditorListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
@@ -67,7 +70,7 @@ import pipeline.parameters.TextParameter;
  **/
 public class MultiRenderer implements TableCellRenderer, TableCellEditor {
 	private final TableCellRenderer defaultRenderer = new DefaultTableCellRenderer();
-	private TableCellEditor defaultEditor;
+	private TableCellEditor defaultEditor = null;
 
 	private Map<Class<?>, TableCellRenderer> registeredRenderers = new HashMap<>();
 
@@ -78,6 +81,7 @@ public class MultiRenderer implements TableCellRenderer, TableCellEditor {
 	}
 
 	private TableCellEditor currentEditor;
+	public boolean singleClickToEdit = true;
 
 	public static void fillMultiRendererWithSpreadSheet(MultiRenderer multiRenderer) {
 		multiRenderer.registerRenderer(SpreadsheetCell.class, new SpreadsheetCellView());
@@ -209,15 +213,16 @@ public class MultiRenderer implements TableCellRenderer, TableCellEditor {
 		}
 
 		if (delegateEditor == null || value == null) {
-			delegateEditor = defaultEditor;
+			if (defaultEditor != null) {
+				delegateEditor = defaultEditor;
+			} else {
+				delegateEditor = new DefaultCellEditor(new JTextField());
+			}
 		}
 
 		currentEditor = delegateEditor;
 
-		if (delegateEditor == null) {
-			return null;
-		} else
-			return delegateEditor.getTableCellEditorComponent(table, value, isSelected, row, column);
+		return delegateEditor.getTableCellEditorComponent(table, value, isSelected, row, column);
 	}
 
 	@Override
@@ -227,6 +232,9 @@ public class MultiRenderer implements TableCellRenderer, TableCellEditor {
 
 	@Override
 	public boolean isCellEditable(EventObject anEvent) {
+		if (anEvent instanceof MouseEvent) {
+			return singleClickToEdit || ((MouseEvent) anEvent).getClickCount() >= 2;
+		}
 		return true;
 	}
 

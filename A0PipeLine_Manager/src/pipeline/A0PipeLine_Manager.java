@@ -1542,8 +1542,10 @@ public class A0PipeLine_Manager implements PlugIn {
 				System.exit(1);
 			}
 
-			if ((((MyTableModel) table1.getModel()).updatePipeline || batchRun) && (!(plugin instanceof Pause && !Utils.headless && !batchRun))
-					&& (!wasInterrupted) && !(((Boolean) pluginTableRow[COMPUTING_ERROR]) && stopOnError)
+			if (	(((MyTableModel) table1.getModel()).updatePipeline || batchRun)
+					&& (!(plugin instanceof Pause && !Utils.headless && !batchRun))
+					&& (!wasInterrupted)
+					&& !(((Boolean) pluginTableRow[COMPUTING_ERROR]) && stopOnError)
 					&& modelRow + 1 < data.length)
 				processStep(modelRow + 1, triggerRow, null, true, changedParameter, stayInCoreLoop, batchRun);
 
@@ -1780,8 +1782,6 @@ public class A0PipeLine_Manager implements PlugIn {
 				if (subMenu.getSubElements().length > 0)
 					pluginListMenu.add(subMenu);
 			}
-
-			ToolTipManager.sharedInstance().setDismissDelay(60000);
 
 			pluginListMenu.show(comp, xPosition, yPosition);
 		}
@@ -2181,10 +2181,6 @@ public class A0PipeLine_Manager implements PlugIn {
 		    ColumnHeaderToolTips tips = new ColumnHeaderToolTips();
 			JTableHeader header = table1.getTableHeader();
 		    header.addMouseMotionListener(tips);
-		    for (int colIndex = 0; colIndex < table1.getColumnCount(); colIndex++) {
-		      TableColumn col = table1.getColumnModel().getColumn(colIndex);
-		      tips.setToolTip(col, table1.getColumnName(colIndex));
-		    }
 		    
 			table1.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 			table1.setPreferredScrollableViewportSize(new Dimension(900, 250));
@@ -4790,7 +4786,11 @@ public class A0PipeLine_Manager implements PlugIn {
 							0,
 							new RowOrFileTextReference(
 									"",
-									"Image that this step uses as an input. Name of an open image, absolute reference to another row starting with a dollar (e.g. $2), or relative reference (e.g. -1 for the previous row)",
+									"Image that this step uses as an input. Name of an open image, absolute reference to another "
+									+ "row starting with a dollar (e.g. $2), relative reference (e.g. -1 for the previous row), or "
+									+ "path to a TIFF or LSM file (the path can be absolute or relative to the current working directory, "
+									+ "and can substitute ~user_name for home directories; {} braces will be removed from path name, "
+									+ "and numbers between braces will be automatically incremented at each iteration of a batch run).",
 									"", true, null),
 							channelsParameter,
 							Boolean.TRUE,
@@ -5568,6 +5568,7 @@ public class A0PipeLine_Manager implements PlugIn {
 	public static ReflectionProvider reflectionProvider;
 
 	static {
+		ToolTipManager.sharedInstance().setDismissDelay(120_000);
 		boolean b = true;
 		if (b) {
 			reflectionProvider = new Sun14ReflectionProvider();

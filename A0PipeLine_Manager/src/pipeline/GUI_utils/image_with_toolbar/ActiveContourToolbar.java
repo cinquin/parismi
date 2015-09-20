@@ -38,7 +38,7 @@ import org.eclipse.jdt.annotation.NonNull;
 import pipeline.A0PipeLine_Manager;
 import pipeline.GUI_utils.OrthogonalViewsWithComposites;
 import pipeline.GUI_utils.PluginIOView;
-import pipeline.GUI_utils.TableBetterFocus;
+import pipeline.GUI_utils.JXTableBetterFocus;
 import pipeline.data.PluginIOCells;
 import pipeline.misc_util.FileNameUtils;
 import pipeline.misc_util.Utils;
@@ -268,7 +268,7 @@ public class ActiveContourToolbar extends Toolbar {
 		add(stopVideoOnCellsButton, c);
 
 		DefaultTableModel smoothingTableModel = new DefaultTableModel(1, 1);
-		TableBetterFocus smoothingParameterTable = new TableBetterFocus(smoothingTableModel);
+		JXTableBetterFocus smoothingParameterTable = new JXTableBetterFocus(smoothingTableModel);
 		smoothingParameterTable.setFillsViewportHeight(false);
 		smoothingParameterTable.getColumn(0).setCellEditor(new FloatSlider());
 		smoothingParameterTable.getColumn(0).setCellRenderer(new FloatSlider());

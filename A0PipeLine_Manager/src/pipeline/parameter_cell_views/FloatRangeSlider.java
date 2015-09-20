@@ -38,6 +38,7 @@ import javax.swing.event.ChangeListener;
 
 import org.apache.commons.lang3.text.WordUtils;
 import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -381,14 +382,14 @@ public class FloatRangeSlider extends AbstractParameterCellView implements Mouse
 	private IntervalMarker selectionRange;
 
 	/**
-	 * Called whenever currentValue0, currentValue1, minimum, or maximum have been updates
+	 * Called whenever currentValue0, currentValue1, minimum, or maximum have been updated.
 	 * Updates all elements in the GUI.
 	 * 
 	 * @param triggerParameterUpdate
 	 *            Trigger a callback to the parameter and therefore to the pipeline
 	 * @param stillChanging
 	 *            True if parameter is still changing (ie if the user is still dragging the slider of the histogram
-	 *            interval marker
+	 *            interval marker)
 	 */
 	private void updateDisplayAndParameter(boolean triggerParameterUpdate, boolean stillChanging) {
 		if (silenceUpdate)
@@ -612,10 +613,11 @@ public class FloatRangeSlider extends AbstractParameterCellView implements Mouse
 	 *            MouseEvent containing coordinates of interest
 	 * @return Chart coordinates (evaluated as double)
 	 */
-	private Point2D getChartCoordinates(MouseEvent e) {
-		if (chartPanel.getChartRenderingInfo().getChartArea().getHeight() == 0)
-			Utils.log("Cannot translate to chart coordinates", LogLevel.ERROR);// throw new
-																				// RuntimeException("Cannot translate to chart coordinates");
+	private @Nullable Point2D getChartCoordinates(MouseEvent e) {
+		if (chartPanel.getChartRenderingInfo().getChartArea().getHeight() == 0) {
+			Utils.log("Cannot translate to chart coordinates", LogLevel.DEBUG);
+			return null;
+		}
 		int mouseX = e.getX();
 		int mouseY = e.getY();
 		Utils.log("x = " + mouseX + ", y = " + mouseY, LogLevel.DEBUG);
@@ -628,7 +630,7 @@ public class FloatRangeSlider extends AbstractParameterCellView implements Mouse
 		RectangleEdge rangeAxisEdge = plot.getRangeAxisEdge();
 		double chartX = domainAxis.java2DToValue(p.getX(), plotArea, domainAxisEdge);
 		double chartY = rangeAxis.java2DToValue(p.getY(), plotArea, rangeAxisEdge);
-		return (new Point2D.Double(chartX, chartY));
+		return new Point2D.Double(chartX, chartY);
 	}
 
 	void moveIntervalEdgeToMousePosition(MouseEvent e) {
@@ -637,6 +639,9 @@ public class FloatRangeSlider extends AbstractParameterCellView implements Mouse
 		if (silenceUpdate)
 			return;
 		Point2D chartCoordinates = getChartCoordinates(e);
+		if  (chartCoordinates == null) {
+			return;
+		}
 
 		if (markerIntervalEdgeSelected == 0) {
 			// prevent the minimum and maximum from sliding past each other
@@ -658,6 +663,9 @@ public class FloatRangeSlider extends AbstractParameterCellView implements Mouse
 			return;
 
 		Point2D chartCoordinates = getChartCoordinates(e);
+		if (chartCoordinates == null) {
+			return;
+		}
 		double distanceToIntervalLeft = Math.abs(chartCoordinates.getX() - currentValue0);
 		double distanceToIntervalRight = Math.abs(chartCoordinates.getX() - currentValue1);
 

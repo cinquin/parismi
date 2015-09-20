@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Ant-Version: Apache Ant 1.9.3
 Created-By: 1.8.0_25-b17 (Oracle Corporation)
 Built-By: Daily Build
-Implementation-Version: 0.99-b1
-Built-Date: 2015-03-20 18:16:30
+Implementation-Version: 0.99-b11
+Built-Date: 2015-09-20 12:12:15
 Main-Class: pipeline.A0PipeLine_Manager
 
