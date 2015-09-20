@@ -28,7 +28,7 @@
     </unzip>
   </target>
 	
-  <target name="copy_dependencies">
+  <target name="copy_dependencies" depends="unjar_dependencies">
 	    <copy todir="bin">
         <fileset dir="${lib_unjarred}">
         	<exclude name="**/.DS_Store" />
