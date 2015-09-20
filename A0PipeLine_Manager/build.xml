@@ -18,7 +18,7 @@
         <pathelement location="bin"/>
         <path refid="IJ.classpath"/>
         <pathelement location="lib/xpp3_min-1.1.4c.jar"/>
-        <pathelement location="lib/swingx-1.6.1.jar"/>
+        <pathelement location="lib/swingx-all-1.6.5-1.jar"/>
         <pathelement location="lib/guava-11.0.2.jar"/>
         <pathelement location="lib/jna-4.0.0.jar"/>
         <pathelement location="lib/kd.jar"/>
