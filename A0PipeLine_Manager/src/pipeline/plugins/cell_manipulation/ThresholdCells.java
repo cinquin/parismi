@@ -24,6 +24,7 @@ import pipeline.data.IPluginIOList;
 import pipeline.data.IPluginIOListMember;
 import pipeline.data.InputOutputDescription;
 import pipeline.misc_util.ParameterListenerWeakRef;
+import pipeline.misc_util.PluginRuntimeException;
 import pipeline.misc_util.ProgressReporter;
 import pipeline.misc_util.Utils;
 import pipeline.misc_util.Utils.LogLevel;
@@ -99,7 +100,7 @@ public class ThresholdCells extends FourDPlugin implements AuxiliaryInputOutputP
 		}
 	}
 
-	String fieldName = "";
+	protected String fieldName = "";
 
 	private class FieldListener extends ParameterListenerAdapter {
 
@@ -179,36 +180,52 @@ public class ThresholdCells extends FourDPlugin implements AuxiliaryInputOutputP
 		}
 		return max;
 	}
-
-	private void updateHistogram() {
-		IPluginIOList<?> cells = (IPluginIOList<?>) pluginInputs.get("Seeds");
-		if (cells == null)
-			return;
-		BeanTableModel<?> tableModel = cells.getBeanTableModel();
-
-		int columnIndex = Utils.indexOf(getFieldNames(tableModel), fieldNameParam.getSelection());
-
-		double[] valuesForHistogram = new double[tableModel.getRowCount()];
-		for (int i = 0; i < tableModel.getRowCount(); i++) {
-			valuesForHistogram[i] = tableModel.getFloatValueAt(i, columnIndex);
-		}
-
+	
+	private void setEmptyHistogram() {
 		HistogramDataset dataset = new HistogramDataset();
 		dataset.setType(HistogramType.RELATIVE_FREQUENCY);
-		try {
-			dataset.addSeries("Histogram", valuesForHistogram, 15);
-		} catch (IllegalArgumentException e) {
-			//This exception is thrown for an empty series
-			//Don't stop setting up just because the series to display is empty:
-			//it's enough for an exception to be thrown when plugin is run.
-			Utils.printStack(e, LogLevel.DEBUG);
-		}
-
 		((FloatRangeParameter) rangeParameter).histogram = dataset;
 	}
 
+	private void updateHistogram() {
+		IPluginIOList<?> cells = (IPluginIOList<?>) pluginInputs.get("Seeds");
+		if (cells == null) {
+			setEmptyHistogram();
+			return;
+		}
+		BeanTableModel<?> tableModel = cells.getBeanTableModel();
+
+		int columnIndex = Utils.indexOf(getFieldNames(tableModel), fieldNameParam.getSelection());
+		
+		if (columnIndex == -1) {
+			setEmptyHistogram();
+		} else {
+
+			double[] valuesForHistogram = new double[tableModel.getRowCount()];
+			for (int i = 0; i < tableModel.getRowCount(); i++) {
+				valuesForHistogram[i] = tableModel.getFloatValueAt(i, columnIndex);
+			}
+
+			HistogramDataset dataset = new HistogramDataset();
+			dataset.setType(HistogramType.RELATIVE_FREQUENCY);
+			try {
+				dataset.addSeries("Histogram", valuesForHistogram, 15);
+			} catch (IllegalArgumentException e) {
+				//This exception is thrown for an empty series
+				//Don't stop setting up just because the series to display is empty:
+				//it's enough for an exception to be thrown when plugin is run.
+				Utils.printStack(e, LogLevel.DEBUG);
+			}
+
+			((FloatRangeParameter) rangeParameter).histogram = dataset;
+		}
+	}
+
 	private void updateRange(boolean updateSelection) {
-		if (fieldNameParam.getSelection() == null)
+		IPluginIOList<?> cells = (IPluginIOList<?>) pluginInputs.get("Seeds");
+		BeanTableModel<?> tableModel = cells.getBeanTableModel();
+		if (fieldNameParam.getSelection() == null ||
+				Utils.indexOf(getFieldNames(tableModel), fieldNameParam.getSelection()) == -1)
 			return;
 		float min = (float) Utils.enhanceMin(getMin());
 		float max = (float) Utils.enhanceMax(getMax());
@@ -246,19 +263,22 @@ public class ThresholdCells extends FourDPlugin implements AuxiliaryInputOutputP
 
 		BeanTableModel<?> tableModel = cells.getBeanTableModel();
 
-		String[] fieldNames = new String[tableModel.getColumnCount()];
+		List<String> fieldNames = new ArrayList<>(tableModel.getColumnCount());
 
-		for (int i = 0; i < fieldNames.length; i++) {
-			fieldNames[i] = tableModel.getColumnName(i);
+		for (int i = 0; i < tableModel.getColumnCount(); i++) {
+			fieldNames.add(tableModel.getColumnName(i));
 		}
 
 		String currentChoiceName = fieldNameParam.getSelection();
-		fieldNameParam.setChoices(fieldNames);
-		fieldNameParam.setSelectionIndex(Utils.indexOf(fieldNames, currentChoiceName));
-		if ((fieldNames.length > 0) && fieldNameParam.getSelectionIndex() == -1) {
+		if (!fieldNames.contains(currentChoiceName)) {
+			fieldNames.add(0, currentChoiceName);
+		}
+		fieldNameParam.setChoices(fieldNames.toArray(new String[fieldNames.size()]));
+		fieldNameParam.setSelectionIndex(fieldNames.indexOf(currentChoiceName));
+		/*if ((fieldNames.length > 0) && fieldNameParam.getSelectionIndex() == -1) {
 			fieldNameParam.setSelectionIndex(0);
 			fieldNameParam.fireValueChanged(false, true, false);
-		}
+		}*/
 		updateHistogram();
 		updateRange(false);
 	}
@@ -278,8 +298,8 @@ public class ThresholdCells extends FourDPlugin implements AuxiliaryInputOutputP
 		return SAME_AS_BINARY;
 	}
 
-	float minThreshold;
-	float maxThreshold;
+	protected float minThreshold;
+	protected float maxThreshold;
 
 	@Override
 	public Map<String, InputOutputDescription> getInputDescriptions() {
@@ -297,7 +317,6 @@ public class ThresholdCells extends FourDPlugin implements AuxiliaryInputOutputP
 		initializeOutputs();
 		IPluginIOList<?> out = (IPluginIOList<?>) getInput("Seeds").duplicateStructure();
 		PluginIOView view = out.createView();
-		// PluginIOView view=new ListOfPointsView(seeds);
 		view.setData(out);
 		pluginOutputs.put("Cells", out);
 		ArrayList<PluginIOView> views = new ArrayList<>();
@@ -324,6 +343,8 @@ public class ThresholdCells extends FourDPlugin implements AuxiliaryInputOutputP
 	public String[] getOutputLabels() {
 		return new String[] { "Cells" };
 	}
+	
+	private boolean ERROR_ON_MISSING_COLUMN = false;
 
 	@Override
 	public void run(ProgressReporter r, MultiListParameter inChannels, TableParameter outChannels,
@@ -331,9 +352,7 @@ public class ThresholdCells extends FourDPlugin implements AuxiliaryInputOutputP
 			boolean stayInCoreLoop) {
 
 		IPluginIOList<?> cells = (IPluginIOList<?>) pluginInputs.get("Seeds");
-		BeanTableModel<?> tableModel = cells.getBeanTableModel();// new
-																	// BeanTableModel<ClickedPoint>(cells.getElementClass(),(List
-																	// <?>) cells);
+		BeanTableModel<?> tableModel = cells.getBeanTableModel();
 		IPluginIOList<?> outputCells = (IPluginIOList<?>) pluginOutputs.get("Cells");
 		cells.copyInto(outputCells);
 		outputCells.clear();
@@ -346,14 +365,24 @@ public class ThresholdCells extends FourDPlugin implements AuxiliaryInputOutputP
 			throw new IllegalStateException("No field selection has been made");
 
 		int columnIndex = Utils.indexOf(getFieldNames(tableModel), fieldNameParam.getSelection());
+		
+		if (columnIndex == -1) {
+			if (ERROR_ON_MISSING_COLUMN) {
+				throw new PluginRuntimeException("Could not find field " + fieldNameParam.getSelection() + " in cells", true);
+			} else {
+				Utils.log("Skipping threshold step because field " + fieldNameParam.getSelection() + " does not exist", LogLevel.WARNING);
+			}
+		}
 
 		for (int i = 0; i < tableModel.getRowCount(); i++) {
-			float f = tableModel.getFloatValueAt(i, columnIndex);
-			if ((f >= lowValue) && (f <= highValue)) {
+			float f = Float.NaN;
+			if (columnIndex > -1) {
+				f = tableModel.getFloatValueAt(i, columnIndex);
+			}
+			if (columnIndex == -1 || (f >= lowValue && f <= highValue)) {
 				IPluginIOListMember<?> pCloned = (IPluginIOListMember<?>) cells.get(i).clone();
 				pCloned.linkToList(outputCells);
 				outputCells.addDontFireValueChanged(pCloned);
-
 			}
 		}
 
