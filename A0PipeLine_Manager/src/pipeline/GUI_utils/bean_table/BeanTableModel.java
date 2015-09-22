@@ -131,6 +131,14 @@ public class BeanTableModel<T> extends RowTableModel<T> {
 		// Initialize the column name List to the proper size. The actual
 		// column names will be reset in the resetModelDefaults() method.
 
+		columns.sort((a, b) -> a.getName().compareTo(b.getName()));
+		
+		for (int i = 0; i < columns.size(); i++) {
+			if (columns.get(i).getName().startsWith("userCell")) {
+				columns.add(0, columns.remove(i));
+			}
+		}
+		
 		List<String> columnNames = columns.stream().map(ColumnInformation::getName).collect(Collectors.toList());
 
 		// Reset all the values in the RowTableModel

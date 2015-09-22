@@ -605,6 +605,9 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 			controlPanel.setMinimumSize(new Dimension(1, 80));
 			frame.add(controlPanel, c);
 			
+			table.setHorizontalScrollEnabled(true);
+			table.updateFilteringTableSetup();
+
 			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 			int height = screenSize.height;
 			int width = screenSize.width;
