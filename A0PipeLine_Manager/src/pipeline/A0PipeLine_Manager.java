@@ -4400,7 +4400,11 @@ public class A0PipeLine_Manager implements PlugIn {
 
 					AbstractParameter[] paramArray = new AbstractParameter[2];
 					paramArray[0] = (AbstractParameter) newRow[PLUGIN_PARAM_1_FIELD];
-					paramArray[1] = (AbstractParameter) newRow[PLUGIN_PARAM_2_FIELD];
+					paramArray[1] = newRow[PLUGIN_PARAM_2_FIELD] instanceof String ?
+						null //Can happen if user edited box that did not contain a parameter
+						//In the future, such editing should be blocked in the first place
+						:
+						(AbstractParameter) newRow[PLUGIN_PARAM_2_FIELD];
 
 					try {
 						plugin.setParameters(paramArray);
