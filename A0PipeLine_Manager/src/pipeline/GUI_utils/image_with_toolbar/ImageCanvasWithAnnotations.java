@@ -20,9 +20,11 @@ import pipeline.data.PluginIOListener;
 import pipeline.misc_util.Pair;
 import pipeline.misc_util.Utils;
 import pipeline.misc_util.Utils.LogLevel;
+import pipeline.plugins.gui_control.FireLookupTable;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.IndexColorModel;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -342,7 +344,9 @@ public class ImageCanvasWithAnnotations extends ImageCanvas implements MouseMoti
 			String nameOfZCal) {
 		super(imp);
 
+		removeKeyListener(ij);
 		addKeyListener(this);
+		addKeyListener(ij);
 		if (cells != null)
 			cells.addListener(this);
 
@@ -721,8 +725,20 @@ public class ImageCanvasWithAnnotations extends ImageCanvas implements MouseMoti
 	@Override
 	public void keyPressed(KeyEvent e) {
 		Utils.log("Key pressed " + e.getKeyChar(), LogLevel.DEBUG);
-		for (KeyListener l : privateKeyListeners) {
-			l.keyPressed(e);
+		if (e.getKeyChar() == 'f') {
+			imp.getProcessor().setColorModel(
+					new IndexColorModel(8, FireLookupTable.reds.length,
+							FireLookupTable.reds, FireLookupTable.greens, FireLookupTable.blues));
+			if (imp.getNSlices() > 1) {
+				Utils.updateRangeInStack(imp);
+			} else {
+				Utils.updateRangeInRegularImp(imp);
+			}
+			e.consume();
+		} else {
+			for (KeyListener l : privateKeyListeners) {
+				l.keyPressed(e);
+			}
 		}
 	}
 
