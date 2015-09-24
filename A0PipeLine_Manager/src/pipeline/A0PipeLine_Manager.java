@@ -4016,7 +4016,7 @@ public class A0PipeLine_Manager implements PlugIn {
 				return;
 			saveTo += Utils.fileNameSeparator + dialog.getFile();
 
-			if (!dialog.getFile().contains(".xml"))
+			if (!dialog.getFile().endsWith(".xml"))
 				saveTo += ".xml";
 
 			lastTablePath = saveTo;
