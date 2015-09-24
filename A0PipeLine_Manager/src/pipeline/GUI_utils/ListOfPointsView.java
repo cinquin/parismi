@@ -1085,7 +1085,7 @@ public class ListOfPointsView<T extends IPluginIOListMember<T>> extends PluginIO
 					});
 				} catch (Exception e) {
 					Utils.log("Exception: " + e, LogLevel.WARNING);
-					dirty.set(true);
+					dirty.set(false);
 				} finally {
 					silenceUpdates.decrementAndGet();
 				}
