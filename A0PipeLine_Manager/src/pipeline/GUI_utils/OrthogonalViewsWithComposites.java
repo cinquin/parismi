@@ -228,19 +228,16 @@ public class OrthogonalViewsWithComposites implements MouseListener, MouseMotion
 			@Override
 			public void keyTyped(KeyEvent e) {
 				keyListener.keyTyped(e);
-				e.consume();
 			}
 
 			@Override
 			public void keyReleased(KeyEvent e) {
 				keyListener.keyReleased(e);
-				e.consume();
 			}
 
 			@Override
 			public void keyPressed(KeyEvent e) {
 				keyListener.keyPressed(e);
-				e.consume();
 			}
 		});
 
@@ -248,19 +245,16 @@ public class OrthogonalViewsWithComposites implements MouseListener, MouseMotion
 			@Override
 			public void keyTyped(KeyEvent e) {
 				keyListener.keyTyped(e);
-				e.consume();
 			}
 
 			@Override
 			public void keyReleased(KeyEvent e) {
 				keyListener.keyReleased(e);
-				e.consume();
 			}
 
 			@Override
 			public void keyPressed(KeyEvent e) {
 				keyListener.keyPressed(e);
-				e.consume();
 			}
 		});
 
