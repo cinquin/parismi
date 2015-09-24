@@ -54,7 +54,7 @@ public class CellBallQuantify extends ThreeDPlugin implements AuxiliaryInputOutp
 	@Override
 	public String getToolTip() {
 		return "Quantify total intensity within a set of cells defined by their center and by a diameter,"
-				+ " or by a pre-existing segmentation";
+				+ " or by a pre-existing segmentation. For now, do not run on more than 1 channel at a time.";
 	}
 
 	@Override
@@ -138,6 +138,9 @@ public class CellBallQuantify extends ThreeDPlugin implements AuxiliaryInputOutp
 	@ParameterInfo(userDisplayName = "Compute overall percentiles", stringValue = "TRUE", noErrorIfMissingOnReload = true)
 	private boolean computeOverallPercentiles = true;
 
+	@ParameterInfo(userDisplayName = "Use rectangular shape", stringValue = "FALSE", noErrorIfMissingOnReload = true)
+	private boolean useRectangularShape;
+	
 	@Override
 	public String operationName() {
 		return "Cell Ball Quantify";
@@ -249,7 +252,7 @@ public class CellBallQuantify extends ThreeDPlugin implements AuxiliaryInputOutp
 					double jSq = j * j * xyCalib;
 					for (int i = -x0; i <= x1; i++) {
 						double iSq = i * i * xyCalib;
-						if (kSq + jSq + iSq > radiusSq)
+						if ((!useRectangularShape) && kSq + jSq + iSq > radiusSq)
 							continue;
 						float f = input.getFloat(xCenterInt + i, yCenterInt + j, zCenterInt + k);
 						if (ignoreZero && f == 0)
@@ -275,7 +278,7 @@ public class CellBallQuantify extends ThreeDPlugin implements AuxiliaryInputOutp
 			float f;
 
 			for (int i = 0; i < xCoord.length; i++) {
-				if (applyRadiusToSegmentation) {
+				if (applyRadiusToSegmentation && !useRectangularShape) {
 					double distanceSq =
 							Math.pow((xCoord[i] - xCenter) * xyCalib, 2) + Math.pow((yCoord[i] - yCenter) * xyCalib, 2)
 									+ Math.pow((zCoord[i] - zCenter) * zCalib, 2);
