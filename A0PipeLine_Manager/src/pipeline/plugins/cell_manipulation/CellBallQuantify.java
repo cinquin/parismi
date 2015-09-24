@@ -97,7 +97,8 @@ public class CellBallQuantify extends ThreeDPlugin implements AuxiliaryInputOutp
 	}
 
 	@ParameterInfo(userDisplayName = "Store field", stringValue = "DAPI content",
-			description = "Name of field to store results into")
+			description = "Name of field to store results into", changeTriggersLiveUpdates = false,
+			changeTriggersUpdate = false)
 	String fieldName;
 
 	@ParameterInfo(userDisplayName = "Diameter", floatValue = 3f, permissibleFloatRange = { 1f, 50f })
