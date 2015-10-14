@@ -138,6 +138,9 @@ public class CellBallQuantify extends ThreeDPlugin implements AuxiliaryInputOutp
 	
 	@ParameterInfo(userDisplayName = "Compute overall percentiles", stringValue = "TRUE", noErrorIfMissingOnReload = true)
 	private boolean computeOverallPercentiles = true;
+	
+	@ParameterInfo(userDisplayName = "High overall percentile", floatValue = 95f, noErrorIfMissingOnReload = true)
+	private float highOverallPercentile = 95;
 
 	@ParameterInfo(userDisplayName = "Use rectangular shape", stringValue = "FALSE", noErrorIfMissingOnReload = true)
 	private boolean useRectangularShape;
@@ -379,8 +382,8 @@ public class CellBallQuantify extends ThreeDPlugin implements AuxiliaryInputOutp
 			Arrays.sort(allPixels);
 			PluginIONumber fifthP = new PluginIONumber("Fifth percentile");
 			PluginIONumber ninetyFifthP = new PluginIONumber("Ninety-fifth percentile");
-			fifthP.number = new Float(allPixels[(int) ((nPixels -1 ) * 0.05)]);
-			ninetyFifthP.number = new Float(allPixels[(int) ((nPixels -1 ) * 0.95)]);
+			fifthP.number = new Float(allPixels[(int) ((nPixels - 1d ) * 0.05)]);
+			ninetyFifthP.number = new Float(allPixels[(int) ((nPixels - 1d ) * (highOverallPercentile / 100f))]);
 			getOutputs().put("Fifth percentile", fifthP);
 			getOutputs().put("Ninety-fifth percentile", ninetyFifthP);
 		}

@@ -93,6 +93,12 @@ public class NormalizeImage extends ThreeDPlugin implements AuxiliaryInputOutput
 				throw new PluginRuntimeException("Low percentile must be lower than high percentile but found " +
 						lowPercentile + " and " + highPercentile, true);
 			}
+			if (highPercentile > 100) {
+				throw new PluginRuntimeException("High percentile is greater than 100: " + highPercentile, true);
+			}
+			if (lowPercentile < 0) {
+				throw new PluginRuntimeException("Low percentile is lower than 0: " + highPercentile, true);
+			}
 			
 			long nPixels = input.getDepth() * input.getHeight() * input.getWidth();
 
@@ -113,8 +119,8 @@ public class NormalizeImage extends ThreeDPlugin implements AuxiliaryInputOutput
 			}
 
 			Arrays.sort(pixels);
-			int highPercIndex = (int) (((nPixels - 1) * highPercentile) / 100);
-			int lowPercIndex = (int) (((nPixels - 1) * lowPercentile) / 100);
+			int highPercIndex = (int) (((nPixels - 1d) * highPercentile) / 100);
+			int lowPercIndex = (int) (((nPixels - 1d) * lowPercentile) / 100);
 
 			offset = pixels[lowPercIndex];
 			if (offset == pixels[highPercIndex]) {
