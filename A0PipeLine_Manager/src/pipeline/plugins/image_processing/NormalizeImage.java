@@ -45,9 +45,13 @@ public class NormalizeImage extends ThreeDPlugin implements AuxiliaryInputOutput
 			stringValue = "TRUE")
 	private boolean readPercentiles;
 
-	@ParameterInfo(userDisplayName = "Percentile", changeTriggersUpdate = true, changeTriggersLiveUpdates = true,
-			floatValue = 95, permissibleFloatRange = { 0, 100 })
-	private float percentile;
+	@ParameterInfo(userDisplayName = "High percentile", changeTriggersUpdate = true, changeTriggersLiveUpdates = true,
+			floatValue = 95, permissibleFloatRange = { 0, 100 }, noErrorIfMissingOnReload = true)
+	private float highPercentile;
+	
+	@ParameterInfo(userDisplayName = "Low percentile", changeTriggersUpdate = true, changeTriggersLiveUpdates = true,
+			floatValue = 5, permissibleFloatRange = { 0, 100 }, noErrorIfMissingOnReload = true)
+	private float lowPercentile;
 
 	@Override
 	public Map<String, InputOutputDescription> getInputDescriptions() {
@@ -78,14 +82,23 @@ public class NormalizeImage extends ThreeDPlugin implements AuxiliaryInputOutput
 			PluginIONumber f = (PluginIONumber) getInput("Fifth percentile");
 			PluginIONumber fn = (PluginIONumber) getInput("Ninety-fifth percentile");
 			offset = f.number.floatValue();
-			scalingFactor = 1f / (fn.number.floatValue() + offset);
+			if (f.number.floatValue() + offset <= 0) {
+				throw new PluginRuntimeException("Ninety-fith percentile is not greater than fifth percentile: " +
+						fn.number + " vs " + offset, true);
+			}
+			scalingFactor = 1f / (fn.number.floatValue() - offset);
 			Utils.log("Offset: " + offset + "; scaling factor: " + scalingFactor, LogLevel.INFO);
 		} else {
-			offset = 0;
+			if (lowPercentile >= highPercentile) {
+				throw new PluginRuntimeException("Low percentile must be lower than high percentile but found " +
+						lowPercentile + " and " + highPercentile, true);
+			}
+			
 			long nPixels = input.getDepth() * input.getHeight() * input.getWidth();
 
-			if (nPixels > Integer.MAX_VALUE)
+			if (nPixels > Integer.MAX_VALUE) {
 				throw new RuntimeException("Too many pixels");
+			}
 
 			float[] pixels = new float[(int) nPixels];
 
@@ -100,21 +113,21 @@ public class NormalizeImage extends ThreeDPlugin implements AuxiliaryInputOutput
 			}
 
 			Arrays.sort(pixels);
-			int percIndex = (int) ((nPixels * percentile) / 100);
-			if (percIndex == nPixels)
-				percIndex--;
+			int highPercIndex = (int) (((nPixels - 1) * highPercentile) / 100);
+			int lowPercIndex = (int) (((nPixels - 1) * lowPercentile) / 100);
 
-			scalingFactor = 1f / pixels[percIndex];
-
-			if (scalingFactor == 0) {
-				throw new PluginRuntimeException("Percentile is 0", true);
+			offset = pixels[lowPercIndex];
+			if (offset == pixels[highPercIndex]) {
+				throw new PluginRuntimeException("Ninety-fith percentile is not greater than fifth percentile: " +
+						pixels[highPercIndex] + " vs " + offset, true);
 			}
+			scalingFactor = 1f / (pixels[highPercIndex] - offset);
 		}
 
 		for (int z = 0; z < input.getDepth(); z++) {
 			for (int y = 0; y < input.getHeight(); y++) {
 				for (int x = 0; x < input.getWidth(); x++) {
-					output.setPixelValue(x, y, z, (input.getFloat(x, y, z) + offset) * scalingFactor);
+					output.setPixelValue(x, y, z, (Math.max(0, input.getFloat(x, y, z) - offset)) * scalingFactor);
 				}
 			}
 		}
