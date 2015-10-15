@@ -9,7 +9,14 @@ Put this back once Coverity have fixed their internal problems with the scanner
 We are releasing the code of our 3D image segmentation and cell cycle
 analysis pipeline “Parismi” so that the results reported in our
 publications can easily be reproduced, and so that the tool can be
-reused and modified by other groups.
+reused and modified by other groups. The reference for the accompanying
+manuscript is:
+
+Chiang M., Hallman S., Cinquin A., Reyes de Mochel N., Paz A., Kawauchi
+S., Calof A.L., Cho K.W., Fowlkes C.C. & Cinquin O. (2015) Analysis of
+in vivo single cell behavior by high throughput, human-in-the-loop
+segmentation of three-dimensional images. *BMC Bioinformatics* (in
+press)
 
 **Running Parismi**
 
