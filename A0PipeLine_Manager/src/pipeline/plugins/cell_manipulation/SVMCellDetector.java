@@ -208,8 +208,8 @@ public class SVMCellDetector extends ThreeDPlugin implements AuxiliaryInputOutpu
 				if (currentColumn == nColumns) {
 					currentColumn = 0;
 					assert (point != null);
-					point.setx(xyCalibration * (point.x / xyCalibration + Math.max(0, (point.hsz - 1) / 2)));
-					point.sety(xyCalibration * (point.y / xyCalibration + Math.max(0, (point.hsz - 1) / 2)));
+					point.setx(xyCalibration * (point.x + Math.max(0, (point.hsz - 1) / 2)));
+					point.sety(xyCalibration * (point.y + Math.max(0, (point.hsz - 1) / 2)));
 					cells.add(point);
 					allocateNewPoint = true;
 				}
