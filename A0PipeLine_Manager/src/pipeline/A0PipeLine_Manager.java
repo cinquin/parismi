@@ -110,6 +110,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import org.apache.commons.lang3.text.WordUtils;
+import org.boris.expr.function.excel.T;
 import org.eclipse.jdt.annotation.NonNull;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -1498,23 +1499,23 @@ public class A0PipeLine_Manager implements PlugIn {
 						}
 					}
 
-				} catch (Exception e) {
+				} catch (Throwable t) {
 					pluginTableRow[COMPUTING_ERROR] = true;
 					String pluginName = "";
 					try {
 						pluginName = plugin.operationName() + ": ";
 						Utils.log("Error in plugin " + pluginName, LogLevel.ERROR);
-					} catch (Throwable t) {
+					} catch (Throwable t2) {
 						System.err.println("Problem logging exception");
 					}
 					if (tableFrame != null) {
 						scrollTableToRow(modelRow - 1);
 						tableFrame.toFront();
 					}
-					Utils.printStack(e, LogLevel.ERROR);
-					if (e instanceof PluginRuntimeException && ((PluginRuntimeException) e).getDisplayUserDialog()
-							&& !Utils.causedByInterruption(e)) {
-						Utils.displayMessage(pluginName + e.getMessage(), false, LogLevel.ERROR);
+					Utils.printStack(t, LogLevel.ERROR);
+					if (t instanceof PluginRuntimeException && ((PluginRuntimeException) t).getDisplayUserDialog()
+							&& !Utils.causedByInterruption(t)) {
+						Utils.displayMessage(pluginName + t.getMessage(), false, LogLevel.ERROR);
 					}
 				} finally {
 					progressSetIndeterminateThreadSafe((ProgressRenderer) pluginTableRow[PERCENT_DONE], false, modelRow);
