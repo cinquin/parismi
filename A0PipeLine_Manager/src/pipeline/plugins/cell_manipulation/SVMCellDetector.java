@@ -260,9 +260,10 @@ public class SVMCellDetector extends ThreeDPlugin implements AuxiliaryInputOutpu
 
 			Objects.requireNonNull(fileName);
 			String trainingDataFileName = FileNameUtils.removeIncrementationMarks(fileName);
+			@SuppressWarnings("null")
 			String trainingDataFullPath =
-					FileNameUtils.expandPath(FileNameUtils.removeIncrementationMarks(workingDirectory.getAbsolutePath()
-							+ "/" + trainingDataFileName));
+					FileNameUtils.removeIncrementationMarks(new File(FileNameUtils.expandPath(workingDirectory.getPath())).getAbsolutePath()
+							+ "/" + trainingDataFileName);
 
 			try {
 				if (local) {
