@@ -379,6 +379,10 @@ public class CellBallQuantify extends ThreeDPlugin implements AuxiliaryInputOutp
 			float[] allPixels = allPixelValues.toArray();
 			allPixelValues.clear();
 			int nPixels = allPixels.length;
+			if (nPixels == 0) {
+				throw new PluginRuntimeException("Cannot compute percentile because of empty segmentations",
+						true);
+			}
 			Arrays.sort(allPixels);
 			PluginIONumber fifthP = new PluginIONumber("Fifth percentile");
 			PluginIONumber ninetyFifthP = new PluginIONumber("Ninety-fifth percentile");
