@@ -63,6 +63,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.TooManyListenersException;
 import java.util.TreeMap;
@@ -2691,6 +2692,7 @@ public class A0PipeLine_Manager implements PlugIn {
 				@Override
 				public void mouseDragged(MouseEvent e) {
 					TransferHandler handler = dragMe.getTransferHandler();
+					Objects.requireNonNull(handler);
 					handler.exportAsDrag(dragMe, e, TransferHandler.COPY);
 				}
 			});
