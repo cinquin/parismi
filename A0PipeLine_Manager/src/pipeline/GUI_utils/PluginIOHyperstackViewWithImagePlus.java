@@ -6,17 +6,6 @@
  ******************************************************************************/
 package pipeline.GUI_utils;
 
-import ij.CompositeImage;
-import ij.ImageListener;
-import ij.ImagePlus;
-import ij.ImageStack;
-import ij.gui.ImageCanvas;
-import ij.gui.StackWindow;
-import ij.process.ByteProcessor;
-import ij.process.FloatProcessor;
-import ij.process.ImageProcessor;
-import ij.process.ShortProcessor;
-
 import java.awt.AWTEvent;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -37,6 +26,16 @@ import javax.swing.SwingUtilities;
 
 import org.eclipse.jdt.annotation.NonNull;
 
+import ij.CompositeImage;
+import ij.ImageListener;
+import ij.ImagePlus;
+import ij.ImageStack;
+import ij.gui.ImageCanvas;
+import ij.gui.StackWindow;
+import ij.process.ByteProcessor;
+import ij.process.FloatProcessor;
+import ij.process.ImageProcessor;
+import ij.process.ShortProcessor;
 import pipeline.GUI_utils.image_with_toolbar.ImageCanvasWithAnnotations;
 import pipeline.GUI_utils.image_with_toolbar.StackWindowWithToolbar;
 import pipeline.data.ChannelInfo;
@@ -816,6 +815,7 @@ public class PluginIOHyperstackViewWithImagePlus extends PluginIOView implements
 
 		if (action != null) {
 			action.actionPerformed(null);
+			e.consume();
 		}
 	}
 

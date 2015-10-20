@@ -141,6 +141,11 @@ public class SVMCellDetector extends ThreeDPlugin implements AuxiliaryInputOutpu
 			ClickedPoint point = null;
 
 			int seedId = 0;
+			float xyCalibration = inputImage != null && inputImage.getCalibration() != null ?
+					(float) inputImage.getCalibration().pixelWidth : 0;
+			float zCalibration = inputImage != null && inputImage.getCalibration() != null ?
+					(float) inputImage.getCalibration().pixelDepth : 0;
+					
 			while (stok.ttype != ReaderTokenizer.TT_EOF) {
 				if (allocateNewPoint) {
 					point = new ClickedPoint();
@@ -153,8 +158,8 @@ public class SVMCellDetector extends ThreeDPlugin implements AuxiliaryInputOutpu
 						cells.setUserCellDescriptions(point.userCellDescriptions);
 					if (inputImage != null && inputImage.getCalibration() != null) {
 						// Assume same calibration for x and y
-						point.xyCalibration = (float) inputImage.getCalibration().pixelWidth;
-						point.zCalibration = (float) inputImage.getCalibration().pixelDepth;
+						point.xyCalibration = xyCalibration;
+						point.zCalibration = zCalibration;
 					}
 					for (int i = 0; i < cells.getQuantifiedPropertyNames().size(); i++) {
 						point.quantifiedProperties.add(0f);
@@ -166,19 +171,19 @@ public class SVMCellDetector extends ThreeDPlugin implements AuxiliaryInputOutpu
 					float f = (float) stok.nval;
 					switch (currentColumn) {
 						case xColumn:
-							point.setx(f);
+							point.setx(f * xyCalibration);
 							if (f < 0) {
 								Utils.log("Read negative x coordinate", LogLevel.ERROR);
 							}
 							break;
 						case yColumn:
-							point.sety(f);
+							point.sety(f * xyCalibration);
 							if (f < 0) {
 								Utils.log("Read negative y coordinate", LogLevel.ERROR);
 							}
 							break;
 						case zColumn:
-							point.setz(f);
+							point.setz(f * zCalibration);
 							if (f < 0) {
 								Utils.log("Read negative z coordinate", LogLevel.ERROR);
 							}
@@ -203,8 +208,8 @@ public class SVMCellDetector extends ThreeDPlugin implements AuxiliaryInputOutpu
 				if (currentColumn == nColumns) {
 					currentColumn = 0;
 					assert (point != null);
-					point.setx(point.x + Math.max(0, (point.hsz - 1) / 2));
-					point.sety(point.y + Math.max(0, (point.hsz - 1) / 2));
+					point.setx(xyCalibration * (point.x + Math.max(0, (point.hsz - 1) / 2)));
+					point.sety(xyCalibration * (point.y + Math.max(0, (point.hsz - 1) / 2)));
 					cells.add(point);
 					allocateNewPoint = true;
 				}
@@ -255,9 +260,10 @@ public class SVMCellDetector extends ThreeDPlugin implements AuxiliaryInputOutpu
 
 			Objects.requireNonNull(fileName);
 			String trainingDataFileName = FileNameUtils.removeIncrementationMarks(fileName);
+			@SuppressWarnings("null")
 			String trainingDataFullPath =
-					FileNameUtils.expandPath(FileNameUtils.removeIncrementationMarks(workingDirectory.getAbsolutePath()
-							+ "/" + trainingDataFileName));
+					FileNameUtils.removeIncrementationMarks(new File(FileNameUtils.expandPath(workingDirectory.getPath())).getAbsolutePath()
+							+ "/" + trainingDataFileName);
 
 			try {
 				if (local) {

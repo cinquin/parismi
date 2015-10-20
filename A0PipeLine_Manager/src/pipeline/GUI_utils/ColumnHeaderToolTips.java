@@ -1,8 +1,6 @@
 package pipeline.GUI_utils;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
@@ -11,15 +9,7 @@ import javax.swing.table.TableColumnModel;
 //From http://www.java2s.com/Code/Java/Swing-JFC/SettingColumnHeaderToolTipsinaJTableComponents.htm
 public class ColumnHeaderToolTips extends MouseMotionAdapter {
 	TableColumn curCol;
-	private Map<TableColumn, String> tips = new HashMap<TableColumn, String>();
-	public void setToolTip(TableColumn col, String tooltip) {
-		if (tooltip == null) {
-			tips.remove(col);
-		} else {
-			tips.put(col, tooltip);
-		}
-	}
-
+	
 	@Override
 	public void mouseMoved(MouseEvent evt) {
 		JTableHeader header = (JTableHeader) evt.getSource();
@@ -31,12 +21,9 @@ public class ColumnHeaderToolTips extends MouseMotionAdapter {
 			col = colModel.getColumn(vColIndex);
 		}
 		if (col != curCol) {
-			header.setToolTipText(tips.get(col));
+			header.setToolTipText((String) col.getHeaderValue());
 			curCol = col;
 		}
 	}
 
-	public void clear() {
-		tips.clear();
-	}
 }

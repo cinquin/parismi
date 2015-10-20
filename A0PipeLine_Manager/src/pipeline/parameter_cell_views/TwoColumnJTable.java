@@ -25,7 +25,6 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
 import javax.swing.text.JTextComponent;
 
 import org.eclipse.jdt.annotation.NonNull;
@@ -243,12 +242,6 @@ public class TwoColumnJTable extends AbstractParameterCellView implements TableM
 		((MyTableModel) localTable.getModel()).fireTableDataChanged();
 		localTable.createDefaultColumnsFromModel();
 		
-	    tips.clear();
-	    for (int c = 0; c < localTable.getColumnCount(); c++) {
-	      TableColumn col = localTable.getColumnModel().getColumn(c);
-	      tips.setToolTip(col, localTable.getColumnName(c));
-	    }
-
 		// TODO Restore selection from parameter; see how OneColumnJTable does it
 
 		int heightWanted = (int) getPreferredSize().getHeight();

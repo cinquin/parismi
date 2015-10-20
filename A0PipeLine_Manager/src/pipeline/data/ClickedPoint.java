@@ -292,7 +292,11 @@ public class ClickedPoint extends PluginIO implements Cloneable, Comparable<Clic
 	 * @param x
 	 */
 	public final void setx(float x) {
-		this.x = x;
+		if (xyCalibration == 0) {
+			this.x = x;
+		} else {
+			this.x = x / xyCalibration;
+		}
 	}
 
 	/**
@@ -307,7 +311,11 @@ public class ClickedPoint extends PluginIO implements Cloneable, Comparable<Clic
 	}
 
 	public final void sety(float y) {
-		this.y = y;
+		if (xyCalibration == 0) {
+			this.y = y;
+		} else {
+			this.y = y / xyCalibration;
+		}
 	}
 
 	public final double getz() {
@@ -317,7 +325,11 @@ public class ClickedPoint extends PluginIO implements Cloneable, Comparable<Clic
 	}
 
 	public final void setz(double z) {
-		this.z = z;
+		if (zCalibration == 0) {
+			this.z = z;
+		} else {
+			this.z = z / zCalibration;
+		}
 	}
 
 	public final float gett() {

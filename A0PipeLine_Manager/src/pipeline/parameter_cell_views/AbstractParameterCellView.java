@@ -58,7 +58,7 @@ public abstract class AbstractParameterCellView extends JPanel implements TableC
 	@Override
 	public final Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
 		if (value == null) {
-			throw new IllegalArgumentException();
+			return null;
 		}
 		return getRendererOrEditorComponent(table, value, isSelected, false, row, column, false);
 	}

@@ -1,5 +1,8 @@
 [![Build Status](https://travis-ci.org/cinquin/parismi.svg?branch=master)](https://travis-ci.org/cinquin/parismi)
+<!---
 [![Coverity Status](https://scan.coverity.com/projects/4509/badge.svg)](https://scan.coverity.com/projects/4509)
+Put this back once Coverity have fixed their internal problems with the scanner
+-->
 
 **General notes**
 

@@ -325,7 +325,7 @@ public class XYScatterPlotView<CollectionType extends AbstractSeriesDataset & Fr
 			controlPanel = new JPanel();
 
 			DefaultTableModel smoothingTableModel = new DefaultTableModel(1, 1);
-			TableBetterFocus smoothingParameterTable = new TableBetterFocus(smoothingTableModel);
+			JXTableBetterFocus smoothingParameterTable = new JXTableBetterFocus(smoothingTableModel);
 			smoothingParameterTable.setFillsViewportHeight(false);
 			smoothingParameterTable.getColumn(0).setCellEditor(new FloatSlider());
 			smoothingParameterTable.getColumn(0).setCellRenderer(new FloatSlider());

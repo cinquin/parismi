@@ -22,7 +22,8 @@ public class Pause extends FourDPlugin {
 
 	@Override
 	public String getToolTip() {
-		return "Pause the pipeline; user resumes by starting from following step";
+		return "Pause the pipeline; user resumes by starting from following step. This plugin is ignored "
+				+ "when running in batch mode or from the command line.";
 	}
 
 	@Override

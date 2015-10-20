@@ -289,7 +289,7 @@ public class A0PipeLine_Manager implements PlugIn {
 	// http://java.sun.com/docs/books/tutorial/uiswing/examples/components/TableRenderDemoProject/src/components/TableRenderDemo.java
 	public class TableSelectionDemo extends JPanel implements ActionListener {
 
-		private String workingDirectory;
+		private String workingDirectory, lastTablePath;
 		private static final long serialVersionUID = 1L;
 		private JTable table1;
 		private JScrollPane sp;
@@ -1498,23 +1498,23 @@ public class A0PipeLine_Manager implements PlugIn {
 						}
 					}
 
-				} catch (Exception e) {
+				} catch (Throwable t) {
 					pluginTableRow[COMPUTING_ERROR] = true;
 					String pluginName = "";
 					try {
 						pluginName = plugin.operationName() + ": ";
 						Utils.log("Error in plugin " + pluginName, LogLevel.ERROR);
-					} catch (Throwable t) {
+					} catch (Throwable t2) {
 						System.err.println("Problem logging exception");
 					}
 					if (tableFrame != null) {
 						scrollTableToRow(modelRow - 1);
 						tableFrame.toFront();
 					}
-					Utils.printStack(e, LogLevel.ERROR);
-					if (e instanceof PluginRuntimeException && ((PluginRuntimeException) e).getDisplayUserDialog()
-							&& !Utils.causedByInterruption(e)) {
-						Utils.displayMessage(pluginName + e.getMessage(), false, LogLevel.ERROR);
+					Utils.printStack(t, LogLevel.ERROR);
+					if (t instanceof PluginRuntimeException && ((PluginRuntimeException) t).getDisplayUserDialog()
+							&& !Utils.causedByInterruption(t)) {
+						Utils.displayMessage(pluginName + t.getMessage(), false, LogLevel.ERROR);
 					}
 				} finally {
 					progressSetIndeterminateThreadSafe((ProgressRenderer) pluginTableRow[PERCENT_DONE], false, modelRow);
@@ -1542,8 +1542,10 @@ public class A0PipeLine_Manager implements PlugIn {
 				System.exit(1);
 			}
 
-			if ((((MyTableModel) table1.getModel()).updatePipeline || batchRun) && (!(plugin instanceof Pause && !Utils.headless && !batchRun))
-					&& (!wasInterrupted) && !(((Boolean) pluginTableRow[COMPUTING_ERROR]) && stopOnError)
+			if (	(((MyTableModel) table1.getModel()).updatePipeline || batchRun)
+					&& (!(plugin instanceof Pause && !Utils.headless && !batchRun))
+					&& (!wasInterrupted)
+					&& !(((Boolean) pluginTableRow[COMPUTING_ERROR]) && stopOnError)
 					&& modelRow + 1 < data.length)
 				processStep(modelRow + 1, triggerRow, null, true, changedParameter, stayInCoreLoop, batchRun);
 
@@ -1780,8 +1782,6 @@ public class A0PipeLine_Manager implements PlugIn {
 				if (subMenu.getSubElements().length > 0)
 					pluginListMenu.add(subMenu);
 			}
-
-			ToolTipManager.sharedInstance().setDismissDelay(60000);
 
 			pluginListMenu.show(comp, xPosition, yPosition);
 		}
@@ -2181,10 +2181,6 @@ public class A0PipeLine_Manager implements PlugIn {
 		    ColumnHeaderToolTips tips = new ColumnHeaderToolTips();
 			JTableHeader header = table1.getTableHeader();
 		    header.addMouseMotionListener(tips);
-		    for (int colIndex = 0; colIndex < table1.getColumnCount(); colIndex++) {
-		      TableColumn col = table1.getColumnModel().getColumn(colIndex);
-		      tips.setToolTip(col, table1.getColumnName(colIndex));
-		    }
 		    
 			table1.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 			table1.setPreferredScrollableViewportSize(new Dimension(900, 250));
@@ -2704,7 +2700,7 @@ public class A0PipeLine_Manager implements PlugIn {
 			vnc.setSelected(false);
 			globalOptionPanel.add(vnc);
 
-			updateCurrentStepButton = addCheckBox("Update current step upon param change");
+			updateCurrentStepButton = addCheckBox("Update step upon param change");
 			updateCurrentStepButton.setSelected(true);
 			globalOptionPanel.add(updateCurrentStepButton);
 			updatePipelineButton = addCheckBox("Propagate updates");
@@ -3137,7 +3133,7 @@ public class A0PipeLine_Manager implements PlugIn {
 			
 			controls2.add(runButton);
 			
-			controls2.add(new JLabel("Parismi v.0.1.1"));
+			controls2.add(new JLabel("Parismi v0.1.6"));
 
 			final JPanel memoryPanel = new JPanel();
 			JButton collectGarbageButton = new JButton("Collect garbage");
@@ -3908,7 +3904,7 @@ public class A0PipeLine_Manager implements PlugIn {
 
 			}
 			KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner();
-			System.gc();
+			//System.gc();
 
 			((MyTableModel) table1.getModel()).fireTableDataChanged();
 
@@ -3932,7 +3928,7 @@ public class A0PipeLine_Manager implements PlugIn {
 					Utils.printStack(e);
 				}
 			}
-			System.gc();
+			//System.gc();
 			((MyTableModel) table1.getModel()).fireTableDataChanged();
 		}
 
@@ -4013,16 +4009,17 @@ public class A0PipeLine_Manager implements PlugIn {
 				return;
 			}
 			FileDialog dialog = new FileDialog(new Frame(), "Save table to", FileDialog.SAVE);
-
+			dialog.setFile(lastTablePath);
 			dialog.setVisible(true);
 			String saveTo = dialog.getDirectory();
 			if (saveTo == null)
 				return;
-
 			saveTo += Utils.fileNameSeparator + dialog.getFile();
 
-			if (!dialog.getFile().contains(".xml"))
+			if (!dialog.getFile().endsWith(".xml"))
 				saveTo += ".xml";
+
+			lastTablePath = saveTo;
 
 			try (PrintWriter out = new PrintWriter(saveTo)) {
 				out.println(output);
@@ -4049,10 +4046,11 @@ public class A0PipeLine_Manager implements PlugIn {
 			String fileToReadFrom = null;
 
 			if (modifier == 0) {
-				File f = FileNameUtils.chooseFile("Choose table...", FileDialog.LOAD, null);
+				File f = FileNameUtils.chooseFile("Choose table...", FileDialog.LOAD, lastTablePath);
 				if (f == null)
 					return;
 				fileToReadFrom = f.getAbsolutePath();
+				lastTablePath = fileToReadFrom;
 			} else {
 				final JOptionPane optionPane = new JOptionPane("Enter full path", JOptionPane.QUESTION_MESSAGE);
 				optionPane.addHierarchyListener(e -> {
@@ -4071,6 +4069,7 @@ public class A0PipeLine_Manager implements PlugIn {
 								JOptionPane.QUESTION_MESSAGE);
 				if (fileToReadFrom == null)
 					return;
+				lastTablePath = fileToReadFrom;
 				fileToReadFrom = FileNameUtils.expandPath(fileToReadFrom);
 			}
 			if (!fileToReadFrom.endsWith(".xml")) {
@@ -4401,7 +4400,11 @@ public class A0PipeLine_Manager implements PlugIn {
 
 					AbstractParameter[] paramArray = new AbstractParameter[2];
 					paramArray[0] = (AbstractParameter) newRow[PLUGIN_PARAM_1_FIELD];
-					paramArray[1] = (AbstractParameter) newRow[PLUGIN_PARAM_2_FIELD];
+					paramArray[1] = newRow[PLUGIN_PARAM_2_FIELD] instanceof String ?
+						null //Can happen if user edited box that did not contain a parameter
+						//In the future, such editing should be blocked in the first place
+						:
+						(AbstractParameter) newRow[PLUGIN_PARAM_2_FIELD];
 
 					try {
 						plugin.setParameters(paramArray);
@@ -4533,7 +4536,7 @@ public class A0PipeLine_Manager implements PlugIn {
 				case "Use virtual stacks to open files":
 					((MyTableModel) table1.getModel()).openUsingVirtualStacks = updatePipelineButton.isSelected();
 					break;
-				case "Update current step upon param change":
+				case "Update step upon param change":
 					((MyTableModel) table1.getModel()).updateCurrentStep = updateCurrentStepButton.isSelected();
 					break;
 				case "Restart local update upon param change":
@@ -4590,8 +4593,6 @@ public class A0PipeLine_Manager implements PlugIn {
 					setAllDirectories();
 					break;
 				case "Collect garbage":
-					Utils.log("Calling garbage callector", LogLevel.DEBUG);
-					// Runtime.getRuntime().freeMemory();
 					SwingMemory.swingGC(null);
 					Runtime.getRuntime().gc();
 					break;
@@ -4789,7 +4790,11 @@ public class A0PipeLine_Manager implements PlugIn {
 							0,
 							new RowOrFileTextReference(
 									"",
-									"Image that this step uses as an input. Name of an open image, absolute reference to another row starting with a dollar (e.g. $2), or relative reference (e.g. -1 for the previous row)",
+									"Image that this step uses as an input. Name of an open image, absolute reference to another "
+									+ "row starting with a dollar (e.g. $2), relative reference (e.g. -1 for the previous row), or "
+									+ "path to a TIFF or LSM file (the path can be absolute or relative to the current working directory, "
+									+ "and can substitute ~user_name for home directories; {} braces will be removed from path name, "
+									+ "and numbers between braces will be automatically incremented at each iteration of a batch run).",
 									"", true, null),
 							channelsParameter,
 							Boolean.TRUE,
@@ -5567,6 +5572,7 @@ public class A0PipeLine_Manager implements PlugIn {
 	public static ReflectionProvider reflectionProvider;
 
 	static {
+		ToolTipManager.sharedInstance().setDismissDelay(120_000);
 		boolean b = true;
 		if (b) {
 			reflectionProvider = new Sun14ReflectionProvider();

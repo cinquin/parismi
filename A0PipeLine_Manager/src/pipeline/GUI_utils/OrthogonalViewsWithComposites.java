@@ -228,19 +228,16 @@ public class OrthogonalViewsWithComposites implements MouseListener, MouseMotion
 			@Override
 			public void keyTyped(KeyEvent e) {
 				keyListener.keyTyped(e);
-				e.consume();
 			}
 
 			@Override
 			public void keyReleased(KeyEvent e) {
 				keyListener.keyReleased(e);
-				e.consume();
 			}
 
 			@Override
 			public void keyPressed(KeyEvent e) {
 				keyListener.keyPressed(e);
-				e.consume();
 			}
 		});
 
@@ -248,19 +245,16 @@ public class OrthogonalViewsWithComposites implements MouseListener, MouseMotion
 			@Override
 			public void keyTyped(KeyEvent e) {
 				keyListener.keyTyped(e);
-				e.consume();
 			}
 
 			@Override
 			public void keyReleased(KeyEvent e) {
 				keyListener.keyReleased(e);
-				e.consume();
 			}
 
 			@Override
 			public void keyPressed(KeyEvent e) {
 				keyListener.keyPressed(e);
-				e.consume();
 			}
 		});
 
@@ -566,7 +560,7 @@ public class OrthogonalViewsWithComposites implements MouseListener, MouseMotion
 
 	}
 
-	void arrangeWindows() {
+	private void arrangeWindows() {
 		ImageWindow xyWin = imp.getWindow();
 		if (xyWin == null)
 			return;
@@ -879,7 +873,6 @@ public class OrthogonalViewsWithComposites implements MouseListener, MouseMotion
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-
 	}
 
 	@Override
@@ -911,6 +904,8 @@ public class OrthogonalViewsWithComposites implements MouseListener, MouseMotion
 			updater.doUpdate();
 	}
 
+	boolean firstUpdate = false;
+	
 	@SuppressWarnings("deprecation")
 	private void exec() {
 		if (canvas == null)
@@ -939,7 +934,10 @@ public class OrthogonalViewsWithComposites implements MouseListener, MouseMotion
 				updateCrosses(p.x, p.y, arat, brat);
 				if (syncZoom)
 					updateMagnification(p.x, p.y);
-				arrangeWindows();
+				if (!firstUpdate) {
+					firstUpdate = true;
+					arrangeWindows();
+				}
 			});
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();

@@ -339,7 +339,7 @@ public class IntrospectionParameters {
 				boolean editable = parameterInfo.editable().length == 0 ? true : parameterInfo.editable()[0];
 
 				final DirectoryParameter directoryNameParam =
-						new DirectoryParameter(userDisplayName, description, "", editable, null);
+						new DirectoryParameter(userDisplayName + " directory", description, "", editable, null);
 
 				if (parameterType != null)
 					directoryNameParam.printValueAsString = parameterType.printValueAsString();

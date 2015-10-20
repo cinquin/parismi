@@ -14,12 +14,16 @@ import pipeline.PreviewType;
 import pipeline.data.IPluginIOStack;
 import pipeline.data.InputOutputDescription;
 import pipeline.data.PluginIOImage.PixelType;
+import pipeline.data.PluginIONumber;
 import pipeline.misc_util.IntrospectionParameters.ParameterInfo;
 import pipeline.misc_util.PluginRuntimeException;
 import pipeline.misc_util.ProgressReporter;
+import pipeline.misc_util.Utils;
+import pipeline.misc_util.Utils.LogLevel;
+import pipeline.plugins.AuxiliaryInputOutputPlugin;
 import pipeline.plugins.ThreeDPlugin;
 
-public class NormalizeImage extends ThreeDPlugin {
+public class NormalizeImage extends ThreeDPlugin implements AuxiliaryInputOutputPlugin {
 
 	@Override
 	public String operationName() {
@@ -35,10 +39,19 @@ public class NormalizeImage extends ThreeDPlugin {
 	public int getFlags() {
 		return 0;
 	}
+	
+	@ParameterInfo(userDisplayName = "Read 5th and 95th percentiles from output of CellBallQuantify plugin",
+			changeTriggersUpdate = false, changeTriggersLiveUpdates = false,
+			stringValue = "TRUE")
+	private boolean readPercentiles;
 
-	@ParameterInfo(userDisplayName = "Percentile", changeTriggersUpdate = false, changeTriggersLiveUpdates = false,
-			floatValue = 95, permissibleFloatRange = { 0, 100 })
-	private float percentile;
+	@ParameterInfo(userDisplayName = "High percentile", changeTriggersUpdate = true, changeTriggersLiveUpdates = true,
+			floatValue = 95, permissibleFloatRange = { 0, 100 }, noErrorIfMissingOnReload = true)
+	private float highPercentile;
+	
+	@ParameterInfo(userDisplayName = "Low percentile", changeTriggersUpdate = true, changeTriggersLiveUpdates = true,
+			floatValue = 5, permissibleFloatRange = { 0, 100 }, noErrorIfMissingOnReload = true)
+	private float lowPercentile;
 
 	@Override
 	public Map<String, InputOutputDescription> getInputDescriptions() {
@@ -62,43 +75,78 @@ public class NormalizeImage extends ThreeDPlugin {
 	public void runChannel(IPluginIOStack input, IPluginIOStack output, ProgressReporter r, PreviewType previewType,
 			boolean inputHasChanged) {
 
-		long nPixels = input.getDepth() * input.getHeight() * input.getWidth();
+		final float offset;
+		final float scalingFactor;
 
-		if (nPixels > Integer.MAX_VALUE)
-			throw new RuntimeException("Too many pixels");
+		if (readPercentiles) {
+			PluginIONumber f = (PluginIONumber) getInput("Fifth percentile");
+			PluginIONumber fn = (PluginIONumber) getInput("Ninety-fifth percentile");
+			offset = f.number.floatValue();
+			if (f.number.floatValue() + offset <= 0) {
+				throw new PluginRuntimeException("Ninety-fith percentile is not greater than fifth percentile: " +
+						fn.number + " vs " + offset, true);
+			}
+			scalingFactor = 1f / (fn.number.floatValue() - offset);
+			Utils.log("Offset: " + offset + "; scaling factor: " + scalingFactor, LogLevel.INFO);
+		} else {
+			if (lowPercentile >= highPercentile) {
+				throw new PluginRuntimeException("Low percentile must be lower than high percentile but found " +
+						lowPercentile + " and " + highPercentile, true);
+			}
+			if (highPercentile > 100) {
+				throw new PluginRuntimeException("High percentile is greater than 100: " + highPercentile, true);
+			}
+			if (lowPercentile < 0) {
+				throw new PluginRuntimeException("Low percentile is lower than 0: " + highPercentile, true);
+			}
+			
+			long nPixels = input.getDepth() * input.getHeight() * input.getWidth();
 
-		float[] pixels = new float[(int) nPixels];
+			if (nPixels > Integer.MAX_VALUE) {
+				throw new RuntimeException("Too many pixels");
+			}
 
-		int index = 0;
+			float[] pixels = new float[(int) nPixels];
+
+			int index = 0;
+
+			for (int z = 0; z < input.getDepth(); z++) {
+				for (int y = 0; y < input.getHeight(); y++) {
+					for (int x = 0; x < input.getWidth(); x++) {
+						pixels[index++] = input.getFloat(x, y, z);
+					}
+				}
+			}
+
+			Arrays.sort(pixels);
+			int highPercIndex = (int) (((nPixels - 1d) * highPercentile) / 100);
+			int lowPercIndex = (int) (((nPixels - 1d) * lowPercentile) / 100);
+
+			offset = pixels[lowPercIndex];
+			if (offset == pixels[highPercIndex]) {
+				throw new PluginRuntimeException("Ninety-fith percentile is not greater than fifth percentile: " +
+						pixels[highPercIndex] + " vs " + offset, true);
+			}
+			scalingFactor = 1f / (pixels[highPercIndex] - offset);
+		}
 
 		for (int z = 0; z < input.getDepth(); z++) {
 			for (int y = 0; y < input.getHeight(); y++) {
 				for (int x = 0; x < input.getWidth(); x++) {
-					pixels[index++] = input.getFloat(x, y, z);
+					output.setPixelValue(x, y, z, (Math.max(0, input.getFloat(x, y, z) - offset)) * scalingFactor);
 				}
 			}
 		}
+	}
 
-		Arrays.sort(pixels);
-		int percIndex = (int) ((nPixels * percentile) / 100);
-		if (percIndex == nPixels)
-			percIndex--;
+	@Override
+	public String[] getOutputLabels() {
+		return new String[] {};
+	}
 
-		float norm = pixels[percIndex];
-
-		if (norm == 0) {
-			throw new PluginRuntimeException("Percentile is 0", true);
-		}
-
-		index = 0;
-		for (int z = 0; z < input.getDepth(); z++) {
-			for (int y = 0; y < input.getHeight(); y++) {
-				for (int x = 0; x < input.getWidth(); x++) {
-					output.setPixelValue(x, y, z, input.getFloat(x, y, z) / norm);
-				}
-			}
-		}
-
+	@Override
+	public String[] getInputLabels() {
+		return new String[] {"Fifth percentile", "Ninety-fifth percentile" };
 	}
 
 }

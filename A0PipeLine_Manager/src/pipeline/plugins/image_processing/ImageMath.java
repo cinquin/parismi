@@ -65,27 +65,27 @@ public class ImageMath extends ThreeDPlugin implements AuxiliaryInputOutputPlugi
 	public void runChannel(final IPluginIOStack input, final IPluginIOStack output, final ProgressReporter p,
 			PreviewType previewType, boolean inputHasChanged) throws InterruptedException {
 
-		IPluginIOStack auxStack = null;
+		IPluginIOStack auxStack;
 
 		PluginIOImage auxInput = (PluginIOImage) pluginInputs.get("Input 2");
 		if (auxInput instanceof PluginIOHyperstack)
-			auxStack = ((PluginIOHyperstack) auxInput).getChannels().values().iterator().next();
+			auxStack = ((PluginIOHyperstack) auxInput).getChannels().get(input.getName());
 		else if (auxInput instanceof IPluginIOStack)
 			auxStack = (IPluginIOStack) auxInput;
-		if (auxStack == null)
+		else
 			throw new RuntimeException("Auxiliary input " + auxInput + " missing or not of the right kind");
 
 		if ((auxStack.getWidth() != input.getWidth()) || (auxStack.getHeight() != input.getHeight())) {
 			throw new RuntimeException("Dimension mismatch");
 		}
-
+		
 		progressSetIndeterminateThreadSafe(p, true);
 		progressSetValueThreadSafe(p, 0);
 
 		input.computePixelArray();
 		auxStack.computePixelArray();
 		output.computePixelArray();
-
+		
 		final Object[] inputSlices = input.getStackPixelArray();
 		final Object[] outputSlices = output.getStackPixelArray();
 		final Object[] auxSlices = auxStack.getStackPixelArray();
@@ -98,6 +98,10 @@ public class ImageMath extends ThreeDPlugin implements AuxiliaryInputOutputPlugi
 			float[] inputArray = (float[]) inputSlices[z];
 			float[] outputArray = (float[]) outputSlices[z];
 			float[] auxArray = (float[]) auxSlices[z];
+			
+			if (!auxStack.getName().equals(input.getName())) {
+				throw new RuntimeException();
+			}
 
 			for (int i = 0; i < inputArray.length; i++) {
 				switch (operation) {

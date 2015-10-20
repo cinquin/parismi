@@ -6,23 +6,34 @@
  ******************************************************************************/
 package pipeline.GUI_utils;
 
+import java.awt.Component;
 import java.awt.FileDialog;
 import java.awt.Frame;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.EventObject;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.RowFilter;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.TableColumnModelEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import org.apache.commons.collections.primitives.ArrayFloatList;
 import org.apache.commons.collections.primitives.ArrayIntList;
 import org.jdesktop.swingx.JXTable;
+import org.jdesktop.swingx.table.TableColumnExt;
 import org.jfree.data.statistics.HistogramDataset;
 import org.jfree.data.statistics.HistogramType;
 
@@ -66,8 +77,8 @@ public class JXTablePerColumnFiltering extends JXTable {
 						if ((!"".equals(((TextParameter) filteringModel.getValueAt(0, i)).getStringValue()))
 								&& !v.equals(filteringModel.getValueAt(0, i)))
 							return false;
-					} else if (v instanceof Float) {
-						float f = (Float) v;
+					} else if (v instanceof Float || v instanceof Double) {
+						float f = ((Number) v).floatValue();
 						float[] range = (float[]) ((FloatRangeParameter) filteringModel.getValueAt(0, i)).getValue();
 						if (f < range[0]) {
 							// Utils.log("Excluding based on column "+i,LogLevel.VERBOSE_DEBUG);
@@ -79,7 +90,6 @@ public class JXTablePerColumnFiltering extends JXTable {
 						}
 					} else if (v instanceof SpreadsheetCell) {
 						float f = ((SpreadsheetCell) v).getFloatValue();
-
 						float[] range = (float[]) ((FloatRangeParameter) filteringModel.getValueAt(0, i)).getValue();
 						if (f < range[0]) {
 							// Utils.log("Excluding based on column  "+i,LogLevel.VERBOSE_DEBUG);
@@ -182,7 +192,7 @@ public class JXTablePerColumnFiltering extends JXTable {
 			out.println(b);
 
 			for (int i = 0; i < model.getRowCount(); i++) {
-				int rowIndex = convertRowIndexToView(i);// JXTablePerColumnFiltering.this.
+				int rowIndex = convertRowIndexToView(i);
 				if (rowIndex > -1) {
 					if (columnsFormulasToPrint == null)
 						if (stripNewLinesInCells)
@@ -221,7 +231,7 @@ public class JXTablePerColumnFiltering extends JXTable {
 
 	private static final long serialVersionUID = 1L;
 
-	public JXTable filteringTable;
+	JXTable filteringTable, tableForColumnDescriptions;
 	private RowTableModel<?> model;
 	private TableModel filteringModel;
 	private int nColumns;
@@ -304,26 +314,29 @@ public class JXTablePerColumnFiltering extends JXTable {
 			initializeFilterModel();
 		}
 		boolean isFloat = model.getValueAt(0, columnIndex) instanceof Float;
+		boolean isDouble = model.getValueAt(0, columnIndex) instanceof Double;
 		boolean isInteger = model.getValueAt(0, columnIndex) instanceof Integer;
 		boolean isSpreadsheetCell = model.getValueAt(0, columnIndex) instanceof SpreadsheetCell;
-		if (!(isFloat || isInteger || isSpreadsheetCell))
+		if (!(isFloat || isInteger || isSpreadsheetCell || isDouble))
 			return;
-		float min = Float.MAX_VALUE;
-		float max = -Float.MAX_VALUE;
+		double min = Double.MAX_VALUE;
+		double max = Double.MIN_VALUE;
 
 		double[] valuesForHistogram = new double[model.getRowCount()];
 
 		for (int i = 0; i < model.getRowCount(); i++) {
-			float value;
+			double value;
 			if (isFloat)
 				value = (Float) model.getValueAt(i, columnIndex);
+			else if (isDouble)
+				value = (Double) model.getValueAt(i, columnIndex);
 			else if (isInteger)
 				value = (Integer) model.getValueAt(i, columnIndex);
 			else {
 				value = ((SpreadsheetCell) model.getValueAt(i, columnIndex)).getFloatValue();
 			}
-			if (Float.isNaN(value))
-				value = 0.0f;
+			if (Double.isNaN(value))
+				value = 0.0d;
 			if (value < min)
 				min = value;
 			if (value > max)
@@ -337,14 +350,14 @@ public class JXTablePerColumnFiltering extends JXTable {
 		dataset.setType(HistogramType.RELATIVE_FREQUENCY);
 		dataset.addSeries("Histogram", valuesForHistogram, 15);
 
-		if ((isFloat) || isSpreadsheetCell) {
+		if (isFloat || isDouble || isSpreadsheetCell) {
 			FloatRangeParameter param = (FloatRangeParameter) filteringModel.getValueAt(0, columnIndex);
 			param.histogram = dataset;
 			float[] currentValue = (float[]) param.getValue();
 			if ((boundsToUpdate == BOTH_BOUNDS) || boundsToUpdate == LOWER_BOUND)
-				currentValue[2] = min;
+				currentValue[2] = (float) min;
 			if ((boundsToUpdate == BOTH_BOUNDS) || boundsToUpdate == UPPER_BOUND)
-				currentValue[3] = max;
+				currentValue[3] = (float) max;
 			if (reinitializeSelection) {
 				currentValue[0] = currentValue[2];
 				currentValue[1] = currentValue[3];
@@ -373,8 +386,9 @@ public class JXTablePerColumnFiltering extends JXTable {
 		if (model.getRowCount() > 0) {
 			needToInitializeFilterModel = false;
 			updateFilteringTable();
-			for (int i = 0; i < nColumns; i++) {
-				if ((model.getValueAt(0, i) instanceof Float) || (model.getValueAt(0, i) instanceof SpreadsheetCell)) {
+			for (int i = 0; i < model.getColumnCount(); i++) {
+				if ((model.getValueAt(0, i) instanceof Float) || (model.getValueAt(0, i) instanceof SpreadsheetCell) ||
+						(model.getValueAt(0, i) instanceof Double)) {
 					filteringModel.setValueAt(new FloatRangeParameter("", "", 0.0f, 0.0f, 0.0f, 0.0f, true, true,
 							new filterListener(i), i), 0, i);
 				} else if (model.getValueAt(0, i) instanceof Integer)
@@ -390,10 +404,9 @@ public class JXTablePerColumnFiltering extends JXTable {
 			}
 		} else
 			needToInitializeFilterModel = true;
-		// silenceUpdates.decrementAndGet();
 	}
 
-	private transient AtomicInteger silenceUpdates = new AtomicInteger(0);
+	transient AtomicInteger silenceUpdates = new AtomicInteger(0);
 	
 	private ColumnHeaderToolTips tips;
 
@@ -403,14 +416,6 @@ public class JXTablePerColumnFiltering extends JXTable {
 		super.setModel(newModel);
 		updateFilteringTable();
 		this.setRowFilter(filter);
-		if (tips == null) {
-			tips = new ColumnHeaderToolTips();
-		}
-		tips.clear();
-	    for (int colIndex = 0; colIndex < this.getColumnCount(); colIndex++) {
-		      TableColumn col = this.getColumnModel().getColumn(colIndex);
-		      tips.setToolTip(col, this.getColumnName(colIndex));
-		}
 	}
 
 	private void updateFilteringTable() {
@@ -419,14 +424,102 @@ public class JXTablePerColumnFiltering extends JXTable {
 		if (filteringTable != null) {
 			filteringTable.setModel(filteringModel);
 			for (int i = 0; i < nColumns; i++) {
+				MultiRenderer multiRenderer = getMultiRenderer();
 				filteringTable.getColumn(i).setCellEditor(multiRenderer);
 				filteringTable.getColumn(i).setCellRenderer(multiRenderer);
 			}
 		}
 	}
+	
+	private static void updateColumn(TableColumnExt template, TableColumnExt toUpdate) {
+		if (template == null || toUpdate == null) {
+			return;
+		}
+		if (toUpdate.getModelIndex() != template.getModelIndex()) {
+			toUpdate.setModelIndex(template.getModelIndex());
+		}
+		if (toUpdate.getWidth() != template.getWidth()) {
+			toUpdate.setWidth(template.getWidth());
+			toUpdate.setPreferredWidth(template.getPreferredWidth());
+			toUpdate.setMaxWidth(template.getWidth());
+			toUpdate.setMinWidth(template.getWidth());
+		}
+		if (toUpdate.isVisible() != template.isVisible()) {
+			toUpdate.setVisible(template.isVisible());
+		}
 
-	private MultiRenderer multiRenderer;
+	}
+	
+	void updateFilteringTableSetup() {
+		if (filteringTable == null) {
+			return;
+		}
+		int nColumns = getColumns(true).size();
+		for (int i = 0; i < nColumns; i++) {
+			TableColumnExt filteringColumn = (TableColumnExt) filteringTable.getColumns(true).get(i);
+			TableColumnExt dataColumn = (TableColumnExt) getColumns(true).get(i);
+			updateColumn(dataColumn, filteringColumn);
+			
+			if (tableForColumnDescriptions != null) {
+				TableColumnExt descColumn = (TableColumnExt) tableForColumnDescriptions.getColumns(true).get(i);
+				updateColumn(dataColumn, descColumn);
+			}
+		}
+	}
+	
+	@Override
+	public void columnMoved(TableColumnModelEvent e) {
+		super.columnMoved(e);
+		if (e.getFromIndex() == e.getToIndex()) {
+			return;
+		}
+		try {
+			filteringTable.editingCanceled(null);
+			if (e.getFromIndex() != -1 && e.getFromIndex() < getColumns(true).size()) {
+				filteringTable.moveColumn(e.getFromIndex(), e.getToIndex());
+				tableForColumnDescriptions.moveColumn(e.getFromIndex(), e.getToIndex());
+			}
+		} catch (ArrayIndexOutOfBoundsException ex) {
+			//Changes in column counts apparently occur when hiding/unhiding columns,
+			//which generate column move events
+			Utils.printStack(ex, LogLevel.DEBUG);
+		}
+		updateFilteringTableSetup();
+	}
+	
+	@Override
+	public void columnPropertyChange(PropertyChangeEvent event) {
+		super.columnPropertyChange(event);
+		updateFilteringTableSetup();
+	}
 
+	@Override
+	public void columnMarginChanged(ChangeEvent e) {
+		super.columnMarginChanged(e);
+		updateFilteringTableSetup();
+	}
+	
+	private static MultiRenderer getMultiRenderer() {
+		MultiRenderer multiRenderer = new MultiRenderer();
+
+		FloatRangeSlider myFloatSliderRange = new FloatRangeSlider();
+		FloatRangeSlider myFloatSliderRange2 = new FloatRangeSlider();
+		IntRangeSlider myIntSliderRange = new IntRangeSlider();
+		IntRangeSlider myIntSliderRange2 = new IntRangeSlider();
+		TextBox textBox = new TextBox();
+		TextBox textBox2 = new TextBox();
+
+		multiRenderer.registerRenderer(IntRangeParameter.class, myIntSliderRange);
+		multiRenderer.registerRenderer(FloatRangeParameter.class, myFloatSliderRange);
+		multiRenderer.registerRenderer(TextParameter.class, textBox);
+
+		multiRenderer.registerEditor(FloatRangeParameter.class, myFloatSliderRange2);
+		multiRenderer.registerEditor(IntRangeParameter.class, myIntSliderRange2);
+		multiRenderer.registerEditor(TextParameter.class, textBox2);
+
+		return multiRenderer;
+	}
+	
 	public JXTablePerColumnFiltering(TableModel model) {
 		super(model);
 		this.model = (BeanTableModel<?>) model;
@@ -451,29 +544,16 @@ public class JXTablePerColumnFiltering extends JXTable {
 
 		initializeFilterModel();
 
-		filteringTable = new TableBetterFocus(filteringModel);
-		filteringTable.setFillsViewportHeight(false);
-
-		multiRenderer = new MultiRenderer();
-
-		FloatRangeSlider myFloatSliderRange = new FloatRangeSlider();
-		FloatRangeSlider myFloatSliderRange2 = new FloatRangeSlider();
-		IntRangeSlider myIntSliderRange = new IntRangeSlider();
-		IntRangeSlider myIntSliderRange2 = new IntRangeSlider();
-		TextBox textBox = new TextBox();
-		TextBox textBox2 = new TextBox();
-
-		multiRenderer.registerRenderer(IntRangeParameter.class, myIntSliderRange);
-		multiRenderer.registerRenderer(FloatRangeParameter.class, myFloatSliderRange);
-		multiRenderer.registerRenderer(TextParameter.class, textBox);
-
-		multiRenderer.registerEditor(FloatRangeParameter.class, myFloatSliderRange2);
-		multiRenderer.registerEditor(IntRangeParameter.class, myIntSliderRange2);
-		multiRenderer.registerEditor(TextParameter.class, textBox2);
+		filteringTable = new JXTableBetterFocus(filteringModel);
+		filteringTable.setTableHeader(null);
 
 		for (int i = 0; i < nColumns; i++) {
-			filteringTable.getColumn(i).setCellEditor(multiRenderer);
-			filteringTable.getColumn(i).setCellRenderer(multiRenderer);
+			TableColumn fColumn = filteringTable.getColumn(i);
+			MultiRenderer multiRenderer = getMultiRenderer();
+			
+			fColumn.setCellRenderer(multiRenderer);
+			fColumn.setCellEditor(multiRenderer);
+			fColumn.setWidth(getColumn(i).getWidth());
 		}
 
 		this.setRowFilter(filter);
@@ -483,9 +563,83 @@ public class JXTablePerColumnFiltering extends JXTable {
 			tips = new ColumnHeaderToolTips();
 		}
 	    header.addMouseMotionListener(tips);
-	    for (int colIndex = 0; colIndex < this.getColumnCount(); colIndex++) {
-	      TableColumn col = this.getColumnModel().getColumn(colIndex);
-	      tips.setToolTip(col, this.getColumnName(colIndex));
-	    }
 	}
+	
+    @Override
+    //Overridden to work around problem with editor returning null value and
+    //to allow parsing to right object type
+	public void editingStopped(ChangeEvent e) {
+        // Take in the new value
+    	int editingRow = this.editingRow;
+    	int editingColumn = this.editingColumn;
+        TableCellEditor editor = getCellEditor();
+        if (editor != null) {
+        	if (editingRow > -1 && editingColumn > -1) {
+        		Object value = editor.getCellEditorValue();
+        		if (getValueAt(editingRow, editingColumn) instanceof Float && value != null) {
+        			try {
+        				value = Float.parseFloat((String) value);
+        				setValueAt(value, editingRow, editingColumn);
+        			} catch (NumberFormatException ex) {
+        				Utils.log("Could not parse " + value + " to float", LogLevel.WARNING);
+        			}
+        		} else if (getValueAt(editingRow, editingColumn) instanceof Double && value != null) {
+        			try {
+        				value = Double.parseDouble((String) value);
+        				setValueAt(value, editingRow, editingColumn);
+        			} catch (NumberFormatException ex) {
+        				Utils.log("Could not parse " + value + " to float", LogLevel.WARNING);
+        			}
+        		} else if (getValueAt(editingRow, editingColumn) instanceof Integer && value != null) {
+        			try {
+        				value = Integer.parseInt((String) value);
+        				setValueAt(value, editingRow, editingColumn);
+        			} catch (NumberFormatException ex) {
+        				Utils.log("Could not parse " + value + " to int", LogLevel.WARNING);
+        			}
+        		} else if (value != null) {
+        			setValueAt(value, editingRow, editingColumn);
+        		}
+        		//It might make more sense for update event to be fired by setValueAt,
+        		//but BeanTableModel does not currently do that
+        		model.fireTableCellUpdated(editingRow, editingColumn);
+        	}
+            removeEditor();
+        }
+    }
+    
+    @Override
+    //Overridden to prevent cell editing from starting just because the
+    //user pressed the command key (which is necessary for discontiguous
+    //cell selection)
+	public boolean editCellAt(int row, int column, EventObject e) {
+    	if (e instanceof KeyEvent) {
+    		KeyEvent ke = (KeyEvent) e;
+    		if ((ke.getKeyCode() == 0 || ke.getKeyCode() == 157) &&
+    				(ke.getModifiers() == 260 || ke.getModifiers() == 4)) {
+    			return false;
+    		}
+    	}
+   		return super.editCellAt(row, column, e);
+    }
+    
+	@Override
+	//Adapted from http://stackoverflow.com/questions/27102546/show-tooltips-in-jtable-only-when-column-is-cut-off
+	public String getToolTipText(MouseEvent e) {
+		Point p = e.getPoint();
+		int col = columnAtPoint(p);
+		int row = rowAtPoint(p);
+		if (row == -1 || col == -1) {
+			return null;
+		}
+		Rectangle bounds = getCellRect(row, col, false);
+		Object value = getValueAt(row, col);
+		Component comp = prepareRenderer(getCellRenderer(row, col), row, col);
+		if (comp.getPreferredSize().width > bounds.width) {
+		    return(value.toString());
+		} else {
+			return null;
+		}
+	}
+
 }

@@ -242,7 +242,7 @@ public class FileNameUtils {
 
 		String newName = input;
 
-		if (openingBrace > 0) {
+		if (openingBrace > -1) {
 			int closingBrace = input.indexOf('}');
 			if (closingBrace < 0) {
 				throw new RuntimeException("Missing closing brace in file name " + input);
