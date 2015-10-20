@@ -21,7 +21,7 @@ public class ColumnHeaderToolTips extends MouseMotionAdapter {
 			col = colModel.getColumn(vColIndex);
 		}
 		if (col != curCol) {
-			header.setToolTipText((String) col.getHeaderValue());
+			header.setToolTipText(col == null ? "" : (String) col.getHeaderValue());
 			curCol = col;
 		}
 	}
