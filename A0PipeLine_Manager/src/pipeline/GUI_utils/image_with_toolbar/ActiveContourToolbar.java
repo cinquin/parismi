@@ -668,14 +668,14 @@ public class ActiveContourToolbar extends Toolbar {
 	@Override
 	public void publicProcessKeyEvent(KeyEvent e) {
 		char c = e.getKeyChar();
-		if (c == '�') {
+		if (c == 'å') {
 			buttonGroup.setSelected(newButton.getModel(), true);
 			currentModifier = PluginIOCells.ADD_MODIFIER;
-		} else if (c == '�') {
+		} else if (c == '∫') {
 			buttonGroup.setSelected(browseButton.getModel(), true);
 			currentModifier = -1;
 		}
-		if (c == '�') {
+		if (c == '∂') {
 			buttonGroup.setSelected(deleteButton.getModel(), true);
 			currentModifier = PluginIOCells.DELETE_MODIFIER;
 		} else {
