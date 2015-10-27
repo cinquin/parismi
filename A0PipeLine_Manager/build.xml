@@ -69,6 +69,7 @@
     <target depends="init" name="build-project">
         <echo message="${ant.project.name}: ${ant.file}"/>
         <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+            <compilerarg line="-encoding utf-8"/>
             <src path="src"/>
             <src path="contrib"/>
             <exclude name="**/.DS_Store"/>
