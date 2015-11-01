@@ -56,7 +56,7 @@ import pipeline.parameters.TableParameter;
 import pipeline.parameters.TextParameter;
 import pipeline.plugins.MouseEventPlugin;
 
-// TODO Icons are from http://www.famfamfam.com/lab/icons/silk/ **which requires attribution in a credits page**
+//Icons are from http://www.famfamfam.com/lab/icons/silk/
 
 /**
  * A toolbar designed for editing of segmentations obtained by active contours.

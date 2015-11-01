@@ -218,6 +218,10 @@ Pedro Felzenszwalb
 -   Other libraries part of our distribution include XStream, JNA,
 SwingX, and Eclipse annotations.
 
+-   [Silk icons](http://www.famfamfam.com/lab/icons/silk/) by Mark James
+are used in the active contour toolbar (Creative Commons Attribution 2.5
+License).
+
 **License**
 
 Parismi uses code from projects listed above, which come under various
