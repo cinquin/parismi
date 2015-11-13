@@ -3135,7 +3135,7 @@ public class A0PipeLine_Manager implements PlugIn {
 			
 			controls2.add(runButton);
 			
-			controls2.add(new JLabel("Parismi v0.1.6"));
+			controls2.add(new JLabel("Parismi v0.1.7"));
 
 			final JPanel memoryPanel = new JPanel();
 			JButton collectGarbageButton = new JButton("Collect garbage");
