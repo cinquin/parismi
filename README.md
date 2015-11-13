@@ -254,7 +254,7 @@ press).
 \[2\]: Reyes de Mochel N.S., Luong M., Chiang M., Javier A.L., Luu E.,
 Toshihiko F., MacGregor G.R., Cinquin O. & Cho K.W. (2015) BMP signaling
 is required for cell cleavage in preimplantation-mouse embryos. *Dev Biol*
-397(1),pp45-55
+397(1), pp45-55
 
 \[3\]: Cinquin A., Zheng L., Taylor P.H., Paz A., Zhang L., Chiang M.,
 Snow J.J., Nie Q. & Cinquin O. (2015) Semi-permeable diffusion barriers
