@@ -1,22 +1,16 @@
 [![Build Status](https://travis-ci.org/cinquin/parismi.svg?branch=master)](https://travis-ci.org/cinquin/parismi)
-<!---
 [![Coverity Status](https://scan.coverity.com/projects/4509/badge.svg)](https://scan.coverity.com/projects/4509)
-Put this back once Coverity have fixed their internal problems with the scanner
--->
 
 **General notes**
 
-We are releasing the code of our 3D image segmentation and cell cycle
-analysis pipeline “Parismi” so that the results reported in our
-publications can easily be reproduced, and so that the tool can be
-reused and modified by other groups. The reference for the accompanying
-manuscript is:
-
-Chiang M., Hallman S., Cinquin A., Reyes de Mochel N., Paz A., Kawauchi
-S., Calof A.L., Cho K.W., Fowlkes C.C. & Cinquin O. (2015) Analysis of
-in vivo single cell behavior by high throughput, human-in-the-loop
-segmentation of three-dimensional images. *BMC Bioinformatics* (in
-press)
+This is the code repository for project "Parismi", a 3D image
+segmentation pipeline designed for biological images. Parismi is
+detailed in reference \[1\], and was also used in references [2-4]. Note
+that although Parismi is functional, user friendliness is not an area to
+which we have been able to devote much effort so far. As discussed in
+\[1\], the ideas demonstrated by this implementation might be usefully
+translated to other software ecosystems (which should be made relatively
+straightforward by the release of our code).
 
 **Running Parismi**
 
@@ -248,3 +242,26 @@ and
 [YourKit .NET Profiler](www.yourkit.com/.net/profiler/index.jsp).
 innovative and intelligent tools for profiling Java and .NET applications.
 [![YourKit](https://www.yourkit.com/images/yklogo.png)](https://www.yourkit.com)
+
+**References**
+
+\[1\]: Chiang M., Hallman S., Cinquin A., Reyes de Mochel N., Paz A., Kawauchi
+S., Calof A.L., Cho K.W., Fowlkes C.C. & Cinquin O. (2015) Analysis of
+in vivo single cell behavior by high throughput, human-in-the-loop
+segmentation of three-dimensional images. *BMC Bioinformatics* (in
+press).
+
+\[2\]: Reyes de Mochel N.S., Luong M., Chiang M., Javier A.L., Luu E.,
+Toshihiko F., MacGregor G.R., Cinquin O. & Cho K.W. (2015) BMP signaling
+is required for cell cleavage in preimplantation-mouse embryos. *Dev Biol*
+397(1),pp45-55
+
+\[3\]: Cinquin A., Zheng L., Taylor P.H., Paz A., Zhang L., Chiang M.,
+Snow J.J., Nie Q. & Cinquin O. (2015) Semi-permeable diffusion barriers
+enhance patterning robustness in the *C. elegans* germ line. *Dev Cell*
+(in press).
+
+\[4\]: Chiang M., Cinquin A., Paz A., Meeds E., Price C.A., Welling M. &
+Cinquin O. (2015) Control of *Caenorhabditis elegans* germ-line stem-cell
+cycling speed meets requirements of design to minimize mutation
+accumulation. *BMC Biology* 13:51.
