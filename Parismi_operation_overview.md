@@ -195,7 +195,7 @@ must occur.
 
 Batch runs can be performed with `java -jar A0PipeLine_Manager.jar batch path_to_pipeline.xml`.
 This matches the semi-automated functionality described above, except that pauses for
-user review are skipped, and no GUI windows are open (for a command-line run without batch
+user review are skipped, and no GUI windows are opened (for a command-line run without batch
 functionality, replace `batch` by `singleRun`). When using long pipelines with
 adjustments that may need to be made at select steps, it may be a good idea to split
 the pipelines in smaller pieces and use `make` to handle updates. This is what we have
