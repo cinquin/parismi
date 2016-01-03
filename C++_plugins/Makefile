@@ -1,7 +1,7 @@
 
 OS:=$(shell uname -s | tr a-z A-Z)
 
-CFLAGS= -Werror -Wall -pedantic -Weverything -Wno-padded -Wno-old-style-cast -g -fmessage-length=0 -fexceptions -DUSELIBDISPATCH
+CFLAGS= -Werror -Wall -pedantic -Weverything -Wno-reserved-id-macro -Wno-old-style-cast -Wno-padded -Wno-old-style-cast -g -fmessage-length=0 -fexceptions -DUSELIBDISPATCH
 DEBUG_FLAGS = -O3 -DINCLUDESANITYCHECKS
 RELEASE_FLAGS= -ffast-math -funroll-loops -fstrict-aliasing -Wstrict-aliasing=2 -DINCLUDESANITYCHECKS
 # -DBOOST_DISABLE_ASSERTS
