@@ -7,36 +7,18 @@
   ******************************************************************************/
 
 #include "util.h"
+#include <atomic>
 
-bool isEqual(float a, float b) {
-	if (fabs(a - b) < EPS) {
+bool isCloseTo(float a, float b) {
+	if (fabsf(a - b) < EPS) {
 		return true;
 	} else {
 		return false;
 	}
 }
 
-bool isUnequal(float a, float b) {
-	if (fabs(a - b) < EPS) {
-		return false;
-	} else {
-		return true;
-	}
-}
-
-void atomic_increment(volatile uint32_t *i) {
-#ifdef FREEBSD
-	atomic_add_int(i,1);
-#elif defined OSX
-	using boost::numeric_cast;
-	volatile int32_t j = numeric_cast<volatile int32_t> (*i);
-	OSAtomicIncrement32(&j);
-	*i = (uint32_t) j;
-#elif defined LINUX
-	__sync_fetch_and_add(i,1);
-#else
-	no defined atomic integer operations
-#endif
+void atomic_increment(std::atomic<unsigned int> *i) {
+	std::atomic_fetch_add_explicit(i, (unsigned int) 1, std::memory_order_relaxed);
 }
 
 /*!

@@ -48,7 +48,7 @@ ActiveContourSeed::ActiveContourSeed(Protobuf *seedData, int protobuf_index,
 	_yC = (int) yC;
 	_zC = (int) zC;
 	_seedIdx = seedData->getSeedIdx(protobuf_index);
-	if (isEqual(_seedIdx, 0)) {
+	if (_seedIdx == 0.0f) {
 		BOOST_THROW_EXCEPTION(Exception("Error: cannot set an active contour seed index to 0; this is reserved for background voxels"));
 	}
 	_hszX = (int) (p_->hsz / p_->res_x);
@@ -130,7 +130,7 @@ void ActiveContourSeed::getSparseCoordinates(Array1D<int> *xS,
 	for (int x = 0; x < dimx; x++) {
 		for (int y = 0; y < dimy; y++) {
 			for (int z = 0; z < dimz; z++) {
-				if ((*bw)(x, y, z) > BWTHRESH) {
+				if ((*bw)(x, y, z) > float(BWTHRESH)) {
 					int xAbs, yAbs, zAbs;
 					relToAbs(xAbs, yAbs, zAbs, x, y, z);
 					(*xS)(pixelCount) = xAbs;
@@ -297,8 +297,11 @@ void ActiveContourSeed::updateFullSeg(Image3D<float> *phi) {
 					int xAbs, yAbs, zAbs;
 					relToAbs(xAbs, yAbs, zAbs, x, y, z);
 					float fsIdx = (*fullSeg)(xAbs, yAbs, zAbs);
-					if (fsIdx > 0 && isUnequal(fsIdx, _seedIdx))
-						(*fullSeg)(xAbs, yAbs, zAbs) = -2;// Multiple contours collided at this position
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wfloat-equal"
+					if (fsIdx > 0 && fsIdx != _seedIdx)
+#pragma clang diagnostic pop
+						(*fullSeg)(xAbs, yAbs, zAbs) = -2.0f;// Multiple contours collided at this position
 					else if (fsIdx > 0) // Not already marked as collision area
 						(*fullSeg)(xAbs, yAbs, zAbs) = _seedIdx;
 				}
@@ -357,7 +360,7 @@ void ActiveContourSeed::initializePhi(int protobuf_idx, Protobuf *proto) {
 		for (int x = 0; x < _dimx_Rel; x++) {
 			for (int y = 0; y < _dimy_Rel; y++) {
 				for (int z = 0; z < _dimz_Rel; z++) {
-					if (temp(x, y, z) > BWTHRESH) {
+					if (temp(x, y, z) > float(BWTHRESH)) {
 						(*phi_)(x, y, z) = -(*phi_)(x, y, z);
 					}
 				}
@@ -390,7 +393,10 @@ void ActiveContourSeed::preUpdatePhi() {
 				int xAbs, yAbs, zAbs;
 				relToAbs(xAbs, yAbs, zAbs, x, y, z);
 				float fsIdx = (*fullSeg)(xAbs, yAbs, zAbs);
-				if (isEqual(fsIdx, -2)) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wfloat-equal"
+				if (fsIdx == -2.0f) {
+#pragma clang diagnostic pop
 					// Old collision; do not update Phi here
 					continue;
 				}
@@ -408,7 +414,7 @@ void ActiveContourSeed::preUpdatePhi() {
 				// calculate derivatives of phi
 				float phix, phiy, phiz, phixx, phiyy, phizz, phixz, phixy,
 						phiyz;
-				if (isEqual(p_->res_x, 1) && isEqual(p_->res_y, 1)) {
+				if (isCloseTo(p_->res_x, 1.0f) && isCloseTo(p_->res_y, 1.0f)) {
 					phi_->getFastDerivatives(x, y, z, phix, phiy, phiz, phixx,
 							phiyy, phizz, phixy, phixz, phiyz);
 				} else {
@@ -467,23 +473,25 @@ void ActiveContourSeed::preUpdatePhi() {
 		if (newPhi <= 0) {
 			int xAbs, yAbs, zAbs;
 			relToAbs(xAbs, yAbs, zAbs, x, y, z);
-
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wfloat-equal"
 			//Old collision; do not update fullseg
-			if (isEqual((*fullSeg)(xAbs, yAbs, zAbs), -2)) {
+			if ((*fullSeg)(xAbs, yAbs, zAbs) == -2.0f) {
 				continue;
 			}
 
-			if (isUnequal((*fullSeg)(xAbs, yAbs, zAbs), 0) && isUnequal(
-					(*fullSeg)(xAbs, yAbs, zAbs), _seedIdx)) {
+			if ((*fullSeg)(xAbs, yAbs, zAbs) != 0.0f &&
+					(*fullSeg)(xAbs, yAbs, zAbs) != _seedIdx) {
 				//New collision
-				(*fullSeg)(xAbs, yAbs, zAbs) = -1;
+				(*fullSeg)(xAbs, yAbs, zAbs) = -1.0f;
 			} else {
 				(*fullSeg)(xAbs, yAbs, zAbs) = _seedIdx;
-				if (isUnequal((*fullSeg)(xAbs, yAbs, zAbs), _seedIdx)) {
+				if ((*fullSeg)(xAbs, yAbs, zAbs) != _seedIdx) {
 					//This might not be sufficient to take care of race conditions, but it's cheap
-					(*fullSeg)(xAbs, yAbs, zAbs) = -1;
+					(*fullSeg)(xAbs, yAbs, zAbs) = -1.0f;
 				}
 			}
+#pragma clang diagnostic pop
 		}
 	}
 }
@@ -499,14 +507,17 @@ void ActiveContourSeed::updatePhi() {
 		int xAbs, yAbs, zAbs;
 		relToAbs(xAbs, yAbs, zAbs, x, y, z);
 
-		if (isEqual((*fullSeg)(xAbs, yAbs, zAbs), -1)) {
-			(*fullSeg)(xAbs, yAbs, zAbs) = -2;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wfloat-equal"
+		if ((*fullSeg)(xAbs, yAbs, zAbs) == -1.0f) {
+			(*fullSeg)(xAbs, yAbs, zAbs) = -2.0f;
 		}
 
 		float dphidt = (*narrowBand_DphiDt)(k);
 		float newPhi = (*phi_)(x, y, z) + (p_->dt) * dphidt;
 
-		if (isUnequal((*fullSeg)(xAbs, yAbs, zAbs), -2) || newPhi > 0) {
+		if ((*fullSeg)(xAbs, yAbs, zAbs) != -2.0f || newPhi > 0) {
+#pragma clang diagnostic pop
 			(*phi_)(x, y, z) = newPhi;
 		}
 	}

@@ -82,7 +82,7 @@ void rayTraceFiller(TextIO* inputText, ImageIO* outputImage,
 									+ zLine(r);
 							if (x >= 0 & x < dimx & y >= 0 & y < dimy & z >= 0
 									& z < dimz) { // check if ray in image boundary
-								if ((*I)(x, y, z) > BWTHRESH) { // if collision detected, update collision information for all points on ray
+								if ((*I)(x, y, z) > float(BWTHRESH)) { // if collision detected, update collision information for all points on ray
 									for (int rr = 0; rr <= r; rr++) {
 										int xx = xc + xLine(rr), yy = yc
 												+ yLine(rr), zz = zc
@@ -132,7 +132,7 @@ void rayTraceFiller(TextIO* inputText, ImageIO* outputImage,
 		for (int x = 0; x < dimx; x++) {
 			for (int y = 0; y < dimy; y++) {
 				// skip over pixels in segmentaiton mask
-				if ((*I)(x, y, z) > BWTHRESH) {
+				if ((*I)(x, y, z) > float(BWTHRESH)) {
 					continue;
 				}
 				// for each pixel in the image, calculate the percentage of rays that hit segmentation mask

@@ -11,7 +11,7 @@
 //
 // Using the BOOST.ASSERT mechanism to replace library assertions
 // with exceptions
-
+#ifndef BOOST_DISABLE_ASSERTS
 #ifndef OVERRIDE_BOOST_ABORT
 #define OVERRIDE_BOOST_ABORT
 #include "definitions.h"
@@ -33,4 +33,5 @@ void assertion_failed_msg(char const * expr, char const * msg,
 	BOOST_THROW_EXCEPTION(Exception("Boost assert failed: %s %s %s %s line %li", expr, msg, function, file, line));
 }
 }
+#endif
 #endif

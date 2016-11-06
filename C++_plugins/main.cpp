@@ -78,11 +78,13 @@ int main(int argc, char * const argv[]) {
 
 		// run plugin
 		returnValue = imageProcessingPlugins(imageInput,textInput,command,imageOutput,textOutput,cb);
-
-//        } catch (std::exception const & ex) {
-//                log(cb,1,"Catching exception %s",ex.what());
+#ifdef BOOST_DISABLE_ASSERTS
+        } catch (std::exception const & ex) {
+                log(cb,1,"Catching exception %s",ex.what());
+#else
 	} catch (...) {
 		log(cb,1,"ERROR; catching exception: %s",boost::current_exception_diagnostic_information().c_str());
+#endif
 		returnValue=1;
 	}
 

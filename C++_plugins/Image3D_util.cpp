@@ -65,7 +65,7 @@ void perim(Image3D<float> *I, int thickness) {
 	for (int x = 0; x < dimx; x++) {
 		for (int y = 0; y < dimy; y++) {
 			for (int z = 0; z < dimz; z++) {
-				if ((*I)(x, y, z) > BWTHRESH && erodedI(x, y, z) > BWTHRESH) {
+				if ((*I)(x, y, z) > float(BWTHRESH) && erodedI(x, y, z) > float(BWTHRESH)) {
 					(*I)(x, y, z) = 0;
 				}
 			}
@@ -340,7 +340,7 @@ void bwdist(Image3D<float> *I) {
 	for (int x = 0; x < dimx; x++) {
 		for (int y = 0; y < dimy; y++) {
 			for (int z = 0; z < dimz; z++) {
-				if ((*I)(x, y, z) < BWTHRESH) {
+				if ((*I)(x, y, z) < float(BWTHRESH)) {
 					(*I)(x, y, z) = INF;
 				} else {
 					(*I)(x, y, z) = 0;

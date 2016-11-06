@@ -64,11 +64,11 @@ Exception::Exception(const char * const fmt, ...) :
 	delete[] log_message;
 }
 
-const char* Exception::what() const throw () {
+const char* Exception::what() const noexcept {
 	return new_message;
 }
 
-Exception::~Exception() throw () {
+Exception::~Exception() noexcept {
 	if (new_message != NULL) {
 		free(new_message);
 		new_message = NULL;

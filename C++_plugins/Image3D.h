@@ -66,17 +66,6 @@ public:
 	 * Access/mutate x,y,z voxel of image.
 	 */
 	T& operator()(int x, int y, int z) {
-
-#if defined INCLUDESANITYCHECKS
-		// Sanity check
-		int dimx,dimy,dimz;
-		getDimensions(dimx,dimy,dimz);
-		if (x<0 || x>=dimx || y<0 || y>=dimy || z<0 || z>=dimz) {
-			log(cb,1,"Coordinates (%d,%d,%d) outside of image range (%d,%d,%d)",x,y,z,dimx,dimy,dimz);
-			throw 999;
-		}
-#endif
-
 		return (*I)[x][y][z];
 	}
 
@@ -441,7 +430,7 @@ public:
 
 	T getDdxVal(int x, int y, int z) {
 		float I_xp1_y_z, I_xm1_y_z;
-		if (isEqual(pixelsPerMicron_x, 1)) {
+		if (isCloseTo(pixelsPerMicron_x, 1)) {
 			// handle boundary cases
 			int dimx, dimy, dimz;
 			getDimensions(dimx, dimy, dimz);
@@ -466,7 +455,7 @@ public:
 
 	T getD2dx2Val(int x, int y, int z) {
 		float I_x_y_z, I_xp1_y_z, I_xm1_y_z;
-		if (isEqual(pixelsPerMicron_x, 1)) {
+		if (isCloseTo(pixelsPerMicron_x, 1)) {
 			// handle boundary cases
 			int dimx, dimy, dimz;
 			getDimensions(dimx, dimy, dimz);
@@ -492,7 +481,7 @@ public:
 
 	T getDdyVal(int x, int y, int z) {
 		float I_x_yp1_z, I_x_ym1_z;
-		if (isEqual(pixelsPerMicron_y, 1)) {
+		if (isCloseTo(pixelsPerMicron_y, 1)) {
 			// handle boundary cases
 			int dimx, dimy, dimz;
 			getDimensions(dimx, dimy, dimz);
@@ -516,7 +505,7 @@ public:
 
 	T getD2dy2Val(int x, int y, int z) {
 		float I_x_y_z, I_x_yp1_z, I_x_ym1_z;
-		if (isEqual(pixelsPerMicron_y, 1)) {
+		if (isCloseTo(pixelsPerMicron_y, 1)) {
 			// handle boundary cases
 			int dimx, dimy, dimz;
 			getDimensions(dimx, dimy, dimz);
@@ -542,7 +531,7 @@ public:
 
 	T getDdzVal(int x, int y, int z) {
 		float I_x_y_zp1, I_x_y_zm1;
-		if (isEqual(pixelsPerMicron_z, 1)) {
+		if (isCloseTo(pixelsPerMicron_z, 1)) {
 			// handle boundary cases
 			int dimx, dimy, dimz;
 			getDimensions(dimx, dimy, dimz);
@@ -567,7 +556,7 @@ public:
 
 	T getD2dz2Val(int x, int y, int z) {
 		float I_x_y_z, I_x_y_zp1, I_x_y_zm1;
-		if (isEqual(pixelsPerMicron_z, 1)) {
+		if (isCloseTo(pixelsPerMicron_z, 1)) {
 			// handle boundary cases
 			int dimx, dimy, dimz;
 			getDimensions(dimx, dimy, dimz);
@@ -593,7 +582,7 @@ public:
 
 	T getD2dxzVal(int x, int y, int z) {
 		float I_xm1_y_zp1, I_xp1_y_zm1, I_xp1_y_zp1, I_xm1_y_zm1;
-		if (isEqual(pixelsPerMicron_x, 1) && isEqual(pixelsPerMicron_z, 1)) {
+		if (isCloseTo(pixelsPerMicron_x, 1) && isCloseTo(pixelsPerMicron_z, 1)) {
 			// handle boundary cases
 			int dimx, dimy, dimz;
 			getDimensions(dimx, dimy, dimz);
@@ -628,7 +617,7 @@ public:
 
 	T getD2dxyVal(int x, int y, int z) {
 		float I_xm1_yp1_z, I_xp1_ym1_z, I_xp1_yp1_z, I_xm1_ym1_z;
-		if (isEqual(pixelsPerMicron_x, 1) && isEqual(pixelsPerMicron_y, 1)) {
+		if (isCloseTo(pixelsPerMicron_x, 1) && isCloseTo(pixelsPerMicron_y, 1)) {
 			// handle boundary cases
 			int dimx, dimy, dimz;
 			getDimensions(dimx, dimy, dimz);
@@ -663,7 +652,7 @@ public:
 
 	T getD2dyzVal(int x, int y, int z) {
 		float I_x_yp1_zm1, I_x_ym1_zp1, I_x_yp1_zp1, I_x_ym1_zm1;
-		if (isEqual(pixelsPerMicron_y, 1) && isEqual(pixelsPerMicron_z, 1)) {
+		if (isCloseTo(pixelsPerMicron_y, 1) && isCloseTo(pixelsPerMicron_z, 1)) {
 			// handle boundary cases
 			int dimx, dimy, dimz;
 			getDimensions(dimx, dimy, dimz);
@@ -703,12 +692,10 @@ public:
 	void getFastDerivatives(int x, int y, int z, float &ddx, float &ddy,
 			float &ddz, float &d2dx2, float &d2dy2, float &d2dz2, float &d2dxy,
 			float &d2dxz, float &d2dyz) {
-#if defined INCLUDESANITYCHECKS
-		if (isUnequal(pixelsPerMicron_x,1) || isUnequal(pixelsPerMicron_y,1)) {
-			log(cb,1,"Error: Fast derivaties require that x,y resolution is 1");
+		if (!isCloseTo(pixelsPerMicron_x, 1.0f) || !isCloseTo(pixelsPerMicron_y, 1.0f)) {
+			log(cb,1,"Error: Fast derivatives require that x,y resolution is 1");
 			throw 999;
 		}
-#endif
 
 		// handle boundary cases
 		int dimx, dimy, dimz;
@@ -820,7 +807,7 @@ public:
 		float I_x_y_z, I_xm1_y_z, I_xp1_y_z, I_x_ym1_z, I_x_yp1_z, I_x_y_zm1,
 				I_x_y_zp1;
 		I_x_y_z = (*I)[x][y][z];
-		if (isEqual(pixelsPerMicron_x, 1)) {
+		if (isCloseTo(pixelsPerMicron_x, 1)) {
 			// handle boundary cases
 			int dimx, dimy, dimz;
 			getDimensions(dimx, dimy, dimz);
@@ -838,7 +825,7 @@ public:
 			I_xm1_y_z = interpolate(x, y, z, -1, 0, 0);
 			I_xp1_y_z = interpolate(x, y, z, 1, 0, 0);
 		}
-		if (isEqual(pixelsPerMicron_y, 1)) {
+		if (isCloseTo(pixelsPerMicron_y, 1)) {
 			// handle boundary cases
 			int dimx, dimy, dimz;
 			getDimensions(dimx, dimy, dimz);
@@ -856,7 +843,7 @@ public:
 			I_x_ym1_z = interpolate(x, y, z, 0, -1, 0);
 			I_x_yp1_z = interpolate(x, y, z, 0, 1, 0);
 		}
-		if (isEqual(pixelsPerMicron_z, 1)) {
+		if (isCloseTo(pixelsPerMicron_z, 1)) {
 			// handle boundary cases
 			int dimx, dimy, dimz;
 			getDimensions(dimx, dimy, dimz);
@@ -984,7 +971,7 @@ public:
 		for (int x = 0; x < dimx; x++) {
 			for (int y = 0; y < dimy; y++) {
 				for (int z = 0; z < dimz; z++) {
-					if ((*I)[x][y][z] > BWTHRESH) {
+					if ((*I)[x][y][z] > float(BWTHRESH)) {
 						count++;
 					}
 				}
@@ -1002,7 +989,7 @@ public:
 	T perctile(float percentile) {
 		// get index corresponding to given percentile
 		int sz = numel();
-		int idxPerc = (int) (percentile * (double) (sz - 1));
+		int idxPerc = (int) (percentile * float(sz - 1));
 
 		// store matrix in 1D array temp
 		boost::multi_array<T, 1> temp(boost::extents[sz]);

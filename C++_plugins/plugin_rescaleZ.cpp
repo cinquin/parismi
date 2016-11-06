@@ -52,8 +52,8 @@ static void rescale_image_z(Image3D<float> *I, float rescale_val,
 #else
 		for (int z = 0; z < dimz_out; z++) {
 #endif
-			int z_high = iround(ceil((*zaxis_transform)((int) z)));
-			int z_low = iround(floor((*zaxis_transform)((int) z)));
+			int z_high = iround(ceilf((*zaxis_transform)(int(z))));
+			int z_low = iround(floorf((*zaxis_transform)(int(z))));
 			float z_val = (*zaxis_transform)((int) z);
 			for (int x = 0; x < dimx; x++) {
 				for (int y = 0; y < dimy; y++) {

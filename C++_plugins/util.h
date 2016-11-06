@@ -13,20 +13,12 @@
 #include "definitions.h"
 #include <math.h>
 
-#ifdef FREEBSD
-# include <machine/atomic.h>
-#elif defined OSX
-# include <libkern/OSAtomic.h>
-# include <boost/numeric/conversion/cast.hpp>
-#endif
-
 #ifndef ATOMIC_OPS
 #define ATOMIC_OPS
-void atomic_increment(volatile uint32_t *i);
+void atomic_increment(std::atomic<unsigned int> *i);
 #endif
 
 void log(CallbackFunctions *cb, int logLevel, const char *fmt, ...);
 int sgn(int x);
 float sgn(float x);
-bool isEqual(float a, float b);
-bool isUnequal(float a, float b);
+bool isCloseTo(float a, float b);

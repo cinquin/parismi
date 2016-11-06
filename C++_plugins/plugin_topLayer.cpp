@@ -11,7 +11,7 @@ using namespace std;
 using namespace boost::math;
 
 /*!
- * Get's z-projection of 3D image looking down from the top of the z-axis
+ * Gets z-projection of 3D image looking down from the top of the z-axis
  */
 static void zProjection(Image3D<float> *I, CallbackFunctions *cb) {
 	// initialize output (2D projection image)
@@ -24,7 +24,7 @@ static void zProjection(Image3D<float> *I, CallbackFunctions *cb) {
 	for (int x = 0; x < dimx; x++) {
 		for (int y = 0; y < dimy; y++) {
 			for (int z = 0; z < dimz; z++) {
-				if (isUnequal((*I)(x, y, z), 0)) {
+				if (!isCloseTo((*I)(x, y, z), 0)) {
 					output(x, y, 0) = (*I)(x, y, z);
 					break;
 				}

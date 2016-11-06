@@ -17,13 +17,13 @@ using namespace boost;
 static void getOrthogonalVectors(float &x1, float &y1, float &z1, float &x2,
 		float &y2, float &z2, float x, float y, float z, CallbackFunctions *cb) {
 	// Sanity check: input vector should be non-zero
-	if (isEqual(x, 0) & isEqual(y, 0) & isEqual(z, 0)) {
+	if (isCloseTo(x, 0) & isCloseTo(y, 0) & isCloseTo(z, 0)) {
 		log(cb, 1, "Error: Non-zero vector required");
 		throw 999;
 	}
 
 	// find orthogonal vectors to use as basis for plane
-	if (isEqual(x, 0) & isEqual(y, 0)) {
+	if (isCloseTo(x, 0) & isCloseTo(y, 0)) {
 		x1 = 1;
 		y1 = 0;
 		z1 = 0;
@@ -109,7 +109,7 @@ static float getRayTracingDiameter(Image3D<float> *debuggingOutput, int xC,
 					if (x >= 0 && x < dimx && y >= 0 && y < dimy && z >= 0 && z
 							< dimz) {
 						// if collision detected
-						if (isEqual((*segmentation)(x, y, z), 0)) {
+						if (isCloseTo((*segmentation)(x, y, z), 0)) {
 							// store length of ray when collided with segmentation
 							(*rayLength)(i) = r - 1;
 							break; // break out of iteration over length of ray
@@ -124,7 +124,7 @@ static float getRayTracingDiameter(Image3D<float> *debuggingOutput, int xC,
 					}
 				}
 				// Check  to make sure ray either hit segmentation boundary or image bondouary
-				if (isEqual((*rayLength)(i), -1)) {
+				if (isCloseTo((*rayLength)(i), -1)) {
 					log(
 							cb,
 							0,

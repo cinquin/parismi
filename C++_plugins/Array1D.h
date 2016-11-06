@@ -52,14 +52,6 @@ public:
 	 * Access/mutate element idx
 	 */
 	T& operator()(int idx) {
-		//#if defined INCLUDESANITYCHECKS
-		// Sanity check
-		int sz = size();
-		if (idx < 0 || idx >= sz) {
-			log(cb, 1, "Index (%d) outside of array range (%d)", idx, sz);
-			throw 999;
-		}
-		//#endif
 		return (*vec)[idx];
 	}
 
@@ -184,7 +176,7 @@ public:
 
 	T perctile(float percentile) {
 		// get index corresponding to given percentile
-		int idxPerc = (int) (percentile * (double) (vec->size() - 1));
+		int idxPerc = (int) (percentile * (float) (vec->size() - 1));
 
 		// get copy of vector
 		int sz = size();
@@ -221,7 +213,7 @@ public:
 		int sz_other = other->size();
 		for (int i = 0; i < sz; i++) {
 			for (int j = 0; j < sz_other; j++) {
-				if (isEqual((*vec)[i], (*other)(j))) {
+				if (isCloseTo((*vec)[i], (*other)(j))) {
 					(*idx_other)(i) = j;
 					break;
 				}

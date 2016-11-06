@@ -1,18 +1,17 @@
 
 OS:=$(shell uname -s | tr a-z A-Z)
 
-CFLAGS= -Werror -Wall -pedantic -Weverything -Wno-reserved-id-macro -Wno-old-style-cast -Wno-padded -Wno-old-style-cast -g -fmessage-length=0 -fexceptions -DUSELIBDISPATCH
-DEBUG_FLAGS = -O3 -DINCLUDESANITYCHECKS
-RELEASE_FLAGS= -ffast-math -funroll-loops -fstrict-aliasing -Wstrict-aliasing=2 -DINCLUDESANITYCHECKS
-# -DBOOST_DISABLE_ASSERTS
+CFLAGS = -DUSELIBDISPATCH -std=c++11 -Werror -Wall -pedantic -Weverything -Wno-c++98-compat -Wno-old-style-cast -Wno-padded -Wno-old-style-cast -g -fmessage-length=0 -fexceptions
+DEBUG_FLAGS = -O3
+RELEASE_FLAGS = -ffast-math -funroll-loops -fstrict-aliasing -Wstrict-aliasing=2 -DBOOST_DISABLE_ASSERTS
 
-CLANG_PATH=clang 
+CLANG_PATH = clang
 
 ifneq (,$(findstring FREEBSD, $(OS)))
 	RELEASE_FLAGS+= -Ofast
 	MAKE=gmake
 	CC=$(CLANG_PATH)
-	CFLAGS+= -fPIC -fblocks -DFREEBSD 
+	CFLAGS+= -fPIC -fblocks 
         LDFLAGS= -L/usr/lib -L/usr/local/lib  -L/lib -ldispatch -lm -lprotobuf -ltiff -ldc1394 -lusb -lexecinfo -lBlocksRuntime -lc++ 
 	INCLUDE= -I. -isystem /usr/include -isystem /usr/local/include -isystem /opt/local/include/google/protobuf -isystem /opt/local/include
 	INCLUDE_MAKEDEPEND= -I/usr/include/c++/4.2
@@ -34,7 +33,6 @@ ifneq (,$(findstring DARWIN, $(OS)))
 	RELEASE_FLAGS+= -O3
 	MAKE=make
 	CC=$(CLANG_PATH)
-	CFLAGS+= -DOSX
 	LDFLAGS= -lstdc++ -lm -lpthread -framework IOKit -framework CoreServices -L/opt/local/lib/ -L/usr/local/lib/ -lprotobuf -ltiff -ldc1394 -lusb-1.0 
 	INCLUDE=-I. -isystem /usr/include -isystem /opt/local/include/google/protobuf -isystem /opt/local/include -isystem /usr/local/include
 	INCLUDE_MAKEDEPEND= -I/usr/include/c++/4.2.1
@@ -78,6 +76,9 @@ protobuf_package.pb.h: protobuf_package.proto
 	echo '#pragma clang diagnostic ignored "-Wpadded"' >> protobuf_package.pb.h
 	echo '#pragma clang diagnostic ignored "-Wshorten-64-to-32"' >> protobuf_package.pb.h
 	echo '#pragma clang diagnostic ignored "-Wglobal-constructors"' >> protobuf_package.pb.h
+#Avoid errors when running older versions of clang that do not have reserved-id-macro warning
+	echo '#pragma clang diagnostic ignored "-Wunknown-pragmas"' >> protobuf_package.pb.h
+	echo '#pragma clang diagnostic ignored "-Wreserved-id-macro"' >> protobuf_package.pb.h
 	cat temp >>  protobuf_package.pb.h 
 	echo "#pragma clang diagnostic pop" >> protobuf_package.pb.h
 	mv protobuf_package.pb.cc temp

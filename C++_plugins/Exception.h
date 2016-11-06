@@ -14,8 +14,8 @@
 struct Exception: public boost::exception, public std::runtime_error {
 	char *new_message;
 	Exception(const Exception &e);
-	~Exception() throw ();
+	~Exception() noexcept;
 	Exception(const char * const fmt, ...);
-	const char* what() const throw ();
+	const char* what() const noexcept;
 };
 #endif

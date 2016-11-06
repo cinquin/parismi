@@ -84,8 +84,6 @@ public:
 		xyz(3), dxyz(3) {
 		xyz = p;
 	}
-	~XYZ() {
-	}
 	coordinates& array() {
 		return xyz;
 	}

@@ -78,7 +78,6 @@ void downSample(ImageIO* inputImage, ImageIO* outputImage,
 	int dimz_new = atoi(work_storage[4]);
 	cb->freeGetMoreWork(work_storage);
 
-#if defined INCLUDESANITYCHECKS
 	int dimx, dimy, dimz;
 	I->getDimensions(dimx,dimy,dimz);
 	// Sanity check
@@ -86,7 +85,6 @@ void downSample(ImageIO* inputImage, ImageIO* outputImage,
 		log(cb,1,"Image must be made strictly smaller");
 		throw 999;
 	}
-#endif
 
 	// resize image
 	scaleDown(I, dimx_new, dimy_new, dimz_new);

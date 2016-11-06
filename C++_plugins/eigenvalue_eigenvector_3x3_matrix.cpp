@@ -48,7 +48,7 @@ static void tred2(float V[n][n], float d[n], float e[n]) {
 		for (int k = 0; k < i; k++) {
 			scale = scale + fabs(d[k]);
 		}
-		if (scale == 0.0) {
+		if (scale == 0.0f) {
 			e[i] = d[i - 1];
 			for (int j = 0; j < i; j++) {
 				d[j] = V[i - 1][j];
@@ -115,7 +115,7 @@ static void tred2(float V[n][n], float d[n], float e[n]) {
 		V[n - 1][i] = V[i][i];
 		V[i][i] = 1.0;
 		float h = d[i + 1];
-		if (h != 0.0) {
+		if (h != 0.0f) {
 			for (int k = 0; k <= i; k++) {
 				d[k] = V[k][i + 1] / h;
 			}

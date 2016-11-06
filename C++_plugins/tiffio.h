@@ -24,8 +24,8 @@
  * OF THIS SOFTWARE.
  */
 
-#ifndef _TIFFIO_
-#define	_TIFFIO_
+#ifndef _tiffIO_
+#define	_tiffIO_
 
 /*
  * TIFF I/O Library Definitions.

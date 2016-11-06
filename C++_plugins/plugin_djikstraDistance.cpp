@@ -116,7 +116,7 @@ static void djikstra(Image3D<int> *neighborMatrix, Array1D<float> *source,
 
 	for (int i = 0; i < source->size(); i++) {
 		float annotationValue = (*source)(i);
-		if (annotationValue > BWTHRESH) {
+		if (annotationValue > float(BWTHRESH)) {
 			(*dist)(i) = initialDistance;
 		}
 	}

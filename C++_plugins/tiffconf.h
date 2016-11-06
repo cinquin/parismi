@@ -5,8 +5,8 @@
   from this file in your programs.
 */
 
-#ifndef _TIFFCONF_
-#define _TIFFCONF_
+#ifndef _tiffCONF_
+#define _tiffCONF_
 
 /* Signed 16-bit type */
 #define TIFF_INT16_T signed short
@@ -125,4 +125,4 @@
 #define PHOTOSHOP_SUPPORT
 #define IPTC_SUPPORT
 
-#endif /* _TIFFCONF_ */
+#endif /* _tiffCONF_ */

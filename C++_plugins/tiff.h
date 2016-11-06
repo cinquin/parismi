@@ -24,8 +24,8 @@
  * OF THIS SOFTWARE.
  */
 
-#ifndef _TIFF_
-#define	_TIFF_
+#ifndef _tiff_
+#define	_tiff_
 
 #include "tiffconf.h"
 

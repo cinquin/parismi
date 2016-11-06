@@ -30,7 +30,8 @@ void imadjust(ImageIO* inputImage, ImageIO* outputImage, CallbackFunctions *cb) 
 	// do thresholding
 	int dimx, dimy, dimz;
 	I.getDimensions(dimx, dimy, dimz);
-	__block volatile uint32_t progress_count;
+	std::atomic<unsigned int> progress_count{0u};
+	std::atomic<unsigned int> *progress_count_ptr = &progress_count;
 	__block volatile bool keepGoing = 1;
 #if defined USELIBDISPATCH
 	dispatch_apply((unsigned int)dimx, dispatch_get_global_queue(0,0), ^(size_t xx) {
@@ -53,8 +54,8 @@ void imadjust(ImageIO* inputImage, ImageIO* outputImage, CallbackFunctions *cb) 
 					}
 				}
 			}
-			atomic_increment(&progress_count);
-			cb->progressReport(100 * (int) progress_count / dimx);
+			atomic_increment(progress_count_ptr);
+			cb->progressReport((100 * int(*progress_count_ptr)) / dimx);
 		}
 #if defined USELIBDISPATCH
 	});

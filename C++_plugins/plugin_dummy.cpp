@@ -43,8 +43,8 @@ void dummyPlugin(ImageIO* inputImage, ImageIO* outputImage,
 	float newPixelValue = pixelValue * 2;
 
 	// print to standard output
-	log(cb, 4, "old pixel value = %f, new pixel value = %f", pixelValue,
-			newPixelValue);
+	log(cb, 4, "old pixel value = %f, new pixel value = %f", double(pixelValue),
+			double(newPixelValue));
 
 	// replace old pixel value in I(x,y,z)
 	I(x, y, z) = newPixelValue;
