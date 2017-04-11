@@ -13,7 +13,7 @@ ifneq (,$(findstring FREEBSD, $(OS)))
 	CC=$(CLANG_PATH)
 	CFLAGS+= -fPIC -fblocks 
         LDFLAGS= -L/usr/lib -L/usr/local/lib  -L/lib -ldispatch -lm -lprotobuf -ltiff -ldc1394 -lusb -lexecinfo -lBlocksRuntime -lc++ 
-	INCLUDE= -I. -isystem /usr/include -isystem /usr/local/include -isystem /opt/local/include/google/protobuf -isystem /opt/local/include
+	INCLUDE= -I. -I /usr/include -isystem /usr/local/include -isystem /opt/local/include/google/protobuf -isystem /opt/local/include
 	INCLUDE_MAKEDEPEND= -I/usr/include/c++/4.2
 
 	DYLIB_SUFFIX=.so
@@ -73,6 +73,7 @@ protobuf_package.pb.h: protobuf_package.proto
 	protoc -I=. --cpp_out=. ./protobuf_package.proto 
 	mv protobuf_package.pb.h temp
 	echo "#pragma clang diagnostic push" > protobuf_package.pb.h
+	echo '#pragma clang diagnostic ignored "-Wundef"' >> protobuf_package.pb.h
 	echo '#pragma clang diagnostic ignored "-Wpadded"' >> protobuf_package.pb.h
 	echo '#pragma clang diagnostic ignored "-Wshorten-64-to-32"' >> protobuf_package.pb.h
 	echo '#pragma clang diagnostic ignored "-Wglobal-constructors"' >> protobuf_package.pb.h
@@ -83,6 +84,8 @@ protobuf_package.pb.h: protobuf_package.proto
 	echo "#pragma clang diagnostic pop" >> protobuf_package.pb.h
 	mv protobuf_package.pb.cc temp
 	echo "#pragma clang diagnostic push" > protobuf_package.pb.cc
+	echo '#pragma clang diagnostic ignored "-Wundef"' >> protobuf_package.pb.cc
+	echo '#pragma clang diagnostic ignored "-Wmissing-prototypes"' >> protobuf_package.pb.cc
 	echo '#pragma clang diagnostic ignored "-Wshorten-64-to-32"' >> protobuf_package.pb.cc
 	echo '#pragma clang diagnostic ignored "-Wsign-conversion"' >> protobuf_package.pb.cc
 	echo '#pragma clang diagnostic ignored "-Wmissing-variable-declarations"' >> protobuf_package.pb.cc
