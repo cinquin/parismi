@@ -91,6 +91,7 @@ protobuf_package.pb.h: protobuf_package.proto
 	echo '#pragma clang diagnostic ignored "-Wmissing-variable-declarations"' >> protobuf_package.pb.cc
 	echo '#pragma clang diagnostic ignored "-Wglobal-constructors"' >> protobuf_package.pb.cc
 	echo '#pragma clang diagnostic ignored "-Wunused-macros"' >> protobuf_package.pb.cc
+	echo '#pragma clang diagnostic ignored "-Wunused-parameter"' >> protobuf_package.pb.cc
 	cat temp >>  protobuf_package.pb.cc
 	echo "#pragma clang diagnostic pop" >> protobuf_package.pb.cc
 	rm temp	
