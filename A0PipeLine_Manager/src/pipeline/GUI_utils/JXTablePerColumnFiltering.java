@@ -455,12 +455,17 @@ public class JXTablePerColumnFiltering extends JXTable {
 			return;
 		}
 		int nColumns = getColumns(true).size();
+		if (nColumns != filteringTable.getColumns(true).size()) {
+			updateFilteringTable();
+		}
+		final boolean updateDesc = tableForColumnDescriptions != null &&
+			tableForColumnDescriptions.getColumns().size() == nColumns;
 		for (int i = 0; i < nColumns; i++) {
 			TableColumnExt filteringColumn = (TableColumnExt) filteringTable.getColumns(true).get(i);
 			TableColumnExt dataColumn = (TableColumnExt) getColumns(true).get(i);
 			updateColumn(dataColumn, filteringColumn);
-			
-			if (tableForColumnDescriptions != null) {
+
+			if (updateDesc) {
 				TableColumnExt descColumn = (TableColumnExt) tableForColumnDescriptions.getColumns(true).get(i);
 				updateColumn(dataColumn, descColumn);
 			}
