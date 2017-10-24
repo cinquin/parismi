@@ -11,6 +11,7 @@
 
 using namespace google::protobuf::io;
 using namespace google::protobuf;
+using namespace std;
 
 /*!
  * Class constructor.
