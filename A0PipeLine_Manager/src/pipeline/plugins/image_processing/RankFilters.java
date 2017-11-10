@@ -91,12 +91,16 @@ public class RankFilters extends TwoDPlugin {
 
 	@Override
 	public void setParameters(AbstractParameter[] param) {
-		if (param[0] != null)
+		if (param[0] != null) {
 			boxParameter = param[0];
+			boxParameter.addPluginListener(methodListener1);
+		}
 		else
 			Utils.log("Null param0 in RankFilter", LogLevel.WARNING);
-		if (param[1] != null)
+		if (param[1] != null) {
 			radius_param = param[1];
+			radius_param.addPluginListener(radiusListener1);
+		}
 		else
 			Utils.log("Null param0 in RankFilter", LogLevel.WARNING);
 		radius = ((int[]) radius_param.getValue())[0];

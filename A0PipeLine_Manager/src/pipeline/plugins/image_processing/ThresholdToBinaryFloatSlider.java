@@ -109,6 +109,7 @@ public class ThresholdToBinaryFloatSlider extends TwoDPlugin {
 		intrangeparam = param[0];
 		minThreshold = ((float[]) intrangeparam.getValue())[0];
 		maxThreshold = ((float[]) intrangeparam.getValue())[1];
+		intrangeparam.addPluginListener(rangeListener1);
 	}
 
 	@Override
