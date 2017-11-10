@@ -17,9 +17,9 @@ import pipeline.data.IPluginIOImage;
 import pipeline.data.PluginIOCells;
 import pipeline.data.PluginIOString;
 import pipeline.misc_util.FileNameUtils;
+import pipeline.misc_util.PluginRuntimeException;
 import pipeline.misc_util.ProgressReporter;
 import pipeline.misc_util.Utils;
-import pipeline.misc_util.Utils.LogLevel;
 import pipeline.parameters.AbstractParameter;
 import pipeline.parameters.DirectoryParameter;
 import pipeline.parameters.FileNameParameter;
@@ -103,17 +103,16 @@ public class SavePointsToTextFile extends FourDPlugin implements AuxiliaryInputO
 		File directory = new File(fileNameString).getParentFile();
 		if (!(directory.exists() && directory.isDirectory())) {
 			if (directory.isFile()) {
-				Utils.displayMessage("Cannot save to " + directory + " because it is a file", true, LogLevel.ERROR);
-				throw new RuntimeException();
+				throw new PluginRuntimeException("Cannot save to " + directory +
+						" because it is a file", true);
 			}
 			if (!directory.mkdirs()) {
-				Utils.displayMessage("Directory " + directory + " does not exist and could not be created", true,
-						LogLevel.ERROR);
-				throw new RuntimeException();
+				throw new PluginRuntimeException("Directory " + directory +
+						" does not exist and could not be created", true);
 			}
 		}
 
-		if (!fileNameString.contains(".tsv") && !fileNameString.contains(".txt"))
+		if (!fileNameString.endsWith(".tsv") && !fileNameString.endsWith(".txt"))
 			fileNameString += ".tsv";
 
 		PluginIOCells cells = (PluginIOCells) pluginInputs.get("Seeds");
@@ -134,7 +133,7 @@ public class SavePointsToTextFile extends FourDPlugin implements AuxiliaryInputO
 			}
 		}
 		if (cells == null) {
-			throw new RuntimeException("Could not find any points to save");
+			throw new PluginRuntimeException("Could not find any points to save", true);
 		}
 		BeanTableModel<ClickedPoint> tableModel = new BeanTableModel<>(ClickedPoint.class, cells.getPoints());
 		JXTablePerColumnFiltering table = new JXTablePerColumnFiltering(tableModel);
