@@ -10,11 +10,10 @@
  ******************************************************************************/
 package pipeline.plugins.image_processing;
 
-import ij.process.FloatProcessor;
-import ij.process.ImageProcessor;
-
 import java.awt.Rectangle;
 
+import ij.process.FloatProcessor;
+import ij.process.ImageProcessor;
 import pipeline.PreviewType;
 import pipeline.misc_util.ParameterListenerWeakRef;
 import pipeline.misc_util.Utils;
@@ -154,7 +153,7 @@ public class RankFilters extends TwoDPlugin {
 
 	/**
 	 * Filter a FloatProcessor according to filterType
-	 * 
+	 *
 	 * @param ip
 	 *            The image subject to filtering
 	 * @param kRadius
@@ -290,7 +289,7 @@ public class RankFilters extends TwoDPlugin {
 
 	/**
 	 * Filters an image
-	 * 
+	 *
 	 * @param ip
 	 *            The ImageProcessor that should be filtered (all 4 types supported)
 	 * @param radius
@@ -314,7 +313,7 @@ public class RankFilters extends TwoDPlugin {
 
 	/**
 	 * Get max (or -min if sign=-1) within the kernel area.
-	 * 
+	 *
 	 * @param xCache0
 	 *            points to cache element equivalent to x
 	 * @param ignoreRight
@@ -421,7 +420,7 @@ public class RankFilters extends TwoDPlugin {
 
 	/**
 	 * Find the n-th lowest number in part of an array
-	 * 
+	 *
 	 * @param buf
 	 *            The input array. Only values 0 ... bufLength are read. <code>buf</code> will be modified.
 	 * @param bufLength

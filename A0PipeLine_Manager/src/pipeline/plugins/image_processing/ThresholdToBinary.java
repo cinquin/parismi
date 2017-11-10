@@ -6,16 +6,15 @@
  ******************************************************************************/
 package pipeline.plugins.image_processing;
 
-import ij.process.ByteProcessor;
-import ij.process.FloatProcessor;
-import ij.process.ImageProcessor;
-import ij.process.ShortProcessor;
-
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.Map;
 
+import ij.process.ByteProcessor;
+import ij.process.FloatProcessor;
+import ij.process.ImageProcessor;
+import ij.process.ShortProcessor;
 import pipeline.PreviewType;
 import pipeline.data.IPluginIO;
 import pipeline.data.IPluginIOHyperstack;

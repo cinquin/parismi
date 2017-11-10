@@ -83,7 +83,7 @@ public class PluginIOHyperstackViewWithImagePlus extends PluginIOView implements
 
 	/**
 	 * @return For images that were computed by projection, range in the original image the projection was performed on.
-	 * 
+	 *
 	 */
 	public Pair<Long, Long> getZRange() {
 		if ((z0 == -1) || (z1 == -1))
@@ -93,7 +93,7 @@ public class PluginIOHyperstackViewWithImagePlus extends PluginIOView implements
 	}
 
 	/**
-	 * 
+	 *
 	 * @param range
 	 *            For images that were computed by projection, range in the original image the projection was performed
 	 *            on.
@@ -225,7 +225,7 @@ public class PluginIOHyperstackViewWithImagePlus extends PluginIOView implements
 	/**
 	 * Bypasses ImageJ listener system. Used when a window closed but immediately reopened under a
 	 * different format (e.g. when switching to a composite image).
-	 * 
+	 *
 	 * @param imp
 	 */
 	public static void closeImpDontNotifyListeners(ImagePlus imp) {
@@ -392,7 +392,7 @@ public class PluginIOHyperstackViewWithImagePlus extends PluginIOView implements
 
 	/**
 	 * Create the ImageJ ImagePlus to display.
-	 * 
+	 *
 	 * @param name
 	 *            Name of window
 	 * @param imageStack
@@ -483,7 +483,7 @@ public class PluginIOHyperstackViewWithImagePlus extends PluginIOView implements
 
 	/**
 	 * Add a channel, or set of channels, to be displayed in the same window as the content that is already present.
-	 * 
+	 *
 	 * @param hyperstack
 	 */
 	public void addImage(IPluginIOHyperstack hyperstack) {

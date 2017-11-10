@@ -224,7 +224,7 @@ public class FileNameUtils {
 
 	public static @NonNull String removeIncrementationMarks(@NonNull String input) {
 		// remove "{" and "}" so the caller can open the file
-		// A SIMPLER WAY OF DOING IT WOULD BE input.replaceAll("\\{|\\}", "");
+		// A simpler way of doing it would be input.replaceAll("\\{|\\}", "");
 
 		if (Utils.isParsableToInt(input) || input.indexOf("$") == 0) {
 			return input;

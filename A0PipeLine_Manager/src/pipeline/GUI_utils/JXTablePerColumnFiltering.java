@@ -147,7 +147,7 @@ public class JXTablePerColumnFiltering extends JXTable {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param columnsFormulasToPrint
 	 *            If null, print all columns
 	 * @param stripNewLinesInCells
@@ -407,7 +407,7 @@ public class JXTablePerColumnFiltering extends JXTable {
 	}
 
 	transient AtomicInteger silenceUpdates = new AtomicInteger(0);
-	
+
 	private ColumnHeaderToolTips tips;
 
 	@Override
@@ -430,7 +430,7 @@ public class JXTablePerColumnFiltering extends JXTable {
 			}
 		}
 	}
-	
+
 	private static void updateColumn(TableColumnExt template, TableColumnExt toUpdate) {
 		if (template == null || toUpdate == null) {
 			return;
@@ -449,7 +449,7 @@ public class JXTablePerColumnFiltering extends JXTable {
 		}
 
 	}
-	
+
 	void updateFilteringTableSetup() {
 		if (filteringTable == null) {
 			return;
@@ -471,7 +471,7 @@ public class JXTablePerColumnFiltering extends JXTable {
 			}
 		}
 	}
-	
+
 	@Override
 	public void columnMoved(TableColumnModelEvent e) {
 		super.columnMoved(e);
@@ -491,7 +491,7 @@ public class JXTablePerColumnFiltering extends JXTable {
 		}
 		updateFilteringTableSetup();
 	}
-	
+
 	@Override
 	public void columnPropertyChange(PropertyChangeEvent event) {
 		super.columnPropertyChange(event);
@@ -503,7 +503,7 @@ public class JXTablePerColumnFiltering extends JXTable {
 		super.columnMarginChanged(e);
 		updateFilteringTableSetup();
 	}
-	
+
 	private static MultiRenderer getMultiRenderer() {
 		MultiRenderer multiRenderer = new MultiRenderer();
 
@@ -524,7 +524,7 @@ public class JXTablePerColumnFiltering extends JXTable {
 
 		return multiRenderer;
 	}
-	
+
 	public JXTablePerColumnFiltering(TableModel model) {
 		super(model);
 		this.model = (BeanTableModel<?>) model;
@@ -555,7 +555,7 @@ public class JXTablePerColumnFiltering extends JXTable {
 		for (int i = 0; i < nColumns; i++) {
 			TableColumn fColumn = filteringTable.getColumn(i);
 			MultiRenderer multiRenderer = getMultiRenderer();
-			
+
 			fColumn.setCellRenderer(multiRenderer);
 			fColumn.setCellEditor(multiRenderer);
 			fColumn.setWidth(getColumn(i).getWidth());
@@ -569,7 +569,7 @@ public class JXTablePerColumnFiltering extends JXTable {
 		}
 	    header.addMouseMotionListener(tips);
 	}
-	
+
     @Override
     //Overridden to work around problem with editor returning null value and
     //to allow parsing to right object type
@@ -612,7 +612,7 @@ public class JXTablePerColumnFiltering extends JXTable {
             removeEditor();
         }
     }
-    
+
     @Override
     //Overridden to prevent cell editing from starting just because the
     //user pressed the command key (which is necessary for discontiguous
@@ -627,7 +627,7 @@ public class JXTablePerColumnFiltering extends JXTable {
     	}
    		return super.editCellAt(row, column, e);
     }
-    
+
 	@Override
 	//Adapted from http://stackoverflow.com/questions/27102546/show-tooltips-in-jtable-only-when-column-is-cut-off
 	public String getToolTipText(MouseEvent e) {

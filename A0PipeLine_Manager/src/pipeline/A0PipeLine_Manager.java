@@ -215,15 +215,15 @@ import pipeline.plugins.input_output.SaveTable;
  * pipeline, the actual image processing plugins (found in {@link pipeline.plugins}), their parameters (found in
  * {@link pipeline.parameters}), and the GUI for representation and manipulation of those parameters (implemented by the
  * main table, with renderers in the {@link pipeline.parameter_cell_views} package).
- * 
+ *
  * TODO This class is in need of overhauling to change the GUI to a graph-based representation, and to cleanly
  * separate it from the pipeline logic (which should be further modularized).
- * 
+ *
  * @see pipeline.plugins
  * @see pipeline.parameters.AbstractParameter
  * @see pipeline.parameters
  * @see pipeline.parameter_cell_views
- * 
+ *
  */
 public class A0PipeLine_Manager implements PlugIn {
 	private static final int COLUMN_NUMBER = 0;
@@ -346,7 +346,7 @@ public class A0PipeLine_Manager implements PlugIn {
 		 * Select numberToAdd more elements in the list of output channels for the plugin at row tableRow. This is
 		 * called when there are more selected input channels than selected output channels, if the plugin specifies it
 		 * has one output channel per input channel.
-		 * 
+		 *
 		 * @param table11
 		 * @param tableRow
 		 * @param numberToAdd
@@ -388,7 +388,7 @@ public class A0PipeLine_Manager implements PlugIn {
 		/**
 		 * Returns any ImagePlus that can be found in a Map of PluginIOs. This is used when a plugin specifies its
 		 * output should be displayed in the same ImagePlus as that of another plugin.
-		 * 
+		 *
 		 * @param map
 		 * @return
 		 */
@@ -400,7 +400,7 @@ public class A0PipeLine_Manager implements PlugIn {
 
 		/**
 		 * Returns all ImagePluses that can be found in a plugin's set of outputs.
-		 * 
+		 *
 		 * @param hashMap
 		 * @return
 		 */
@@ -414,7 +414,7 @@ public class A0PipeLine_Manager implements PlugIn {
 
 		/**
 		 * Update the ImagePlus in the destImp field based on what the user set in the String OUTPUT_NAME_FIELD
-		 * 
+		 *
 		 * @param tableRow
 		 * @param nTries
 		 */
@@ -522,7 +522,7 @@ public class A0PipeLine_Manager implements PlugIn {
 		 * Given a string and a starting position within the table, figures out what row is pointed to by the string.
 		 * The reference can be absolute (if the string is of the form $integer), or relative (if the string is directly
 		 * parsable to an integer).
-		 * 
+		 *
 		 * @param userInput
 		 * @param tableRow
 		 * @return The absolute index in the table of the row pointed to by the string in userInput.
@@ -605,7 +605,7 @@ public class A0PipeLine_Manager implements PlugIn {
 		}
 
 		/**
-		 * 
+		 *
 		 * @param userInput
 		 * @param tableRow
 		 * @param convertImpToPluginIO
@@ -894,7 +894,7 @@ public class A0PipeLine_Manager implements PlugIn {
 		 * index of a row that has the input of row tableRow as its destination (NB: there could be more than one; which
 		 * one is returned in that case?), or -1 if there is no such row. Also updates the auxiliary inputs
 		 * (COMPUTED_INPUTS column) based on the references to other rows contained in column AUXILIARY_INPUTS.
-		 * 
+		 *
 		 * @param tableRow
 		 *            Index of the row in the table
 		 */
@@ -1086,7 +1086,7 @@ public class A0PipeLine_Manager implements PlugIn {
 		 * underway, either cancel it (if the trigger row is the same as the row to update, and global settings say to
 		 * cancel upon update), or flag it for re-updating when it's done. If we're processing the step as a result of
 		 * the user clicking in a window, clickedPoints contains the list of points.
-		 * 
+		 *
 		 * @param modelRow
 		 *            Row index in the table
 		 * @param triggerRow
@@ -1575,7 +1575,7 @@ public class A0PipeLine_Manager implements PlugIn {
 		 * Updates the list of channel names displayed by the table for the user to choose from in the source and
 		 * destination images. Called when a user has selected a new file from a popup menu to use as an input or an
 		 * output to a plugin.
-		 * 
+		 *
 		 * @param modelRow
 		 *            Row index in the table
 		 * @param modelColumn
@@ -1626,7 +1626,7 @@ public class A0PipeLine_Manager implements PlugIn {
 
 		/**
 		 * Display a popup menu as a response to a user right-click in the input or output fields of a plugin
-		 * 
+		 *
 		 * @param modelRow
 		 * @param modelColumn
 		 * @param comp
@@ -1728,7 +1728,7 @@ public class A0PipeLine_Manager implements PlugIn {
 
 		/**
 		 * Display a popup menu as a response to a user right-click in plugin name field
-		 * 
+		 *
 		 * @param modelRow
 		 * @param modelCol
 		 * @param comp
@@ -1859,7 +1859,7 @@ public class A0PipeLine_Manager implements PlugIn {
 			public void updateWorkOnChannelField(int row) {
 				Object[] data = ((MyTableModel) table1.getModel()).data;
 				Object[] theRow = (Object[]) data[row];
-				@NonNull String @NonNull[] channelNames = 
+				@NonNull String @NonNull[] channelNames =
 						((PipelinePlugin) theRow[PLUGIN_INSTANCE]).getInput().listOfSubObjects();
 				((MultiListParameter) theRow[WORK_ON_CHANNEL_FIELD]).setChoices(channelNames);
 				((MultiListParameter) theRow[WORK_ON_CHANNEL_FIELD]).trimSelection();
@@ -1964,7 +1964,7 @@ public class A0PipeLine_Manager implements PlugIn {
 		/**
 		 * Called when the plugin name has been changed at row index x. Terminates current updates, tells the current
 		 * plugin to clean up, and creates a new instance of the plugin name found at column index y.
-		 * 
+		 *
 		 * @param modelRow
 		 * @param modelCol
 		 */
@@ -2014,7 +2014,7 @@ public class A0PipeLine_Manager implements PlugIn {
 								newPlugin.getOutputLabels(), null),
 						modelRow, AUXILIARY_OUTPUTS);
 			}
-			
+
 			table1.getModel().setValueAt(null, modelRow, PLUGIN_OUTPUTS);
 			table1.getModel().setValueAt(null, modelRow, PLUGIN_INPUTS);
 
@@ -2065,7 +2065,7 @@ public class A0PipeLine_Manager implements PlugIn {
 
 		/**
 		 * Stop all updates from row startRow down, by interrupting the corresponding worker threads found in the table.
-		 * 
+		 *
 		 * @param startRow
 		 */
 		private void stopAll(int startRow) {
@@ -2093,7 +2093,7 @@ public class A0PipeLine_Manager implements PlugIn {
 		 * (which depends on whether the user asked for an update to be triggered whenever a parameter changes), and
 		 * cancels all updates of downstream steps already under way, if the pipeline is set to be globally reset when a
 		 * parameter is changed.
-		 * 
+		 *
 		 * @param modelRow
 		 * @param stayInCoreLoop
 		 * @param changedParameter
@@ -2151,7 +2151,7 @@ public class A0PipeLine_Manager implements PlugIn {
 
 			table1 = new JTableWithStripes(new MyTableModel()) {
 				private static final long serialVersionUID = -4771266607962392023L;
-				
+
 				@Override
 				//Adapted from http://stackoverflow.com/questions/27102546/show-tooltips-in-jtable-only-when-column-is-cut-off
 				public String getToolTipText(MouseEvent e) {
@@ -2178,11 +2178,11 @@ public class A0PipeLine_Manager implements PlugIn {
 				}
 
 			};
-			
+
 		    ColumnHeaderToolTips tips = new ColumnHeaderToolTips();
 			JTableHeader header = table1.getTableHeader();
 		    header.addMouseMotionListener(tips);
-		    
+
 			table1.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 			table1.setPreferredScrollableViewportSize(new Dimension(900, 250));
 			table1.setFillsViewportHeight(true);
@@ -2432,9 +2432,9 @@ public class A0PipeLine_Manager implements PlugIn {
 				if (table1.getColumnModel().getColumn(i) != null)
 					table1.getColumnModel().getColumn(i).setMaxWidth(10);
 			}
-			
+
 			table1.moveColumn(AUXILIARY_INPUTS, SHOW_IMAGE);
-			
+
 			DataFlavor tempFlavor = null;
 			try {
 				tempFlavor =
@@ -3132,9 +3132,9 @@ public class A0PipeLine_Manager implements PlugIn {
 			runButton.setActionCommand("Run");
 			runButton.addActionListener(this);
 			controlGroupButton.add(runButton);
-			
+
 			controls2.add(runButton);
-			
+
 			controls2.add(new JLabel("Parismi v0.1.7"));
 
 			final JPanel memoryPanel = new JPanel();
@@ -3149,7 +3149,7 @@ public class A0PipeLine_Manager implements PlugIn {
 			/*
 			 * decompressionProgress=new JProgressBar(); memoryPanel.add(new JLabel("Decompression progress"));
 			 * memoryPanel.add(decompressionProgress); c.gridx = 0; c.gridy = 5; add(memoryPanel,c);
-			 * 
+			 *
 			 * output = new JTextArea(5, 40); output.setEditable(false); c.gridx = 0; c.gridy = 6; c.weighty=0.7;
 			 * c.weightx=1.0;
 			 */
@@ -3542,7 +3542,7 @@ public class A0PipeLine_Manager implements PlugIn {
 		 * open the new file using either the directory the previous file was in (if it was already open), or the most
 		 * recent directory that was successfully used to open an image from an incremented file name. The previous
 		 * image is closed.
-		 * 
+		 *
 		 * @param row
 		 * @param nameColumn
 		 *            Index of the column in the table containing the RowOrFileTextReference with the file name
@@ -3669,7 +3669,7 @@ public class A0PipeLine_Manager implements PlugIn {
 
 		/**
 		 * Keep incrementing file names and running the pipeline until file names are not found anymore
-		 * 
+		 *
 		 * @param blocking
 		 *            TODO
 		 */
@@ -3847,7 +3847,7 @@ public class A0PipeLine_Manager implements PlugIn {
 		 * Closes all currently-open windows, resets the state of all plugins in the table that implement
 		 * ResettablePlugin, and increments the file paths of any parameter that implements FileNameIncrementable.
 		 * Currently, incrementable file paths are those containing curly braces { }
-		 * 
+		 *
 		 * @param displayErrorMessage
 		 *            If true and image opening fails (for example if the file cannot be found or is in an unsupported
 		 *            format), a dialog is displayed to the suer
@@ -4040,7 +4040,7 @@ public class A0PipeLine_Manager implements PlugIn {
 
 		/**
 		 * Prompt the user for an XML file from which a pipeline is to be loaded.
-		 * 
+		 *
 		 * @param modifier
 		 *            If non-0, use simple input dialog rather than file browser
 		 */
@@ -4129,7 +4129,7 @@ public class A0PipeLine_Manager implements PlugIn {
 
 		/**
 		 * Reload pipeline from specified XML file.
-		 * 
+		 *
 		 * @throws IOException
 		 */
 		private void loadTable(String fileToReadFrom) throws IOException {
@@ -4181,7 +4181,7 @@ public class A0PipeLine_Manager implements PlugIn {
 
 		/**
 		 * If Object o is an instance of {@link DirectoryParameter}, set it to point to the directory in s.
-		 * 
+		 *
 		 * @param s
 		 * @param o
 		 */
@@ -4347,7 +4347,7 @@ public class A0PipeLine_Manager implements PlugIn {
 							}
 						}
 					}
-					
+
 					((AtomicBoolean) newRow[IS_UPDATING]).set(false);
 					((AtomicBoolean) newRow[UPDATE_QUEUED]).set(false);
 					if (newRow[OUTPUT_LOCKS] == null)
@@ -4832,7 +4832,7 @@ public class A0PipeLine_Manager implements PlugIn {
 				imageListMenuXCellIndex = ourRow;
 				int imageListMenuXCellIndexModel = table1.convertRowIndexToModel(imageListMenuXCellIndex);
 				imageListMenuYCellIndexModel = table1.convertColumnIndexToModel(ourColumn);
-				
+
 				if (imageListMenuXCellIndex >= 0) {
 					if ((imageListMenuYCellIndexModel == INPUT_NAME_FIELD)
 							&& ((e.getModifiers() & InputEvent.BUTTON3_MASK) != 0)) {
@@ -4866,7 +4866,7 @@ public class A0PipeLine_Manager implements PlugIn {
 			/**
 			 * Called when the user has finished editing a text box in the table. Not using the standard listener system
 			 * because it's easier to respond specifically to this specific GUI event.
-			 * 
+			 *
 			 * @param column
 			 * @param row
 			 */
@@ -5431,7 +5431,7 @@ public class A0PipeLine_Manager implements PlugIn {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return Path to directory containing native_libs and icons directories
 	 */
 	public static String getBaseDir() {
