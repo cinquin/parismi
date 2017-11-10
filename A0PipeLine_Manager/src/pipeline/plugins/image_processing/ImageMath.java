@@ -10,6 +10,7 @@ package pipeline.plugins.image_processing;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.SortedMap;
 
 import pipeline.PreviewType;
 import pipeline.data.IPluginIOStack;
@@ -19,6 +20,7 @@ import pipeline.data.PluginIOImage;
 import pipeline.data.PluginIOImage.PixelType;
 import pipeline.misc_util.IntrospectionParameters.ParameterInfo;
 import pipeline.misc_util.IntrospectionParameters.ParameterType;
+import pipeline.misc_util.PluginRuntimeException;
 import pipeline.misc_util.ProgressReporter;
 import pipeline.misc_util.parfor.ParFor;
 import pipeline.plugins.AuxiliaryInputOutputPlugin;
@@ -65,15 +67,30 @@ public class ImageMath extends ThreeDPlugin implements AuxiliaryInputOutputPlugi
 	public void runChannel(final IPluginIOStack input, final IPluginIOStack output, final ProgressReporter p,
 			PreviewType previewType, boolean inputHasChanged) throws InterruptedException {
 
-		IPluginIOStack auxStack;
+		final IPluginIOStack auxStack;
+		final boolean checkName;
 
 		PluginIOImage auxInput = (PluginIOImage) pluginInputs.get("Input 2");
-		if (auxInput instanceof PluginIOHyperstack)
-			auxStack = ((PluginIOHyperstack) auxInput).getChannels().get(input.getName());
-		else if (auxInput instanceof IPluginIOStack)
+		if (auxInput instanceof PluginIOHyperstack) {
+			SortedMap<String, IPluginIOStack> auxInputChannels = ((PluginIOHyperstack) auxInput).getChannels();
+			if (auxInputChannels.size() == 1) {
+				auxStack = auxInputChannels.values().iterator().next();
+				checkName = false;
+			} else {
+				auxStack = auxInputChannels.get(input.getName());
+				checkName = true;
+			}
+			if (auxStack == null) {
+				throw new PluginRuntimeException("Could not find input 2 channel", true);
+			}
+		}
+		else {
+			checkName = true;
+			if (auxInput instanceof IPluginIOStack)
 			auxStack = (IPluginIOStack) auxInput;
 		else
 			throw new RuntimeException("Auxiliary input " + auxInput + " missing or not of the right kind");
+		}
 
 		if ((auxStack.getWidth() != input.getWidth()) || (auxStack.getHeight() != input.getHeight())) {
 			throw new RuntimeException("Dimension mismatch");
@@ -99,7 +116,7 @@ public class ImageMath extends ThreeDPlugin implements AuxiliaryInputOutputPlugi
 			float[] outputArray = (float[]) outputSlices[z];
 			float[] auxArray = (float[]) auxSlices[z];
 			
-			if (!auxStack.getName().equals(input.getName())) {
+			if (checkName && !auxStack.getName().equals(input.getName())) {
 				throw new RuntimeException();
 			}
 
