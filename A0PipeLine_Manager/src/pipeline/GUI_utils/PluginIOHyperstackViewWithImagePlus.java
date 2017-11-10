@@ -450,7 +450,9 @@ public class PluginIOHyperstackViewWithImagePlus extends PluginIOView implements
 				SwingUtilities.invokeAndWait(r);
 
 		} catch (Exception e) {
-			Utils.printStack(e);
+			if (!(e instanceof InterruptedException)) {
+				Utils.printStack(e);
+			}
 		}
 	}
 
