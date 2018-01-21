@@ -127,7 +127,7 @@ private:
 	vector<double> H; // List of minimum distances
 	double maximum_change; // The distance traversed by the most moved point
 	double minimum_radius; // The radius of the smallest circle
-	time_t T0; // Timing values
+	//time_t T0; // Timing values
 
 	void relax() { // Cause all points to sum forces from all other points
 		size_t i, j;
@@ -153,7 +153,7 @@ public:
 	points(const char *s, const size_t& n, const double& l, const size_t& r) :
 		N(n), L(l), R(r) {
 		S = s;
-		T0 = time(0L); // Get the current time
+		//T0 = time(NULL); // Get the current time
 		srand(1); // Salt the random number generator.  USE SAME SEED (1 INSTEAD OF T0) SO FUNCTIONAL TESTS WORK
 		V.push_back(XYZ(1.0, 0.0, 0.0)); // Create Anchored first point V[0] (1,0,0)
 		H.push_back(2.0);
